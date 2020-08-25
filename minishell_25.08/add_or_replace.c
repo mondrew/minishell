@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   add_or_replace.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/07/28 16:00:56 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/08/25 20:46:00 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+#include "minishell.h"
 
 static char	**ft_free_array(char **arr)
 {

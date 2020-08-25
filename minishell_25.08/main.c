@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/25 10:20:23 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/08/25 20:48:52 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ int launch_commands(char *line, char **envp) // mkdir cd --- ???
 	int		i;
 	int		status;
 
-	t_pid	pid1;
-	t_pid	pid2;
+	pid_t	pid1;
+	pid_t	pid2;
 	int		pipefd[2];
 
 	i = 0;
