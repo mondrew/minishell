@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:30:44 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/25 10:17:55 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/08/25 20:58:24 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ t_cmd **parse_cmd(char *line) // Считаю, что парсинг непра�
 	while (line[i])
 	{
 		i += skip_non_printable(line + i);
-		status = check_command_status(line + i); // (mondrew!)
+		status = check_cmd_status(line + i); // (mondrew!)
 		i += skip_status(line + i); // (mondrew!)
 		if (!line[i]) // (mondrew!)
 			break ; // case if we reach end of the line (mondrew!)

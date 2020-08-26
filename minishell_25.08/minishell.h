@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/07/29 14:18:21 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/08/25 21:01:49 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,13 @@ char	*ft_strchr(const char *s, int c);
 char			**ft_split(char const *s, char c);
 char *correct_echo_msg(char **str, char **envr);
 int		ft_strcmp(const char *s1, const char *s2);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int     check_cmd_status(char *line);
-
+t_cmd    **ft_execute(t_cmd **cmds, char **envp);
+t_cmd    **ft_free_cmds(t_cmd **cmds);
+int     check_cmd_status(char *line);
+char	**add_or_replace(char *key, char *value, char **envp);
+char	**remove_key(char *key, char **envp);
 
 /*
 * GET NEXT LINE

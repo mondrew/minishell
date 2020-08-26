@@ -425,6 +425,7 @@ t_cmd    **ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees ex
     }
     return (cmds);
 }
+<<<<<<< HEAD
 
 char    *ft_strdup(char *str) // for testing
 {
@@ -473,3 +474,5 @@ int     main(int argc, char **argv, char **envp) // for testing
     ft_execute(cmds, envp);
     return (0);
 }
+=======
+>>>>>>> 4381a050290f041c0f67432aceaaf8befd8fcac2

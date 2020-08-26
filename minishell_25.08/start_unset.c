@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   start_unset.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/18 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/08/24 16:00:56 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/08/25 20:52:54 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_free_arr(char **arr, int j) // made by mondrew
+char	**ft_free_arr(char **arr, int j) // made by mondrew
 {
 	// эту ф-цию можно использовать для всей программы
 	int		i;
@@ -61,14 +61,13 @@ char	**ft_new_env_arr(char ***old, int i) // made by mondrew
 int start_unset(char *line, char ***envp) // made by mondrew
 {
 	int		i;
-	char	*new;
+	char	**new;
 
 	i = 0;
 	// add skip whitespaces (mondrew)
 	while ((*envp)[i] != NULL)
 	{
-		if (!ft_strncmp(line, (*envp)[i], ft_strlen(line)) && \
-								envp[i][ft_strlen(line)] == '=')
+		if (!ft_strncmp(line, (*envp)[i], ft_strlen(line)) && *(envp[i][ft_strlen(line)]) == '=') // correct GJ
 			break ;
 		i++;
 	}

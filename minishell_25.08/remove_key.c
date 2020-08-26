@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   remove_key.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:28:29 by mondrew           #+#    #+#             */
-/*   Updated: 2020/07/28 16:11:07 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/08/25 20:49:17 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+#include "minishell.h"
 
 static char	**ft_free_array(char **arr)
 {
