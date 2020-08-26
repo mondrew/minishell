@@ -17,7 +17,7 @@ char *get_path(char **env)
 	char *par;
 
 	par = get_line_env(env, "PATH=");
-	return (par+6); // мб +5? (mondrew)
+	return (par+6); // может быть +5? (mondrew)
 }
 
 int file_exists (char *filename) {
@@ -338,7 +338,7 @@ int start_unknown_cmd2(char *line, char **env)
 	param1 = ft_split(comands[0], ' ');
 	if (comands[1])
 		param2 = ft_split(comands[1], ' ');
-	paths = ft_split(get_path(env), ':'); // if return NULL
+	paths = ft_split(get_path(env), ':'); // if return NULL // get array of pathes
 	pid = fork();
 	if (pid == 0) // child (mondrew)
 	{
@@ -352,9 +352,9 @@ int start_unknown_cmd2(char *line, char **env)
 							// как потом назад вернуться, чтобы ее free()? (mondrew)
 			{
 				execve(fullfilename, param1, env);
-				if (errno == -1)
+				if (errno == -1) // здесь не errno == -1, а execve возвращает -1. Errno выставляется на код ошибки
 					printf(":command not found %d\n", errno); // И это будет печататься 
-																// каждый раз, пока мы ищем нужный путь? (mondrew)
+																// каждый раз, пока мы ищем нужный путь? (mondrew) - для дебага
 				paths++;
 				fullfilename = ft_strdup(*paths); // предыдущий указатель fullfilename утерян, его нужно было free
 				fullfilename = ft_strjoin(fullfilename, "/");

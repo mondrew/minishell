@@ -63,7 +63,7 @@ char		*ft_strdup(char *str)
 	return (dest);
 }
 
-char		*ft_strjoin(char *s1, char *s2)
+char		*ft_strjoin(char *s1, char *s2) // Назови ее ft_strjoin_free_first, а обычный strjoin - добавь
 {
 	char		*str;
 	char		*res;
