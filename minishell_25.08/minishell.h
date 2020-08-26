@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H // MINISHELL_H (mondrew)
-# define GET_NEXT_LINE_H // MINISHELL_H (mondrew)
+#ifndef MINISHELL_H
+# define MINISHELL_H
 # define BUFFER_SIZE 30
 
 # define UNKNOWN 0
@@ -34,11 +34,13 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
-#include <stdio.h>
+#include <stdio.h> // for debug
 #include <limits.h>
 #include <signal.h>
 #include <errno.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 # define FDS 14000
 

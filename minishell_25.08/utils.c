@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char *get_line_env(char **env, char *param) // функция возвращает указатель на строку в env с нужной переменной?
+char *get_line_env(char **env, char *param) // В отдельный файл. Функция возвращает указатель на строку в env с нужной переменной?
 											// т.е. *env = "HOME=/path_to_home_dir/" ? (mondrew)
 {
 	while (*env)
@@ -91,7 +91,7 @@ int start_with_nospace(char *str, char *con) // it is strncmp (mondrew) | что
 	i = 0;
 	if (!str)
 		return(0);
-	while (str[i] && con[i])
+	while (str[i] && con[i]) // Эта ситуация может возникнуть, когда str = "HOME=/usr/path/", а con = "HOM"
 	{
 		if (str[i] != con[i])
 			return(0);

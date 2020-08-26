@@ -51,6 +51,8 @@ void sort_and_show(char **envp)
 	}
 }
 
+/*
+
 void remove_key(char *key, char **envp)
 {
 	//эту я написал кажется (mondrew)
@@ -68,8 +70,9 @@ void add_or_replace(char *key, char *value, char **envp) // и эту тоже �
 	// key = PATH // если есть, то значение ключа поменять на value
 	
 }
+*/
 
-void parse_and_add(char *line, char **envp)
+int parse_and_add(char *line, char **envp)
 {
 	int i;
 	int start_key;
