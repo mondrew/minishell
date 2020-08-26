@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/25 20:48:52 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/08/26 13:01:26 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void print_pre_command()
 	ft_putstr("$ "); // приглашение - это знак доллара (из книги Танненбаума)
 	ft_putstr("\x1b[0m");
 }
+
+// JUST TEST GIT PULL
 
 int launch_commands(char *line, char **envp) // mkdir cd --- ???
 {
