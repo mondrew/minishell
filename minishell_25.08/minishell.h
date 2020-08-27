@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/25 21:01:49 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/08/27 09:17:46 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,9 @@ t_cmd    **ft_free_cmds(t_cmd **cmds);
 int     check_cmd_status(char *line);
 char	**add_or_replace(char *key, char *value, char **envp);
 char	**remove_key(char *key, char **envp);
+char		*ft_strjoin_free_left(char *s1, char *s2);
+char			*ft_strdup(char *str);
+char	*ft_strjoin(char const *s1, char const *s2);
 
 /*
 * GET NEXT LINE
@@ -98,7 +101,6 @@ int				get_next_line(int fd, char **line);
 size_t			ft_strlen(const char *s);
 char			*ft_find_lbreak(char *s);
 void			free_chr(char **chr);
-char			*ft_strdup(char *str);
-char			*ft_strjoin(char *s1, char *s2);
+
 #endif
 

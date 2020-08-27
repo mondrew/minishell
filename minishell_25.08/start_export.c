@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/25 21:01:36 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/08/26 18:42:17 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,28 +51,6 @@ void sort_and_show(char **envp)
 	}
 }
 
-<<<<<<< HEAD
-/*
-
-void remove_key(char *key, char **envp)
-{
-	//эту я написал кажется (mondrew)
-}
-
-void add_or_replace(char *key, char *value, char **envp) // и эту тоже написал (mondrew)
-{
-	// envp = //выглядит так
-	// 	PATH=ghjghjg
-	// 	KEY=kkljklj
-	// 	PATH_1=jkljlk
-	// 	KEY2=jknjkn
-	// key = z // если в списке envp нет такого ключа, тогда
-	// value = 123 // ему через равно без пробелов присвоить значение и добавить в конец envp
-	// key = PATH // если есть, то значение ключа поменять на value
-	
-}
-*/
-=======
 // void remove_key(char *key, char **envp)
 // {
 // 	//эту я написал кажется (mondrew)
@@ -90,7 +68,6 @@ void add_or_replace(char *key, char *value, char **envp) // и эту тоже �
 // 	// key = PATH // если есть, то значение ключа поменять на value
 
 // }
->>>>>>> 4381a050290f041c0f67432aceaaf8befd8fcac2
 
 int parse_and_add(char *line, char **envp)
 {

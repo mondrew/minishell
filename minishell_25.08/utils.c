@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:30:44 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/26 13:04:21 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/08/27 09:32:10 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ int start_with_nospace(char *str, char *con) // it is strncmp (mondrew) | что
 	return (1);
 }
 
-// JUST TEST GIT PULL
 
 int start_with(char *str, char *con) // it is strncmp, isn't it? (mondrew)
 {

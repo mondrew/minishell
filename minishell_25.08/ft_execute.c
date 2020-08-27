@@ -20,34 +20,34 @@ char *get_path(char **env)
 	return (par + 5);
 }
 
-char *get_line_env(char **env, char *param) // В отдельный файл
-{
-	while (*env)
-	{
-		if (start_with_nospace(*env, param))
-			return (*env);
-		env++;
-	}
-	return NULL;
-}
+// char *get_line_env(char **env, char *param) // В отдельный файл
+// {
+// 	while (*env)
+// 	{
+// 		if (start_with_nospace(*env, param))
+// 			return (*env);
+// 		env++;
+// 	}
+// 	return NULL;
+// }
 
-int		start_with_nospace(char *str, char *con) // made by mondrew
-{
-	int		i;
+// int		start_with_nospace(char *str, char *con) // made by mondrew
+// {
+// 	int		i;
 
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i] && con[i])
-	{
-		if (str[i] != con[i])
-			return (0);
-		i++;
-	}
-	if (str[i] == '=' && con[i] == '\0')
-		return (1);
-	return (0);
-}
+// 	i = 0;
+// 	if (!str)
+// 		return (0);
+// 	while (str[i] && con[i])
+// 	{
+// 		if (str[i] != con[i])
+// 			return (0);
+// 		i++;
+// 	}
+// 	if (str[i] == '=' && con[i] == '\0')
+// 		return (1);
+// 	return (0);
+// }
 
 int     ft_free_split(char **array)
 {
@@ -295,6 +295,7 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
             return (&cmds[i + 1]);
         }
     }
+    return NULL;
 }
 
 t_cmd   **ft_execute_with_redir(t_cmd **cmds, char **envp)
@@ -425,54 +426,57 @@ t_cmd    **ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees ex
     }
     return (cmds);
 }
-<<<<<<< HEAD
 
-char    *ft_strdup(char *str) // for testing
-{
-    char    *new;
-    int     i;
 
-    i = 0;
-    while (str[i] != '\0')
-        i++;
-    if (!(new = malloc(sizeof(char) * (i + 1))))
-        return (NULL);
-    i = 0;
-    while (str[i] != '\0')
-    {
-        new[i] = str[i];
-        i++;
-    }
-    new[i] = '\0';
-    return (new);
-}
+// COMMENTED BY GJ
+// CREATE NEW FILE TO TEST
+// ft_strdup was added - ft_strdup.c
 
-int     main(int argc, char **argv, char **envp) // for testing
-{
-    t_cmd   **cmds;
-    // grep test < newtest | cat -e
 
-    cmds = malloc(sizeof(t_cmd *) * 4);
-    cmds[0] = malloc(sizeof(char) * 1);
-    cmds[1] = malloc(sizeof(char) * 1);
-    cmds[2] = malloc(sizeof(char) * 1);
-    cmds[3] = malloc(sizeof(char) * 1);
-    (cmds[0])->cmd = UNKNOWN;
-    cmds[0]->status = NONE;
-    cmds[0]->str = ft_strdup("grep test");
+// char    *ft_strdup(char *str) // for testing
+// {
+//     char    *new;
+//     int     i;
 
-    cmds[1]->cmd = UNKNOWN;
-    cmds[1]->status = RBWS;
-    cmds[1]->str = ft_strdup("newtest");
+//     i = 0;
+//     while (str[i] != '\0')
+//         i++;
+//     if (!(new = malloc(sizeof(char) * (i + 1))))
+//         return (NULL);
+//     i = 0;
+//     while (str[i] != '\0')
+//     {
+//         new[i] = str[i];
+//         i++;
+//     }
+//     new[i] = '\0';
+//     return (new);
+// }
 
-    cmds[2]->cmd = UNKNOWN;
-    cmds[2]->status = PIPE;
-    cmds[2]->str = ft_strdup("cat -e");
+// int     main(int argc, char **argv, char **envp) // for testing
+// {
+//     t_cmd   **cmds;
+//     // grep test < newtest | cat -e
 
-    cmds[3]->cmd = END;
+//     cmds = malloc(sizeof(t_cmd *) * 4);
+//     cmds[0] = malloc(sizeof(char) * 1);
+//     cmds[1] = malloc(sizeof(char) * 1);
+//     cmds[2] = malloc(sizeof(char) * 1);
+//     cmds[3] = malloc(sizeof(char) * 1);
+//     (cmds[0])->cmd = UNKNOWN;
+//     cmds[0]->status = NONE;
+//     cmds[0]->str = ft_strdup("grep test");
 
-    ft_execute(cmds, envp);
-    return (0);
-}
-=======
->>>>>>> 4381a050290f041c0f67432aceaaf8befd8fcac2
+//     cmds[1]->cmd = UNKNOWN;
+//     cmds[1]->status = RBWS;
+//     cmds[1]->str = ft_strdup("newtest");
+
+//     cmds[2]->cmd = UNKNOWN;
+//     cmds[2]->status = PIPE;
+//     cmds[2]->str = ft_strdup("cat -e");
+
+//     cmds[3]->cmd = END;
+
+//     ft_execute(cmds, envp);
+//     return (0);
+// }
