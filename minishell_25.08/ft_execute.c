@@ -6,48 +6,11 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/18 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/08/24 16:00:56 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/08/27 21:35:56 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char *get_path(char **env)
-{
-	char *par;
-
-	par = get_line_env(env, "PATH=");
-	return (par + 5);
-}
-
-// char *get_line_env(char **env, char *param) // В отдельный файл
-// {
-// 	while (*env)
-// 	{
-// 		if (start_with_nospace(*env, param))
-// 			return (*env);
-// 		env++;
-// 	}
-// 	return NULL;
-// }
-
-// int		start_with_nospace(char *str, char *con) // made by mondrew
-// {
-// 	int		i;
-
-// 	i = 0;
-// 	if (!str)
-// 		return (0);
-// 	while (str[i] && con[i])
-// 	{
-// 		if (str[i] != con[i])
-// 			return (0);
-// 		i++;
-// 	}
-// 	if (str[i] == '=' && con[i] == '\0')
-// 		return (1);
-// 	return (0);
-// }
 
 int     ft_free_split(char **array)
 {
@@ -61,6 +24,96 @@ int     ft_free_split(char **array)
     }
     free(array);
     return (0);
+}
+
+/*
+int		start_with_nospace(char *str, char *con)
+{
+	int		i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i] && con[i])
+	{
+		if (str[i] != con[i])
+			return (0);
+		i++;
+	}
+	if (str[i] == '=' && con[i] == '\0')
+		return (1);
+	return (0);
+}
+
+char *get_line_env(char **env, char *param) // В отдельный файл
+{
+	while (*env)
+	{
+		if (start_with_nospace(*env, param))
+			return (*env);
+		env++;
+	}
+	return NULL;
+}
+*/
+
+char *get_path(char **env)
+{
+	char *par;
+
+	par = get_line_env(env, "PATH");
+	return (par + 5);
+}
+
+char    **ft_make_paths_array(char **envp, char *command)
+{
+    char    **paths;
+    char    *str;
+    int     i;
+    int     j;
+    int     k;
+
+    i = 0;
+    if (!(paths = ft_split(get_path(envp), ':')))
+        return (NULL);
+    ////////////////////////////////////////////////////
+    // int n = 0;
+    // printf("!!!!!!!!!\n");
+    // while (paths[n] != NULL)
+    //     printf("%s\n", paths[n++]);
+    ////////////////////////////////////////////////////
+    while (paths[i] != NULL)
+    {
+        j = 0;
+        k = 0;
+        if (!(str = malloc(sizeof(char) * (ft_strlen(paths[i]) + 1 + ft_strlen(command) + 1))))
+        {
+            ft_free_split(paths);
+            return (NULL);
+        }
+        while (paths[i][j] != '\0')
+        {
+            str[j] = paths[i][j];
+            j++;
+        }
+        if (paths[i][j - 1] != '/')
+        {
+            str[j] = '/';
+            j++;
+        }
+        while (command[k] != '\0')
+        {
+            str[j] = command[k];
+            j++;
+            k++;
+        }
+        str[j] = '\0';
+        free(paths[i]);
+        paths[i] = str;
+        str = NULL;
+        i++;
+    }
+    return (paths);
 }
 
 t_cmd    **ft_free_cmds(t_cmd **cmds) //GJ return 1/0? int
@@ -87,9 +140,12 @@ void    ft_free_cmd_elem(t_cmd *cmds)
 
 int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
 {
-    char    **array;
+    char    **array; // array for execve
+    char    **paths; // paths from envp PATH
+    char    *command; // current command
+    int     i;
 
-    array = NULL;
+    i = 0;
     /*
     if (cmds->cmd == PWD)
 		start_pwd(cmds->str);
@@ -120,10 +176,32 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
 	{
         if (!(array = ft_split(cmds->str, ' ')))
             return (0);
-        if (execve(array[0], array, envp) == -1)
+        if (execve(array[0], array, envp) == -1) // нужно ли это вообще и когда это сработает? Для обычных executable?
         {
-            ft_free_split(array);
-            return (0);
+            command = array[0]; // save array[0]
+            if (!(paths = ft_make_paths_array(envp, array[0])))
+                return (ft_free_split(array));
+            while (paths[i] != NULL)
+            {
+                array[0] = paths[i];
+                if (execve(array[0], array, envp) == -1)
+                {
+                    i++;
+                }
+                else
+                {
+                    array[0] = command; // recover array[0]
+                    break ;
+                }
+            }
+            if (paths[i] == NULL)
+            {
+                // Command not found
+                printf(":command not found %d\n", errno); // add name of the error
+                ft_free_split(paths);
+                return (ft_free_split(array));
+            }
+            ft_free_split(paths);
         }
         ft_free_split(array);
     }
@@ -192,6 +270,7 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
         close(pipefd[1]);
         if (!ft_execve_cmd(cmds[j], cmds, envp)) // if execve returns NULL
             return (ft_free_cmds(cmds));
+        exit(0); // !!!!!!!! добавить везде в child-ах
     }
     else
     {
@@ -199,7 +278,7 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
         j++;
         if (input_from_file == 1) // to skip the second argument ("< filename")
         {
-            close(fd);
+            close(fd); // это здесь не нужно.
             j++;
         }
     }
@@ -226,13 +305,13 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
             dup2(pipefd[i + 1], STDOUT_FILENO); // copy new pipe write end
             close(pipefd[i + 1]);
             if (!ft_execve_cmd(cmds[j], cmds, envp))
-                return (ft_free_cmds(cmds));
+                return (ft_free_cmds(cmds)); // освободится лишь в child-е
+            exit(0);
         }
         else
         {
             // Parent
             j++;
-            printf("j: %d\n", j); ////////////////////////
             i += 2;
             pipes--;
         }
@@ -273,12 +352,13 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
             dup2(pipefd[i - 2], STDIN_FILENO); // reads from last pipe read end
             close(pipefd[i - 2]);
             if (!ft_execve_cmd(cmds[j], cmds, envp))
-                return (ft_free_cmds(cmds)); // Это будет только в ребенке!!!
-            if (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD)
-                j++;
+                return (ft_free_cmds(cmds)); // Это будет только в ребенке!!! Нужно ли это вообще проверять?
+            exit(0);
         }
         else
         {
+            if (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD)
+                j++;
             i--; // вернул индекс на последний элемент масссива pipefd[]
             while (i >= 0)
             {
@@ -295,17 +375,16 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
             return (&cmds[i + 1]);
         }
     }
-    return NULL;
 }
 
 t_cmd   **ft_execute_with_redir(t_cmd **cmds, char **envp)
 {
     int     fd;
     int     i;
-    int     j;
+    int     j; // for cmds indexing
     pid_t   pid;
 
-    i = 0;
+    j = 0;
     if ((pid = fork()) < 0)
     {
         printf("Error: fork failed\n");
@@ -314,53 +393,61 @@ t_cmd   **ft_execute_with_redir(t_cmd **cmds, char **envp)
     if (pid == 0)
     {
         // Child
-        if (cmds[i + 1]->status == RBWS)
+        if (cmds[j + 1]->status == RBWS)
         {
-            if ((fd = open(cmds[i + 1]->str, O_RDONLY)) == -1)
+            if ((fd = open(cmds[j + 1]->str, O_RDONLY)) == -1)
             {
                 printf("Error: open failed\n");
                 return (ft_free_cmds(cmds));
             }
             dup2(fd, 0);
             close(fd);
-            i++;
+            j++;
         }
-        if (cmds[i + 1]->status == RFWS)
+        if (cmds[j + 1]->status == RFWS)
         {
-            if ((fd = open(cmds[i + 1]->str, O_CREAT | O_TRUNC | O_WRONLY | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
+            if ((fd = open(cmds[j + 1]->str, O_CREAT | O_TRUNC | O_WRONLY | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
             {
                 printf("Error: open failed\n");
                 return (ft_free_cmds(cmds));
             }
             dup2(fd, 1);
             close(fd);
-            i++;
+            j++; // there is no scense in doing it here
         }
-        else if (cmds[i + 1]->status == RFWD)
+        else if (cmds[j + 1]->status == RFWD)
         {
-            if ((fd = open(cmds[i + 1]->str, O_CREAT | O_APPEND | O_WRONLY | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
+            if ((fd = open(cmds[j + 1]->str, O_CREAT | O_APPEND | O_WRONLY | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
             {
                 printf("Error: open failed\n");
                 return (ft_free_cmds(cmds));
             }
             dup2(fd, 1);
             close(fd);
-            i++;
+            j++; // there is no scense in doing it here
         }
         if (!(ft_execve_cmd(cmds[0], cmds, envp)))
         {
             printf("Error: execution failed\n");
             return (ft_free_cmds(cmds));
         }
+        exit(0);
     }
-    waitpid(pid, 0, 0);
-    j = i; // save i position
-    while (i >= 0)
+    else
     {
-        ft_free_cmd_elem(cmds[i]);
-        i--;
+        if (cmds[j + 1]->status == RBWS)
+            j++;
+        if (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD)
+            j++;
+        waitpid(pid, 0, 0);
+        i = j; // save i position
+        while (j >= 0)
+        {
+            ft_free_cmd_elem(cmds[j]);
+            j--;
+        }
+        return (&cmds[i + 1]);
     }
-    return (&cmds[j + 1]);
 }
 
 int     ft_check_pipes(t_cmd **cmds, int input_from_file)
@@ -427,56 +514,68 @@ t_cmd    **ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees ex
     return (cmds);
 }
 
+/*
 
-// COMMENTED BY GJ
-// CREATE NEW FILE TO TEST
-// ft_strdup was added - ft_strdup.c
+char    *ft_strdup(char *str) // for testing
+{
+    char    *new;
+    int     i;
 
+    i = 0;
+    while (str[i] != '\0')
+        i++;
+    if (!(new = malloc(sizeof(char) * (i + 1))))
+        return (NULL);
+    i = 0;
+    while (str[i] != '\0')
+    {
+        new[i] = str[i];
+        i++;
+    }
+    new[i] = '\0';
+    return (new);
+}
 
-// char    *ft_strdup(char *str) // for testing
-// {
-//     char    *new;
-//     int     i;
+int     main(int argc, char **argv, char **envp) // for testing
+{
+    t_cmd   **cmds;
+    // grep test < newtest | cat -e
+    // ls | cat -e | cat -e | cat -e
+    // grep test < newtest | cat -e > file
 
-//     i = 0;
-//     while (str[i] != '\0')
-//         i++;
-//     if (!(new = malloc(sizeof(char) * (i + 1))))
-//         return (NULL);
-//     i = 0;
-//     while (str[i] != '\0')
-//     {
-//         new[i] = str[i];
-//         i++;
-//     }
-//     new[i] = '\0';
-//     return (new);
-// }
+    cmds = malloc(sizeof(t_cmd *) * 4);
+    cmds[0] = malloc(sizeof(t_cmd) * 1);
+    cmds[1] = malloc(sizeof(t_cmd) * 1);
+    cmds[2] = malloc(sizeof(t_cmd) * 1);
+    cmds[3] = malloc(sizeof(t_cmd) * 1);
+    cmds[4] = malloc(sizeof(t_cmd) * 1);
+    // cmds[5] = malloc(sizeof(t_cmd) * 1);
 
-// int     main(int argc, char **argv, char **envp) // for testing
-// {
-//     t_cmd   **cmds;
-//     // grep test < newtest | cat -e
+    
+    // Command not found - treats not right! - double free or corruption (fasttop) !!!! FIX IT
+    // Program hangs out after multiple pipes - FIX IT // done
+    // Check execute_with_redir - fix all like in execute_with_pipes // done
+    // when redir with pipes (> or >>) permissions are --- -wx --- and with existed file: Error: open failed
 
-//     cmds = malloc(sizeof(t_cmd *) * 4);
-//     cmds[0] = malloc(sizeof(char) * 1);
-//     cmds[1] = malloc(sizeof(char) * 1);
-//     cmds[2] = malloc(sizeof(char) * 1);
-//     cmds[3] = malloc(sizeof(char) * 1);
-//     (cmds[0])->cmd = UNKNOWN;
-//     cmds[0]->status = NONE;
-//     cmds[0]->str = ft_strdup("grep test");
+    cmds[0]->cmd = UNKNOWN;
+    cmds[0]->status = NONE;
+    cmds[0]->str = ft_strdup("grep test");
 
-//     cmds[1]->cmd = UNKNOWN;
-//     cmds[1]->status = RBWS;
-//     cmds[1]->str = ft_strdup("newtest");
+    cmds[1]->cmd = UNKNOWN;
+    cmds[1]->status = RBWS;
+    cmds[1]->str = ft_strdup("newtest");
 
-//     cmds[2]->cmd = UNKNOWN;
-//     cmds[2]->status = PIPE;
-//     cmds[2]->str = ft_strdup("cat -e");
+    // cmds[2]->cmd = UNKNOWN;
+    // cmds[2]->status = PIPE;
+    // cmds[2]->str = ft_strdup("cat -e");
 
-//     cmds[3]->cmd = END;
+    cmds[2]->cmd = UNKNOWN;
+    cmds[2]->status = RFWD;
+    cmds[2]->str = ft_strdup("file");
 
-//     ft_execute(cmds, envp);
-//     return (0);
-// }
+    cmds[3]->cmd = END;
+
+    ft_execute(cmds, envp);
+    return (0);
+}
+*/
