@@ -1,0 +1,45 @@
+10-ft_execve_cmd-------------------------
+!!!!!!!!!!!!!!!!!!!!!!!!!!UNKNOWN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+10-ft_execve_cmd-------------------------$
+!!!!!!!!!!!!!!!!!!!!!!!!!!UNKNOWN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!$
+10-ft_execve_cmd-------------------------$$
+!!!!!!!!!!!!!!!!!!!!!!!!!!UNKNOWN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!$$
+10-ft_execve_cmd-------------------------$$$
+!!!!!!!!!!!!!!!!!!!!!!!!!!UNKNOWN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!$$$
+total 3140$$$
+drwxrwxrwx 1 mondrew mondrew     512 Aug 28 18:48 .$$$
+drwxrwxrwx 1 mondrew mondrew     512 Aug 27 21:27 ..$$$
+-rwxrwxrwx 1 mondrew mondrew   32024 Aug 28 18:48 a.out$$$
+-rwxrwxrwx 1 mondrew mondrew    3209 Aug 27 21:27 add_or_replace.c$$$
+-rwxrwxrwx 1 mondrew mondrew     473 Aug 27 21:27 check_cmd_status.c$$$
+-rwxrwxrwx 1 mondrew mondrew    5333 Aug 27 21:27 echo_utils.c$$$
+-rwxrwxrwx 1 mondrew mondrew   20211 Aug 28 18:48 ft_execute.c$$$
+-rwxrwxrwx 1 mondrew mondrew    1826 Aug 27 21:27 ft_itoa.c$$$
+-rwxrwxrwx 1 mondrew mondrew    2340 Aug 27 21:27 ft_split.c$$$
+-rwxrwxrwx 1 mondrew mondrew    1205 Aug 27 21:27 ft_strchr.c$$$
+-rwxrwxrwx 1 mondrew mondrew    1290 Aug 27 21:27 ft_strcmp.c$$$
+-rw-rw-rw- 1 mondrew mondrew    1170 Aug 27 21:27 ft_strdup.c$$$
+-rw-rw-rw- 1 mondrew mondrew    1347 Aug 27 21:27 ft_strjoin.c$$$
+-rw-rw-rw- 1 mondrew mondrew    1375 Aug 27 21:27 ft_strjoin_free_left.c$$$
+-rw-rw-rw- 1 mondrew mondrew    1010 Aug 27 22:02 ft_strlen.c$$$
+-rw-rw-rw- 1 mondrew mondrew    1148 Aug 27 21:27 ft_strncmp.c$$$
+-rwxrwxrwx 1 mondrew mondrew    1426 Aug 27 21:27 ft_strtrim.c$$$
+-rwxrwxrwx 1 mondrew mondrew    1547 Aug 27 21:27 ft_substr.c$$$
+-rwxrwxrwx 1 mondrew mondrew    2298 Aug 27 21:27 get_next_line.c$$$
+-rwxrwxrwx 1 mondrew mondrew    1229 Aug 27 21:27 get_next_line_utils.c$$$
+-rw-rw-rw- 1 mondrew mondrew    3003 Aug 27 21:27 libft.h$$$
+-rwxrwxrwx 1 mondrew mondrew    3899 Aug 27 23:00 main.c$$$
+-rwxrwxrwx 1 mondrew mondrew    3288 Aug 28 17:47 minishell.h$$$
+-rwxrwxrwx 1 mondrew mondrew 2874672 Aug 28 18:48 minishell.h.gch$$$
+-rw-rw-rw- 1 mondrew mondrew      40 Aug 27 21:27 newtest$$$
+-rwxrwxrwx 1 mondrew mondrew    2188 Aug 27 21:27 remove_key.c$$$
+-rwxrwxrwx 1 mondrew mondrew    1286 Aug 27 21:27 start_cd.c$$$
+-rwxrwxrwx 1 mondrew mondrew    1228 Aug 27 21:27 start_echo.c$$$
+-rwxrwxrwx 1 mondrew mondrew    1049 Aug 27 21:27 start_env.c$$$
+-rwxrwxrwx 1 mondrew mondrew    4837 Aug 27 21:27 start_export.c$$$
+-rwxrwxrwx 1 mondrew mondrew    1715 Aug 28 14:54 start_pwd.c$$$
+-rwxrwxrwx 1 mondrew mondrew   10095 Aug 27 21:27 start_unknown.c$$$
+-rwxrwxrwx 1 mondrew mondrew    2023 Aug 27 21:27 start_unset.c$$$
+-rwxrwxrwx 1 mondrew mondrew       9 Aug 27 21:27 test$$$
+-rwxrwxrwx 1 mondrew mondrew       0 Aug 27 21:27 test3.txt$$$
+-rwxrwxrwx 1 mondrew mondrew    7479 Aug 28 14:54 utils.c$$$
