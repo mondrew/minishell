@@ -115,16 +115,13 @@ t_cmd    **ft_free_cmds(t_cmd **cmds)
     int     i;
 
     i = 0;
-    // printf("1**************************************\n");
     while (cmds[i]->cmd != END)
     {
         free(cmds[i]->str);
         free(cmds[i]);
         i++;
     }
-    // printf("2: i: %d**************************************\n", i);
     free(cmds[i]);
-    // printf("3**************************************\n");
     free(cmds);
     return (NULL);
 }
@@ -143,11 +140,8 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
     int     i;
 
     i = 0;
-    // printf("10-ft_execve_cmd-------------------------\n");
-    // Find where it splits
     if (cmds->cmd == PWD)
     {
-        // printf("11-ft_execve_cmd-------------------------\n");
         start_pwd(cmds->str);
     }
 	else if (cmds->cmd == ECHO)
@@ -173,7 +167,6 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
     }
     else if (cmds->cmd == UNKNOWN)
 	{
-        // printf("!!!!!!!!!!!!!!!!!!!!!!!!!!UNKNOWN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
         if (!(array = ft_split(cmds->str, ' ')))
             return (0);
         if (execve(array[0], array, envp) == -1) // нужно ли это вообще и когда это сработает? Для обычных executable?
@@ -205,7 +198,6 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
         }
         ft_free_split(array);
     }
-    // printf("12-ft_execve_cmd-------------------------\n");
     return (1);
 }
 
@@ -248,7 +240,6 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
 
     i = 2;
     j = 0;
-    // printf("3-ft_exec_pipes-------------------------\n");
     // first pipe
     if (pipe(pipefd) < 0)
     {
@@ -265,7 +256,6 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
     if (pid == 0)
     {
         // Child
-        // printf("4-ft_exec_pipes_child-------------------------\n");
         if (input_from_file == 1) // can be separate function (to save place)
         {
             if ((fd = open(cmds[j + 1]->str, O_RDONLY)) == -1)
@@ -285,13 +275,12 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             ft_free_cmds(cmds);
             return (-1); // Нужно послать сигнал в Parent (kill?), чтобы в parent-e проверить и сделать free, если нужно
         }
-        // printf("check if NULL-------------1\n");
         exit(0);
     }
     else
     {
+        waitpid(pid, 0, 0);
         // Parent
-        // printf("5-ft_exec_pipes_parent-------------------------\n");
         j++;
         if (input_from_file == 1) // to skip the second argument ("< filename")
         {
@@ -302,7 +291,6 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
     // other pipes
     while (pipes > 1 && pid != 0) // pid != 0 guarantees us that all processes inside this "while" will proceed in Parent
     {
-        // printf("6!-ft_exec_pipes-------------------------\n");
         if (pipe(pipefd + i) < 0)
         {
             printf("Error: pipe failed\n");
@@ -334,6 +322,7 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
         else
         {
             // Parent
+            waitpid(pid, 0, 0);
             j++;
             i += 2;
             pipes--;
@@ -342,7 +331,6 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
     // This is the last after-pipe
     if (pid != 0) // to proceed in the Parent
     {
-        // printf("7-ft_exec_pipes_parent-------------------------\n");
         if ((pid = fork()) < 0)
         {
             printf("Error: fork failed\n");
@@ -352,7 +340,6 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
         if (pid == 0)
         {
             // Child
-            // printf("8-ft_exec_pipes_child-------------------------\n");
             if (cmds[j + 1]->cmd != END && (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD)) // IMPORTANT!!!!! 1st ARGUMENT! Check everywhere
             {
                 if (cmds[j + 1]->status == RFWS) // for >
@@ -388,7 +375,7 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
         }
         else
         {
-            // printf("9-ft_exec_pipes_parent-------------------------\n");
+            // waitpid(pid, 0, 0);
             if (cmds[j + 1]->cmd != END && (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD))
                 j++;
             i--; // вернул индекс на последний элемент масссива pipefd[]
@@ -535,7 +522,6 @@ int     ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees execu
         input_from_file = 1;
     if ((pipes = ft_check_pipes(cmds, input_from_file)) > 0)
     {
-        // printf("1-ft_execute----------------\n");
         if ((i = ft_execute_with_pipes(cmds, pipes, input_from_file, envp)) == -1)
             return (-1);
     }
@@ -549,7 +535,6 @@ int     ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees execu
         if ((i = ft_simple_execute(cmds, envp)) == -1)
             return (-1);
     }
-    // printf("2-ft_execute----------------\n");
     return (i);
 }
 
@@ -601,9 +586,9 @@ int     main(int argc, char **argv, char **envp) // for testing
 
     // EXPORT, UNSET & EXIT нужно делать в parent?
 
-    cmds[0]->cmd = PWD;
+    cmds[0]->cmd = ECHO;
     cmds[0]->status = NONE;
-    cmds[0]->str = ft_strdup("");
+    cmds[0]->str = ft_strdup("Hello, World!");
 
     // cmds[1]->cmd = UNKNOWN;
     // cmds[1]->status = RBWS;
@@ -630,9 +615,6 @@ int     main(int argc, char **argv, char **envp) // for testing
             return (-1);
         }
     }
-    printf("0-main------\n");
-    printf("!-!-!-!---i: %d\n", i);
-    printf("CMD last: %d\n", (cmds[i])->cmd);
 
     while (cmds[i]->cmd != END)
     {
@@ -641,7 +623,6 @@ int     main(int argc, char **argv, char **envp) // for testing
     }
     free(cmds[i]);
     free(cmds);
-    printf("main exit------\n");
     return (0);
 }
 */
