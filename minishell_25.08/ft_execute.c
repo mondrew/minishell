@@ -346,7 +346,7 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             {
                 if (cmds[j + 1]->status == RFWS) // for >
                 {
-                    if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_TRUNC | O_CREAT | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
+                    if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
                     {
                         printf("Error: open failed\n");
                         ft_free_cmds(cmds);
@@ -355,7 +355,7 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
                 }
                 else if (cmds[j + 1]->status == RFWD) // for >>
                 {
-                    if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_APPEND | O_CREAT | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
+                    if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
                     {
                         printf("Error: open failed\n");
                         ft_free_cmds(cmds);
@@ -396,7 +396,7 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             return (i + 1);
         }
     }
-    return 0;// add GJ because compilation warning
+    return (0);// add GJ because compilation warning
 }
 
 int     ft_execute_with_redir(t_cmd **cmds, char **envp)
@@ -430,8 +430,10 @@ int     ft_execute_with_redir(t_cmd **cmds, char **envp)
         }
         if (cmds[j + 1]->cmd != END && cmds[j + 1]->status == RFWS)
         {
-            if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_TRUNC | O_CREAT | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
+            if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
             {
+                printf("-----------------\n");
+                printf("errno: %d\n", errno);
                 printf("Error: open failed\n");
                 ft_free_cmds(cmds);
                 return (-1);
@@ -442,7 +444,7 @@ int     ft_execute_with_redir(t_cmd **cmds, char **envp)
         }
         else if (cmds[j + 1]->cmd != END && cmds[j + 1]->status == RFWD)
         {
-            if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_APPEND | O_CREAT | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
+            if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
             {
                 printf("Error: open failed\n");
                 ft_free_cmds(cmds);
@@ -475,6 +477,7 @@ int     ft_execute_with_redir(t_cmd **cmds, char **envp)
         }
         return (i + 1);
     }
+    return (0);
 }
 
 int     ft_check_pipes(t_cmd **cmds, int input_from_file)
@@ -541,7 +544,7 @@ int     ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees execu
     return (i);
 }
 
-/*
+
 char    *ft_strdup(char *str) // for testing
 {
     char    *new;
@@ -579,10 +582,6 @@ int     main(int argc, char **argv, char **envp) // for testing
     // cmds[4] = malloc(sizeof(t_cmd) * 1);
     // cmds[5] = malloc(sizeof(t_cmd) * 1);
 
-<<<<<<< HEAD
-
-=======
->>>>>>> c9e05ad684c533de9e660f5ccab88e863285cb60
     // Command not found - treats not right! - double free or corruption (fasttop) !!!! FIX IT
     // Program hangs out after multiple pipes - FIX IT // done
     // Check execute_with_redir - fix all like in execute_with_pipes // done
@@ -595,15 +594,15 @@ int     main(int argc, char **argv, char **envp) // for testing
 
     cmds[0]->cmd = ECHO;
     cmds[0]->status = NONE;
-    cmds[0]->str = ft_strdup("Hello, World!");
+    cmds[0]->str = ft_strdup("Hello World!");
 
     // cmds[1]->cmd = UNKNOWN;
     // cmds[1]->status = RBWS;
     // cmds[1]->str = ft_strdup("newtest");
 
     cmds[1]->cmd = UNKNOWN;
-    cmds[1]->status = PIPE;
-    cmds[1]->str = ft_strdup("cat -e");
+    cmds[1]->status = RFWD;
+    cmds[1]->str = ft_strdup("file1.txt");
 
     // cmds[2]->cmd = UNKNOWN;
     // cmds[2]->status = PIPE;
@@ -632,4 +631,3 @@ int     main(int argc, char **argv, char **envp) // for testing
     free(cmds);
     return (0);
 }
-*/
