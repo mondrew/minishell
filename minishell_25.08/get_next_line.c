@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:15:24 by gjessica          #+#    #+#             */
-/*   Updated: 2020/07/27 11:26:33 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/08/27 11:38:25 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int				get_next_line(int fd, char **line)
 	while ((read_size = read(fd, buff, BUFFER_SIZE)) > 0)
 	{
 		buff[read_size] = '\0';
-		if (!(list_fd[fd] = ft_strjoin(list_fd[fd], buff)))
+		if (!(list_fd[fd] = ft_strjoin_free_left(list_fd[fd], buff)))
 		{
 			free_chr(&buff);
 			return (-1);

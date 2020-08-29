@@ -121,6 +121,8 @@ t_cmd    **ft_free_cmds(t_cmd **cmds) //GJ return 1/0? int
     int     i;
 
     i = 0;
+    if (!cmds || !cmds[i])
+        return (NULL);
     while (cmds[i]->cmd != END)
     {
         free(cmds[i]->str);
@@ -375,6 +377,7 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
             return (&cmds[i + 1]);
         }
     }
+    return NULL;// add GJ because compilation warning
 }
 
 t_cmd   **ft_execute_with_redir(t_cmd **cmds, char **envp)
@@ -551,7 +554,7 @@ int     main(int argc, char **argv, char **envp) // for testing
     cmds[4] = malloc(sizeof(t_cmd) * 1);
     // cmds[5] = malloc(sizeof(t_cmd) * 1);
 
-    
+
     // Command not found - treats not right! - double free or corruption (fasttop) !!!! FIX IT
     // Program hangs out after multiple pipes - FIX IT // done
     // Check execute_with_redir - fix all like in execute_with_pipes // done

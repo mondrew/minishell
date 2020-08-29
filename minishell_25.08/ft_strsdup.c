@@ -1,45 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   ft_strsdup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/23 11:03:37 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/27 11:38:34 by gjessica         ###   ########.fr       */
+/*   Created: 2020/08/28 09:20:12 by gjessica          #+#    #+#             */
+/*   Updated: 2020/08/28 09:28:49 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		free_chr(char **chr)
+// Return str from start position to any char of set position
+static int	is_contains_in_set(char c, char *set)
 {
-	if (chr && *chr)
+	while (*set)
 	{
-		free(*chr);
-		*chr = NULL;
-	}
-}
-
-char		*ft_find_lbreak(char *s)
-{
-	while (*s)
-	{
-		if (*s == '\n')
-			return (s);
-		s++;
+		if (*set == c)
+			return 1;
+		set++;
 	}
 	return (0);
 }
 
-size_t		ft_strlen(const char *s)
+char *ft_strsdup(char *str, char *set)
 {
-	size_t	i;
+	char			*dest;
+	char			*temp;
 
-	i = 0;
-	if (s == NULL)
-		return (0);
-	while (s[i])
-		i++;
-	return (i);
+	temp = malloc(sizeof(char) * (ft_strlen(str) + 1));
+	if (!temp)
+		return (NULL);
+	dest = temp;
+	while (*str && !is_contains_in_set(*str, set))
+	{
+		*temp = *str;
+		temp++;
+		str++;
+	}
+	*temp = '\0';
+	return (dest);
 }

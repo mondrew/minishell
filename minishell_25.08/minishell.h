@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/27 09:17:46 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/08/28 09:35:32 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ char	**remove_key(char *key, char **envp);
 char		*ft_strjoin_free_left(char *s1, char *s2);
 char			*ft_strdup(char *str);
 char	*ft_strjoin(char const *s1, char const *s2);
+char *ft_strsdup(char *str, char *set);
 
 /*
 * GET NEXT LINE

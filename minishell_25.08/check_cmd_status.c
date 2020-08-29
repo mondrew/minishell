@@ -2,15 +2,13 @@
 
 int     check_cmd_status(char *line)
 {
-    int     i;
     int     status;
 
-    i = 0;
-    status = 0;
-    if (start_with(line, ">"))
-        return (RFWS);
-    else if (start_with(line, ">>"))
+    status = NONE;
+    if (start_with(line, ">>"))
         return (RFWD);
+    else if (start_with(line, ">")) // GJ Поменял местами, иначе никогда не определится RFWD
+        return (RFWS);
     else if (start_with(line, "<"))
         return (RBWS);
     else if (start_with(line, ";"))
