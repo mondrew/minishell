@@ -396,7 +396,7 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             return (i + 1);
         }
     }
-    return NULL;// add GJ because compilation warning
+    return 0;// add GJ because compilation warning
 }
 
 int     ft_execute_with_redir(t_cmd **cmds, char **envp)
@@ -604,7 +604,7 @@ int     main(int argc, char **argv, char **envp) // for testing
     cmds[1]->cmd = UNKNOWN;
     cmds[1]->status = PIPE;
     cmds[1]->str = ft_strdup("cat -e");
-    
+
     // cmds[2]->cmd = UNKNOWN;
     // cmds[2]->status = PIPE;
     // cmds[2]->str = ft_strdup("cat -e");

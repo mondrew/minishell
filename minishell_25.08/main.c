@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/28 13:27:07 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/08/29 17:23:28 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,9 @@ int launch_commands(char *line, char **envp) // mkdir cd --- ???
 
 	i = 0;
 	status = 0;
-<<<<<<< HEAD
-	cmds = parse_cmd(line);
+	cmds = parse_cmd(line); // возвращает массив команд на исполнение
 
-	// TEST
+// TEST
 	// Print commands
 	int t = 0;
 	while (cmds[t])
@@ -55,63 +54,6 @@ int launch_commands(char *line, char **envp) // mkdir cd --- ???
 		t++;
 	}
 	// END TEST
-
-
-	// возвращает массив команд на исполнение
-	// все что ниже надо переделывать (mondrew)
-	// этот if нужно вынести в отдельную функцию, которая будет проверять -
-	// - мы собираемся выполнить built-in программу или нет
-
-	// все что ниже - это отдельная функция на проверку и запуск встроенных команд
-
-	if (cmds) // version 24/08/2020 (mondrew)
-	{
-		while ((*cmds)->cmd != END)
-		{
-			if (!(cmds = ft_execute(cmds, envp)))
-				return (0);
-		}
-	}
-	ft_free_cmds(cmds);
-	/*
-	if (cmds)
-	{
-		while (cmds[i] && cmds[i]->cmd != END)
-		{
-			if (cmds[i]->cmd == PWD)
-				start_pwd(cmds[i]->str); // complete
-			else if (cmds[i]->cmd == UNKNOWN)
-				start_unknown_cmd(cmds[i]->str, envp); // complete // not really
-			else if (cmds[i]->cmd == ECHO)
-				start_echo(cmds[i]->str, envp); // Add '' "" $ // done by mondrew - should be checked by gjessica!
-			else if (cmds[i]->cmd == CD)
-				start_cd(cmds[i]->str, envp);
-			else if (cmds[i]->cmd == EXPORT)
-				start_export(cmds[i]->str, envp);
-			else if (cmds[i]->cmd == UNSET) // done by mondrew - should be checked by gjessica!
-				start_unset(cmds[i]->str, &envp);
-			else if (cmds[i]->cmd == ENV)// complete
-				start_env(cmds[i]->str, envp);
-			else if (cmds[i]->cmd == EXIT)// complete
-				status = -1;
-			free(cmds[i]->str);
-			free(cmds[i]);
-			i++;
-			if (status == -1)
-			{
-				free(cmds);
-				return (-1);
-			}
-		}
-		free(cmds); // на стр 70 уже есть free, если он сработает, этот
-					// уже не нужен. Может тут условие поставить, а
-					// верхний cmds обнулить после free?
-		cmds = NULL;
-	}
-	*/
-	return(0);
-=======
-	cmds = parse_cmd(line); // возвращает массив команд на исполнение
 
 	while (cmds && (cmds[i])->cmd != END)
     {
@@ -126,7 +68,6 @@ int launch_commands(char *line, char **envp) // mkdir cd --- ???
     free(cmds[i]);
     free(cmds);
     return (0);
->>>>>>> c9e05ad684c533de9e660f5ccab88e863285cb60
 }
 
 int minishell(char **envp)

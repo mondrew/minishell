@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:03:37 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/27 11:38:34 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/08/29 17:23:53 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,3 @@ char		*ft_find_lbreak(char *s)
 	return (0);
 }
 
-size_t		ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	if (s == NULL)
-		return (0);
-	while (s[i])
-		i++;
-	return (i);
-}
