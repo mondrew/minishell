@@ -432,9 +432,6 @@ int     ft_execute_with_redir(t_cmd **cmds, char **envp)
         {
             if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
             {
-                printf("-----------------\n");
-                printf("errno: %d\n", errno);
-                printf("Error: open failed\n");
                 ft_free_cmds(cmds);
                 return (-1);
             }
