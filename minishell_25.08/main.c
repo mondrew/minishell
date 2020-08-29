@@ -43,6 +43,7 @@ int launch_commands(char *line, char **envp) // mkdir cd --- ???
 
 	i = 0;
 	status = 0;
+<<<<<<< HEAD
 	cmds = parse_cmd(line);
 
 	// TEST
@@ -109,6 +110,23 @@ int launch_commands(char *line, char **envp) // mkdir cd --- ???
 	}
 	*/
 	return(0);
+=======
+	cmds = parse_cmd(line); // возвращает массив команд на исполнение
+
+	while (cmds && (cmds[i])->cmd != END)
+    {
+        if ((i = ft_execute(cmds, envp)) == -1)
+            return (-1);
+    }
+    while (cmds[i]->cmd != END)
+    {
+        ft_free_cmd_elem(cmds[i]);
+        i++;
+    }
+    free(cmds[i]);
+    free(cmds);
+    return (0);
+>>>>>>> c9e05ad684c533de9e660f5ccab88e863285cb60
 }
 
 int minishell(char **envp)

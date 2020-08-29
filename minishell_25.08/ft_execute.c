@@ -76,12 +76,6 @@ char    **ft_make_paths_array(char **envp, char *command)
     i = 0;
     if (!(paths = ft_split(get_path(envp), ':')))
         return (NULL);
-    ////////////////////////////////////////////////////
-    // int n = 0;
-    // printf("!!!!!!!!!\n");
-    // while (paths[n] != NULL)
-    //     printf("%s\n", paths[n++]);
-    ////////////////////////////////////////////////////
     while (paths[i] != NULL)
     {
         j = 0;
@@ -116,7 +110,7 @@ char    **ft_make_paths_array(char **envp, char *command)
     return (paths);
 }
 
-t_cmd    **ft_free_cmds(t_cmd **cmds) //GJ return 1/0? int
+t_cmd    **ft_free_cmds(t_cmd **cmds)
 {
     int     i;
 
@@ -148,9 +142,10 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
     int     i;
 
     i = 0;
-    /*
     if (cmds->cmd == PWD)
-		start_pwd(cmds->str);
+    {
+        start_pwd(cmds->str);
+    }
 	else if (cmds->cmd == ECHO)
 		start_echo(cmds->str, envp);
 	else if (cmds->cmd == CD)
@@ -172,9 +167,7 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
         ft_free_cmds(cmds_big);
         exit(0);
     }
-    */
-    //else if (cmds->cmd == UNKNOWN)
-    if (cmds->cmd == UNKNOWN) // else if !!!
+    else if (cmds->cmd == UNKNOWN)
 	{
         if (!(array = ft_split(cmds->str, ' ')))
             return (0);
@@ -210,29 +203,35 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
     return (1);
 }
 
-t_cmd     **ft_simple_execute(t_cmd **cmds, char **envp)
+int     ft_simple_execute(t_cmd **cmds, char **envp)
 {
     pid_t   pid;
 
     if ((pid = fork()) < 0)
     {
         printf("Error: fork failed\n");
-        return (ft_free_cmds(cmds));
+        ft_free_cmds(cmds);
+        return (-1);
     }
     if (pid == 0)
     {
         if (!ft_execve_cmd(cmds[0], cmds, envp))
         {
             printf("Error: execution failed\n");
-            return (ft_free_cmds(cmds));
+            ft_free_cmds(cmds);
+            return (-1);
         }
+        exit(0);
     }
-    ft_free_cmd_elem(cmds[0]);
-    waitpid(pid, 0, 0);
-    return (&cmds[1]);
+    else
+    {
+        ft_free_cmd_elem(cmds[0]);
+        waitpid(pid, 0, 0);
+        return (1);
+    }
 }
 
-t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char **envp)
+int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char **envp)
 {
     int     pipefd[pipes * 2];
     // int pipefd[pipes][2] // can change to that type - it is clearer
@@ -247,12 +246,14 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
     if (pipe(pipefd) < 0)
     {
         printf("Error: pipe failed\n");
-        return (ft_free_cmds(cmds));
+        ft_free_cmds(cmds);
+        return (-1);
     }
     if ((pid = fork()) < 0)
     {
         printf("Error: fork failed\n");
-        return (ft_free_cmds(cmds));
+        ft_free_cmds(cmds);
+        return (-1);
     }
     if (pid == 0)
     {
@@ -262,7 +263,8 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
             if ((fd = open(cmds[j + 1]->str, O_RDONLY)) == -1)
             {
                 printf("Error: open failed\n");
-                return (ft_free_cmds(cmds));
+                ft_free_cmds(cmds);
+                return (-1); // Нужно послать сигнал в Parent (kill?), чтобы в parent-e проверить и сделать free, если нужно
             }
             dup2(fd, 0); // now input is from the file
             close(fd);
@@ -271,11 +273,15 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
         dup2(pipefd[1], STDOUT_FILENO);
         close(pipefd[1]);
         if (!ft_execve_cmd(cmds[j], cmds, envp)) // if execve returns NULL
-            return (ft_free_cmds(cmds));
-        exit(0); // !!!!!!!! добавить везде в child-ах
+        {
+            ft_free_cmds(cmds);
+            return (-1); // Нужно послать сигнал в Parent (kill?), чтобы в parent-e проверить и сделать free, если нужно
+        }
+        exit(0);
     }
     else
     {
+        waitpid(pid, 0, 0);
         // Parent
         j++;
         if (input_from_file == 1) // to skip the second argument ("< filename")
@@ -290,12 +296,14 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
         if (pipe(pipefd + i) < 0)
         {
             printf("Error: pipe failed\n");
-            return (ft_free_cmds(cmds));
+            ft_free_cmds(cmds);
+            return (-1);
         }
         if ((pid = fork()) < 0)
         {
             printf("Error: fork failed\n");
-            return (ft_free_cmds(cmds));
+            ft_free_cmds(cmds);
+            return (-1);
         }
         if (pid == 0)
         {
@@ -307,12 +315,16 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
             dup2(pipefd[i + 1], STDOUT_FILENO); // copy new pipe write end
             close(pipefd[i + 1]);
             if (!ft_execve_cmd(cmds[j], cmds, envp))
-                return (ft_free_cmds(cmds)); // освободится лишь в child-е
+            {
+                ft_free_cmds(cmds); // освободится лишь в child-е. Может в этом нет смысла?
+                return (-1);
+            }
             exit(0);
         }
         else
         {
             // Parent
+            waitpid(pid, 0, 0);
             j++;
             i += 2;
             pipes--;
@@ -324,27 +336,30 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
         if ((pid = fork()) < 0)
         {
             printf("Error: fork failed\n");
-            return (ft_free_cmds(cmds));
+            ft_free_cmds(cmds);
+            return (-1);
         }
         if (pid == 0)
         {
             // Child
-            if (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD)
+            if (cmds[j + 1]->cmd != END && (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD)) // IMPORTANT!!!!! 1st ARGUMENT! Check everywhere
             {
                 if (cmds[j + 1]->status == RFWS) // for >
                 {
-                    if ((fd = open(cmds[j + 1]->str, O_CREAT | O_WRONLY | O_TRUNC | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
+                    if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_TRUNC | O_CREAT | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
                     {
                         printf("Error: open failed\n");
-                        return (ft_free_cmds(cmds));
+                        ft_free_cmds(cmds);
+                        return (-1);
                     }
                 }
                 else if (cmds[j + 1]->status == RFWD) // for >>
                 {
-                    if ((fd = open(cmds[j + 1]->str, O_CREAT | O_WRONLY | O_APPEND | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
+                    if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_APPEND | O_CREAT | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
                     {
                         printf("Error: open failed\n");
-                        return (ft_free_cmds(cmds));
+                        ft_free_cmds(cmds);
+                        return (-1);
                     }
                 }
                 dup2(fd, 1);
@@ -354,12 +369,16 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
             dup2(pipefd[i - 2], STDIN_FILENO); // reads from last pipe read end
             close(pipefd[i - 2]);
             if (!ft_execve_cmd(cmds[j], cmds, envp))
-                return (ft_free_cmds(cmds)); // Это будет только в ребенке!!! Нужно ли это вообще проверять?
+            {
+                ft_free_cmds(cmds); // Нужно подать сигнал о неудаче родителю!
+                return (-1);
+            }
             exit(0);
         }
         else
         {
-            if (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD)
+            // waitpid(pid, 0, 0);
+            if (cmds[j + 1]->cmd != END && (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD))
                 j++;
             i--; // вернул индекс на последний элемент масссива pipefd[]
             while (i >= 0)
@@ -374,13 +393,13 @@ t_cmd   **ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, ch
                 ft_free_cmd_elem(cmds[j]);
                 j--;
             }
-            return (&cmds[i + 1]);
+            return (i + 1);
         }
     }
     return NULL;// add GJ because compilation warning
 }
 
-t_cmd   **ft_execute_with_redir(t_cmd **cmds, char **envp)
+int     ft_execute_with_redir(t_cmd **cmds, char **envp)
 {
     int     fd;
     int     i;
@@ -391,39 +410,43 @@ t_cmd   **ft_execute_with_redir(t_cmd **cmds, char **envp)
     if ((pid = fork()) < 0)
     {
         printf("Error: fork failed\n");
-        return (ft_free_cmds(cmds));
+        ft_free_cmds(cmds);
+        return (-1);
     }
     if (pid == 0)
     {
         // Child
-        if (cmds[j + 1]->status == RBWS)
+        if (cmds[j + 1]->cmd != END && cmds[j + 1]->status == RBWS)
         {
             if ((fd = open(cmds[j + 1]->str, O_RDONLY)) == -1)
             {
                 printf("Error: open failed\n");
-                return (ft_free_cmds(cmds));
+                ft_free_cmds(cmds);
+                return (-1);
             }
             dup2(fd, 0);
             close(fd);
             j++;
         }
-        if (cmds[j + 1]->status == RFWS)
+        if (cmds[j + 1]->cmd != END && cmds[j + 1]->status == RFWS)
         {
-            if ((fd = open(cmds[j + 1]->str, O_CREAT | O_TRUNC | O_WRONLY | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
+            if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_TRUNC | O_CREAT | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
             {
                 printf("Error: open failed\n");
-                return (ft_free_cmds(cmds));
+                ft_free_cmds(cmds);
+                return (-1);
             }
             dup2(fd, 1);
             close(fd);
             j++; // there is no scense in doing it here
         }
-        else if (cmds[j + 1]->status == RFWD)
+        else if (cmds[j + 1]->cmd != END && cmds[j + 1]->status == RFWD)
         {
-            if ((fd = open(cmds[j + 1]->str, O_CREAT | O_APPEND | O_WRONLY | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
+            if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_APPEND | O_CREAT | S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
             {
                 printf("Error: open failed\n");
-                return (ft_free_cmds(cmds));
+                ft_free_cmds(cmds);
+                return (-1);
             }
             dup2(fd, 1);
             close(fd);
@@ -432,15 +455,16 @@ t_cmd   **ft_execute_with_redir(t_cmd **cmds, char **envp)
         if (!(ft_execve_cmd(cmds[0], cmds, envp)))
         {
             printf("Error: execution failed\n");
-            return (ft_free_cmds(cmds));
+            ft_free_cmds(cmds);
+            return (-1);
         }
         exit(0);
     }
     else
     {
-        if (cmds[j + 1]->status == RBWS)
+        if (cmds[j + 1]->cmd != END && cmds[j + 1]->status == RBWS)
             j++;
-        if (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD)
+        if (cmds[j + 1]->cmd != END && (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD))
             j++;
         waitpid(pid, 0, 0);
         i = j; // save i position
@@ -449,7 +473,7 @@ t_cmd   **ft_execute_with_redir(t_cmd **cmds, char **envp)
             ft_free_cmd_elem(cmds[j]);
             j--;
         }
-        return (&cmds[i + 1]);
+        return (i + 1);
     }
 }
 
@@ -489,7 +513,7 @@ int     ft_check_redirection(t_cmd **cmds)
     return (0);
 }
 
-t_cmd    **ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees executed cmds and moves the cmd pointer
+int     ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees executed cmds and moves the cmd pointer
 {
     int     i;
     int     pipes;
@@ -497,28 +521,27 @@ t_cmd    **ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees ex
 
     i = 0;
     input_from_file = 0;
-    if (cmds[i + 1]->status == RBWS) // check for the case "cmd < file | cmd ..."
+    if (cmds[i + 1]->cmd != END && cmds[i + 1]->status == RBWS) // check for the case "cmd < file | cmd ..."
         input_from_file = 1;
     if ((pipes = ft_check_pipes(cmds, input_from_file)) > 0)
     {
-        if (!(cmds = ft_execute_with_pipes(cmds, pipes, input_from_file, envp)))
-            return (NULL);
+        if ((i = ft_execute_with_pipes(cmds, pipes, input_from_file, envp)) == -1)
+            return (-1);
     }
     else if (ft_check_redirection(cmds))
     {
-        if (!(cmds = ft_execute_with_redir(cmds, envp)))
-            return (NULL);
+        if ((i = ft_execute_with_redir(cmds, envp)) == -1)
+            return (-1);
     }
     else
     {
-        if (!(cmds = ft_simple_execute(cmds, envp)))
-            return (NULL);
+        if ((i = ft_simple_execute(cmds, envp)) == -1)
+            return (-1);
     }
-    return (cmds);
+    return (i);
 }
 
 /*
-
 char    *ft_strdup(char *str) // for testing
 {
     char    *new;
@@ -542,43 +565,71 @@ char    *ft_strdup(char *str) // for testing
 int     main(int argc, char **argv, char **envp) // for testing
 {
     t_cmd   **cmds;
+    int     i;
     // grep test < newtest | cat -e
     // ls | cat -e | cat -e | cat -e
     // grep test < newtest | cat -e > file
 
-    cmds = malloc(sizeof(t_cmd *) * 4);
+    i = 0; // cmds counter;
+    cmds = malloc(sizeof(t_cmd *) * 3);
     cmds[0] = malloc(sizeof(t_cmd) * 1);
     cmds[1] = malloc(sizeof(t_cmd) * 1);
     cmds[2] = malloc(sizeof(t_cmd) * 1);
-    cmds[3] = malloc(sizeof(t_cmd) * 1);
-    cmds[4] = malloc(sizeof(t_cmd) * 1);
+    // cmds[3] = malloc(sizeof(t_cmd) * 1);
+    // cmds[4] = malloc(sizeof(t_cmd) * 1);
     // cmds[5] = malloc(sizeof(t_cmd) * 1);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> c9e05ad684c533de9e660f5ccab88e863285cb60
     // Command not found - treats not right! - double free or corruption (fasttop) !!!! FIX IT
     // Program hangs out after multiple pipes - FIX IT // done
     // Check execute_with_redir - fix all like in execute_with_pipes // done
     // when redir with pipes (> or >>) permissions are --- -wx --- and with existed file: Error: open failed
 
-    cmds[0]->cmd = UNKNOWN;
+    // Programm hangs out after pwd | cat -e
+    // Segfault after pwd | cat -e | cat -e
+
+    // EXPORT, UNSET & EXIT нужно делать в parent?
+
+    cmds[0]->cmd = ECHO;
     cmds[0]->status = NONE;
-    cmds[0]->str = ft_strdup("grep test");
+    cmds[0]->str = ft_strdup("Hello, World!");
+
+    // cmds[1]->cmd = UNKNOWN;
+    // cmds[1]->status = RBWS;
+    // cmds[1]->str = ft_strdup("newtest");
 
     cmds[1]->cmd = UNKNOWN;
-    cmds[1]->status = RBWS;
-    cmds[1]->str = ft_strdup("newtest");
-
+    cmds[1]->status = PIPE;
+    cmds[1]->str = ft_strdup("cat -e");
+    
     // cmds[2]->cmd = UNKNOWN;
     // cmds[2]->status = PIPE;
     // cmds[2]->str = ft_strdup("cat -e");
 
-    cmds[2]->cmd = UNKNOWN;
-    cmds[2]->status = RFWD;
-    cmds[2]->str = ft_strdup("file");
+    // cmds[2]->cmd = UNKNOWN;
+    // cmds[2]->status = RFWD;
+    // cmds[2]->str = ft_strdup("file");
 
-    cmds[3]->cmd = END;
+    cmds[2]->cmd = END;
 
-    ft_execute(cmds, envp);
+    while ((cmds[i])->cmd != END)
+    {
+        if ((i = ft_execute(cmds, envp)) == -1)
+        {
+            return (-1);
+        }
+    }
+
+    while (cmds[i]->cmd != END)
+    {
+        ft_free_cmd_elem(cmds[i]);
+        i++;
+    }
+    free(cmds[i]);
+    free(cmds);
     return (0);
 }
 */

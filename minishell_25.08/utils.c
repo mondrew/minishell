@@ -53,7 +53,6 @@ int skip_non_printable(char *str)
 	return (i);
 }
 
-/*
 int		start_with_nospace(char *str, char *con) // made by mondrew
 {
 	int		i;
@@ -67,12 +66,12 @@ int		start_with_nospace(char *str, char *con) // made by mondrew
 			return (0);
 		i++;
 	}
-	if (str[i] == '=' && con[i] == '\0') // I guess it is important
+	if (str[i] == '=' && con[i] == '\0')
 		return (1);
 	return (0);
 }
-*/
 
+/*
 int start_with_nospace(char *str, char *con) // it is strncmp (mondrew) | что делает эта функция??
 												// проверяет, совпадает ли имя переменной со списком переменных?
 												// Тогда совпадение будет, когда в строке из списка переменных будет '=',
@@ -91,7 +90,7 @@ int start_with_nospace(char *str, char *con) // it is strncmp (mondrew) | что
 	}
 	return (1);
 }
-
+*/
 
 int start_with(char *str, char *con) // it is strncmp, isn't it? (mondrew)
 {
