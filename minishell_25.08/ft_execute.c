@@ -541,7 +541,7 @@ int     ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees execu
     return (i);
 }
 
-
+/*
 char    *ft_strdup(char *str) // for testing
 {
     char    *new;
@@ -580,9 +580,6 @@ int     main(int argc, char **argv, char **envp) // for testing
     // cmds[5] = malloc(sizeof(t_cmd) * 1);
 
     // Command not found - treats not right! - double free or corruption (fasttop) !!!! FIX IT
-    // Program hangs out after multiple pipes - FIX IT // done
-    // Check execute_with_redir - fix all like in execute_with_pipes // done
-    // when redir with pipes (> or >>) permissions are --- -wx --- and with existed file: Error: open failed
 
     // Programm hangs out after pwd | cat -e
     // Segfault after pwd | cat -e | cat -e
@@ -628,3 +625,4 @@ int     main(int argc, char **argv, char **envp) // for testing
     free(cmds);
     return (0);
 }
+*/
