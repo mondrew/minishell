@@ -192,7 +192,8 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
             if (paths[i] == NULL)
             {
                 // Command not found
-                printf(":command not found %d\n", errno); // add name of the error
+                printf("%s: command not found\n", command); // add name of the error
+                array[0] = command; // Recovet array[0]
                 ft_free_split(paths);
                 return (ft_free_split(array));
             }
@@ -217,7 +218,7 @@ int     ft_simple_execute(t_cmd **cmds, char **envp)
     {
         if (!ft_execve_cmd(cmds[0], cmds, envp))
         {
-            printf("Error: execution failed\n");
+            //printf("Error: execution failed\n");
             ft_free_cmds(cmds);
             return (-1);
         }
@@ -572,16 +573,17 @@ int     main(int argc, char **argv, char **envp) // for testing
     // grep test < newtest | cat -e > file
 
     i = 0; // cmds counter;
-    cmds = malloc(sizeof(t_cmd *) * 5);
+    cmds = malloc(sizeof(t_cmd *) * 2);
     cmds[0] = malloc(sizeof(t_cmd) * 1);
     cmds[1] = malloc(sizeof(t_cmd) * 1);
-    cmds[2] = malloc(sizeof(t_cmd) * 1);
-    cmds[3] = malloc(sizeof(t_cmd) * 1);
-    cmds[4] = malloc(sizeof(t_cmd) * 1);
+    // cmds[2] = malloc(sizeof(t_cmd) * 1);
+    // cmds[3] = malloc(sizeof(t_cmd) * 1);
+    // cmds[4] = malloc(sizeof(t_cmd) * 1);
     // cmds[5] = malloc(sizeof(t_cmd) * 1);
 
-    // 1. Command not found - treats not right! - double free or corruption (fasttop) !!!! FIX IT
+    // 1. Command not found - treats not right! - double free or corruption (fasttop) !!!! FIX IT // done
     // 2. If "Command not found" - I should not do pipes??? check
+    // 2.1 If command not found > redirection - I create empty file and print "Command not found" at the STDOUT
     // 3. CD, EXPORT, UNSET & EXIT нужно сделать в parent
 
     cmds[0]->cmd = UNKNOWN;
@@ -592,23 +594,23 @@ int     main(int argc, char **argv, char **envp) // for testing
     // cmds[1]->status = RBWS;
     // cmds[1]->str = ft_strdup("newtest");
 
-    cmds[1]->cmd = UNKNOWN;
-    cmds[1]->status = PIPE;
-    cmds[1]->str = ft_strdup("cat -e");
+    // cmds[1]->cmd = UNKNOWN;
+    // cmds[1]->status = PIPE;
+    // cmds[1]->str = ft_strdup("cat -e");
 
-    cmds[2]->cmd = UNKNOWN;
-    cmds[2]->status = PIPE;
-    cmds[2]->str = ft_strdup("cat -e");
+    // cmds[2]->cmd = UNKNOWN;
+    // cmds[2]->status = PIPE;
+    // cmds[2]->str = ft_strdup("cat -e");
 
-    cmds[3]->cmd = UNKNOWN;
-    cmds[3]->status = PIPE;
-    cmds[3]->str = ft_strdup("cat -e");
+    // cmds[3]->cmd = UNKNOWN;
+    // cmds[3]->status = PIPE;
+    // cmds[3]->str = ft_strdup("cat -e");
 
     // cmds[2]->cmd = UNKNOWN;
     // cmds[2]->status = RFWD;
     // cmds[2]->str = ft_strdup("file");
 
-    cmds[4]->cmd = END;
+    cmds[1]->cmd = END;
 
     while ((cmds[i])->cmd != END)
     {
