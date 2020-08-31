@@ -229,6 +229,7 @@ int     ft_simple_execute(t_cmd **cmds, char **envp)
         waitpid(pid, 0, 0);
         return (1);
     }
+    return (1);
 }
 
 int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char **envp)
@@ -272,16 +273,16 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
         close(pipefd[0]);
         dup2(pipefd[1], STDOUT_FILENO);
         close(pipefd[1]);
-        if (!ft_execve_cmd(cmds[j], cmds, envp)) // if execve returns NULL
+        if (!ft_execve_cmd(cmds[j], cmds, envp)) // if execve returns NULL .. Был !
         {
             ft_free_cmds(cmds);
             return (-1); // Нужно послать сигнал в Parent (kill?), чтобы в parent-e проверить и сделать free, если нужно
         }
-        exit(0);
+        exit(0); // 
     }
     else
     {
-        waitpid(pid, 0, 0);
+        waitpid(pid, 0, 0); // &wstatus
         // Parent
         j++;
         if (input_from_file == 1) // to skip the second argument ("< filename")
@@ -314,20 +315,25 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             close(pipefd[i]); // close new pipe read end
             dup2(pipefd[i + 1], STDOUT_FILENO); // copy new pipe write end
             close(pipefd[i + 1]);
-            if (!ft_execve_cmd(cmds[j], cmds, envp))
+            if (!ft_execve_cmd(cmds[j], cmds, envp)) // был !
             {
                 ft_free_cmds(cmds); // освободится лишь в child-е. Может в этом нет смысла?
                 return (-1);
             }
-            exit(0);
+            exit(0); // до сюда при успешном execve даже не дойдет. Проблема 100% в ft_execve_cmd, т.к. он должен посылать сигнал
+                    // о завершении работы.
         }
         else
         {
             // Parent
-            waitpid(pid, 0, 0);
+            close(pipefd[i - 2]);
+            close(pipefd[i - 1]);
+            // close(pipefd[0]);
+            // close(pipefd[1]);
+            waitpid(pid, 0, 0); // &wstatus
             j++;
             i += 2;
-            pipes--;
+            pipes--;   
         }
     }
     // This is the last after-pipe
@@ -342,7 +348,7 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
         if (pid == 0)
         {
             // Child
-            if (cmds[j + 1]->cmd != END && (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD)) // IMPORTANT!!!!! 1st ARGUMENT! Check everywhere
+            if (cmds[j + 1]->cmd != END && (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD))
             {
                 if (cmds[j + 1]->status == RFWS) // for >
                 {
@@ -368,25 +374,20 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             close(pipefd[i - 1]); // close last pipe OUT
             dup2(pipefd[i - 2], STDIN_FILENO); // reads from last pipe read end
             close(pipefd[i - 2]);
-            if (!ft_execve_cmd(cmds[j], cmds, envp))
+            if (!ft_execve_cmd(cmds[j], cmds, envp)) // должен делать exit(0) в случае успеха
             {
                 ft_free_cmds(cmds); // Нужно подать сигнал о неудаче родителю!
                 return (-1);
             }
-            exit(0);
+            exit(0); // exit(1) в случае неудачи
         }
         else
         {
-            // waitpid(pid, 0, 0);
             if (cmds[j + 1]->cmd != END && (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD))
                 j++;
-            i--; // вернул индекс на последний элемент масссива pipefd[]
-            while (i >= 0)
-            {
-                close(pipefd[i]);
-                i--;
-            }
-            waitpid(-1, 0, 0); // parent waits for all childs
+            close(pipefd[i - 2]);
+            close(pipefd[i - 1]);
+            waitpid(pid, 0, 0); // This is VERY important! Firstly close fds then wait for child // &wstatus
             i = j; // save j index
             while (j >= 0)
             {
@@ -396,7 +397,7 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             return (i + 1);
         }
     }
-    return (0);// add GJ because compilation warning
+    return (0);
 }
 
 int     ft_execute_with_redir(t_cmd **cmds, char **envp)
@@ -571,42 +572,43 @@ int     main(int argc, char **argv, char **envp) // for testing
     // grep test < newtest | cat -e > file
 
     i = 0; // cmds counter;
-    cmds = malloc(sizeof(t_cmd *) * 3);
+    cmds = malloc(sizeof(t_cmd *) * 5);
     cmds[0] = malloc(sizeof(t_cmd) * 1);
     cmds[1] = malloc(sizeof(t_cmd) * 1);
     cmds[2] = malloc(sizeof(t_cmd) * 1);
-    // cmds[3] = malloc(sizeof(t_cmd) * 1);
-    // cmds[4] = malloc(sizeof(t_cmd) * 1);
+    cmds[3] = malloc(sizeof(t_cmd) * 1);
+    cmds[4] = malloc(sizeof(t_cmd) * 1);
     // cmds[5] = malloc(sizeof(t_cmd) * 1);
 
-    // Command not found - treats not right! - double free or corruption (fasttop) !!!! FIX IT
+    // 1. Command not found - treats not right! - double free or corruption (fasttop) !!!! FIX IT
+    // 2. If "Command not found" - I should not do pipes??? check
+    // 3. CD, EXPORT, UNSET & EXIT нужно сделать в parent
 
-    // Programm hangs out after pwd | cat -e
-    // Segfault after pwd | cat -e | cat -e
-
-    // EXPORT, UNSET & EXIT нужно делать в parent?
-
-    cmds[0]->cmd = ECHO;
+    cmds[0]->cmd = UNKNOWN;
     cmds[0]->status = NONE;
-    cmds[0]->str = ft_strdup("Hello World!");
+    cmds[0]->str = ft_strdup("elfsf");
 
     // cmds[1]->cmd = UNKNOWN;
     // cmds[1]->status = RBWS;
     // cmds[1]->str = ft_strdup("newtest");
 
     cmds[1]->cmd = UNKNOWN;
-    cmds[1]->status = RFWD;
-    cmds[1]->str = ft_strdup("file1.txt");
+    cmds[1]->status = PIPE;
+    cmds[1]->str = ft_strdup("cat -e");
 
-    // cmds[2]->cmd = UNKNOWN;
-    // cmds[2]->status = PIPE;
-    // cmds[2]->str = ft_strdup("cat -e");
+    cmds[2]->cmd = UNKNOWN;
+    cmds[2]->status = PIPE;
+    cmds[2]->str = ft_strdup("cat -e");
+
+    cmds[3]->cmd = UNKNOWN;
+    cmds[3]->status = PIPE;
+    cmds[3]->str = ft_strdup("cat -e");
 
     // cmds[2]->cmd = UNKNOWN;
     // cmds[2]->status = RFWD;
     // cmds[2]->str = ft_strdup("file");
 
-    cmds[2]->cmd = END;
+    cmds[4]->cmd = END;
 
     while ((cmds[i])->cmd != END)
     {
@@ -615,7 +617,6 @@ int     main(int argc, char **argv, char **envp) // for testing
             return (-1);
         }
     }
-
     while (cmds[i]->cmd != END)
     {
         ft_free_cmd_elem(cmds[i]);
