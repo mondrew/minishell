@@ -147,7 +147,10 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
         start_pwd(cmds->str);
     }
 	else if (cmds->cmd == ECHO)
-		start_echo(cmds->str, envp);
+    {
+		if ((start_echo(cmds->str, envp)) == -1)
+            return (0);
+    }
 	else if (cmds->cmd == CD)
 		start_cd(cmds->str, envp);
 	else if (cmds->cmd == EXPORT)
@@ -573,7 +576,7 @@ int     main(int argc, char **argv, char **envp) // for testing
     // grep test < newtest | cat -e > file
 
     i = 0; // cmds counter;
-    cmds = malloc(sizeof(t_cmd *) * 2);
+    cmds = malloc(sizeof(t_cmd *) * 3);
     cmds[0] = malloc(sizeof(t_cmd) * 1);
     cmds[1] = malloc(sizeof(t_cmd) * 1);
     // cmds[2] = malloc(sizeof(t_cmd) * 1);
@@ -586,9 +589,10 @@ int     main(int argc, char **argv, char **envp) // for testing
     // 2.1 If command not found > redirection - I create empty file and print "Command not found" at the STDOUT
     // 3. CD, EXPORT, UNSET & EXIT нужно сделать в parent
 
-    cmds[0]->cmd = UNKNOWN;
+    cmds[0]->cmd = CD;
     cmds[0]->status = NONE;
-    cmds[0]->str = ft_strdup("elfsf");
+    cmds[0]->str = ft_strdup("../");
+    //printf("RES: %s\n", cmds[0]->str);
 
     // cmds[1]->cmd = UNKNOWN;
     // cmds[1]->status = RBWS;

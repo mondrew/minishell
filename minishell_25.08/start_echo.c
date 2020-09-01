@@ -3,21 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   start_echo.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:03:37 by gjessica          #+#    #+#             */
-/*   Updated: 2020/07/29 08:36:50 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/01 12:02:18 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int start_echo(char *line, char **envr)
+int start_echo(char *line, char **envr) // done
 {
 	char *prt;
 
 	prt = ft_strdup((line + skip_whitespace(line)));
-	correct_echo_msg(&prt, envr);
+	if (!(prt = correct_echo_msg(&prt, envr)))
+	{
+		printf("Error: echo failed\n");
+		return (-1);
+	}
 	if (start_with(prt, "-n"))
 		ft_putstr((prt + 2 + skip_whitespace(prt)));
 	else

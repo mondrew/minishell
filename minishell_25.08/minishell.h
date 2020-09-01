@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/29 17:24:28 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/01 11:34:35 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ char	**ft_split(char const *s, char c);
 char 	*correct_echo_msg(char **str, char **envr);
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
+size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 int     check_cmd_status(char *line);
 int		ft_execute(t_cmd **cmds, char **envp);
 t_cmd   **ft_free_cmds(t_cmd **cmds);

@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   echo_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/07/27 22:29:06 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/01 13:35:49 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
 char	*remove_bad_quotes(char *str) // version made by mondrew. Seems it works
 {
 	char	*new;
@@ -59,8 +58,8 @@ char	*remove_bad_quotes(char *str) // version made by mondrew. Seems it works
 	new[j] = '\0';
 	return (new);
 }
-*/
 
+/*
 char *remove_bad_quotes(char *str) // I've done my version (mondrew)
 {
 	char *res;
@@ -102,20 +101,20 @@ char *remove_bad_quotes(char *str) // I've done my version (mondrew)
 	str[j] = '\0'; // may be res[j] = '\0' (mondrew)
 	return (str); // may be return (res) (mondrew)
 }
+*/
 
-/*
-char	*get_path_name(char *str) // version made by mondrew
+char	*get_path_name(char *str) // version made by mondrew // edited 01/09/2020
 {
 	int		i;
 	char	*var;
 
 	i = 0;
-	while (str[i] != ' ')
+	while (str[i] != ' ' && str[i] != '"' && str[i] != '\'')
 		i++;
 	if (!(var = malloc(sizeof(char) * (i + 1))))
 		return (NULL);
 	i = 0;
-	while (str[i] != ' ')
+	while (str[i] != ' ' && str[i] != '"' && str[i] != '\'')
 	{
 		var[i] = str[i];
 		i++;
@@ -123,8 +122,8 @@ char	*get_path_name(char *str) // version made by mondrew
 	var[i] = '\0';
 	return (var); // should be free !
 }
-*/
 
+/*
 char *get_path_name(char *str) // что она делает? возвращает путь или возвращает ИМЯ переменной среды (например HOME)?
 {
 	int i;
@@ -134,8 +133,151 @@ char *get_path_name(char *str) // что она делает? возвращае
 		i++;
 	return ft_substr(str, 1, i - 1); // you didn't check return on NULL (mondrew)
 }
+*/
 
+char	*ft_strjoin_free_both(char *s1, char *s2)
+{
+	int		i;
+	int		j;
+	char	*new;
 
+	i = 0;
+	j = 0;
+	if (!(new = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1))))
+	{
+		free(s1);
+		free(s2);
+		return (NULL);
+	}
+	while (s1[i] != '\0')
+	{
+		new[i] = s1[i];
+		i++;
+	}
+	free(s1);
+	while (s2[j] != '\0')
+	{
+		new[i] = s2[j];
+		i++;
+		j++;
+	}
+	new[i] = '\0';
+	free(s2);
+	return (new);
+}
+
+char	*change_envs(char *str, char **envr) // mondrew 01.09.2020 // done
+{
+	int		i;
+	int		j;
+	int		k;
+	int		single_quote;
+	int		double_quote;
+	char	*res;
+	char	*tmp;
+	char	*param;
+
+	// На Linux если пишешь echo $fiuehf, где fiuehf - несуществующая переменная среды,
+	// печатается пустая строка, т.е. str = "". Как на маке - не знаю
+
+	// изначатьно res = strdup("");
+	// цикл :
+	// алгоритм: посчитать знаки $, выделить память под то, что до
+	// В param поместить значение переменной окружения или пустую строку ""
+	// strjoin_free_left
+	// пропускаем $environname
+	// повторяем цикл
+
+	i = 0;
+	single_quote = 0;
+	double_quote = 0;
+	if (!(res = ft_strdup("")))
+	{
+		printf("Malloc failed\n");
+		return (NULL);
+	}
+	while (str[i] != '\0')
+	{
+		k = i;
+		while (str[i] != '$' && str[i] != '\0')
+		{
+			// It can be one variable "quotes"
+			if (str[i] == '\'')
+			{
+				if (single_quote)
+					single_quote = 0;
+				else if (double_quote)
+					single_quote = 2; // "dsfds '$HOME' efewf"
+				else
+					single_quote = 1;
+			}
+			else if (str[i] == '"')
+			{
+				if (double_quote)
+					double_quote = 0;
+				else if (single_quote)
+					double_quote = 2; // 'dsfds "$HOME" efewf'
+				else
+					double_quote = 1;
+			}
+			i++;
+		}
+		if (!(tmp = malloc(sizeof(char) * (i + 1))))
+		{
+			printf("Malloc failed\n");
+			free(res);
+			return (NULL);
+		}
+		//tmp = ft_strlcpy(tmp, &str[k], i);
+		j = 0;
+		while (str[k] != '$' && str[k] != '\0')
+		{
+			tmp[j] = str[k];
+			j++;
+			k++;
+		}
+		tmp[j] = '\0';
+		if (!(res = ft_strjoin_free_both(res, tmp)))
+			return (NULL);
+		if (str[i] == '$' && (double_quote == 1 || (!double_quote && !single_quote)))
+		{
+			i++;
+			if (!(tmp = get_path_name(&str[i])))
+			{
+				free(res);
+				return (NULL);
+			}
+			if (!(param = get_line_env(envr, tmp)))
+			{
+				if (!(param = ft_strdup("")))
+				{
+					printf("Malloc failed\n");
+					free(res);
+					free(tmp);
+					return (NULL);
+				}
+				free(tmp);
+			}
+			if (!(res = ft_strjoin_free_left(res, param + 5)))
+				return (NULL);
+			while ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z') || \
+					(str[i] >= '0' && str[i] <= '9') || str[i] == '_')
+				i++;
+		}
+		else
+		{
+			if (!(res = ft_strjoin_free_left(res, "$")))
+			{
+				printf("Malloc failed\n");
+				return (NULL);
+			}
+			i++;
+		}
+	}
+	return (res);
+}
+
+/*
 char *change_envs(char *str, char **envr) // эта функция заменяет (например) $HOME на /path_to_home_dir/ ?
 {
 	int i;
@@ -164,18 +306,23 @@ char *change_envs(char *str, char **envr) // эта функция заменя�
 	res[i] = '\0'; // зачем? ft_strjoin нуль-терминирует строку
 	return res;
 }
+*/
 
-char *correct_echo_msg(char **str, char **envr)
+char	*correct_echo_msg(char **str, char **envr)
 {
 	char *res;
-
-	res = remove_bad_quotes(*str); // you need to check if return value is not NULL (because of malloc in remove_bad_quotes) (mondrew)
-	res = change_envs(res, envr); // if you do so => you should free previous res
+	
+	if (!(res = change_envs(*str, envr))) // if you do so => you should free previous res
+	{
+		free(*str);
+		return (NULL);
+	}
+	if (!(res = remove_bad_quotes(res))) // you need to check if return value is not NULL (because of malloc in remove_bad_quotes) (mondrew)
+	{
+		free(*str);
+		return (NULL);
+	}
 	free(*str);
 	*str = res;
-
-	return res;
-
-
-
+	return (res);
 }

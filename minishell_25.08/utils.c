@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:30:44 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/28 09:30:41 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/01 11:53:21 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,11 @@ char *get_line_env(char **env, char *param) // В отдельный файл. �
 {
 	while (*env)
 	{
-	//	printf("%s\n", *env);
 		if (start_with_nospace(*env, param))
 			return (*env);
 		env++;
 	}
-	return NULL;
+	return (NULL);
 }
 
 int ft_putstr(char *s)
@@ -66,7 +65,7 @@ int		start_with_nospace(char *str, char *con) // made by mondrew
 			return (0);
 		i++;
 	}
-	if (str[i] == '=' && con[i] == '\0')
+	if (str[i] == '=' && (con[i] == ' ' || con[i] == '$' || con[i] == '\0')) // edited by mondrew 01/09/2020 echo eiufh$HOME$HOME
 		return (1);
 	return (0);
 }
