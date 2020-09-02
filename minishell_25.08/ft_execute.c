@@ -151,6 +151,11 @@ int     ft_execute_in_parent(t_cmd **cmds, char ***envp)
 		if (!(start_unset((*cmds)->str, envp)))
             return (0);
     }
+    else if ((*cmds)->cmd == EXIT)
+    {
+        ft_free_cmds(*cmds);
+        exit(0);
+    }
     return (1);
 }
 
@@ -550,7 +555,8 @@ int     ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees execu
         input_from_file = 1;
     // If there are pipes with CD command -> Just go to the ft_execute_with_pipes and it does nothing
     // If there is redirection with CD command -> Do "cd ~" in Parent and create empty file (> or >>) or do nothing (<)
-    if ((cmds[i]->cmd == CD || cmds[i]->cmd == EXPORT || cmds[i]->cmd == UNSET) && (cmds[i + 1]->cmd == END))
+    if ((cmds[i]->cmd == CD || cmds[i]->cmd == EXPORT || cmds[i]->cmd == UNSET 
+        ||cmds[i]->cmd == EXIT) && (cmds[i + 1]->cmd == END))
     {
         if ((i = ft_execute_in_parent(cmds, &envp)) == -1)
             return (-1);
