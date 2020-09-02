@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_unset.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/18 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/08/25 20:52:54 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/02 12:34:20 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	**ft_new_env_arr(char ***old, int i) // made by mondrew
 	j = 0;
 	while ((*old)[k] != NULL)
 	{
-		if (k == i)
+		if (k != i)
 		{
 			if (!(new[j] = ft_strdup((*old)[k])))
 				return (ft_free_arr(new, j));
@@ -54,7 +54,7 @@ char	**ft_new_env_arr(char ***old, int i) // made by mondrew
 		k++;
 	}
 	new[j] = NULL;
-	ft_free_arr(*old, k);
+	//ft_free_arr(*old, k); // I should not free envp
 	return (new);
 }
 
@@ -64,10 +64,20 @@ int start_unset(char *line, char ***envp) // made by mondrew
 	char	**new;
 
 	i = 0;
-	// add skip whitespaces (mondrew)
+
+	printf("Initial:\n"); // for testing
+	while ((*envp)[i] != NULL) // for testing
+	{
+		printf("%s\n", (*envp)[i]);
+		i++;
+	}
+	i = 0; // for testing
+	
+	// add skip whitespaces (mondrew) // It's already done while parsing
+	printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 	while ((*envp)[i] != NULL)
 	{
-		if (!ft_strncmp(line, (*envp)[i], ft_strlen(line)) && *(envp[i][ft_strlen(line)]) == '=') // correct GJ
+		if (!ft_strncmp(line, (*envp)[i], ft_strlen(line)) && ((*envp)[i][ft_strlen(line)] == '=')) // correct GJ
 			break ;
 		i++;
 	}
@@ -77,5 +87,13 @@ int start_unset(char *line, char ***envp) // made by mondrew
 			return (0);
 	}
 	*envp = new;
+
+	i = 0; // for testing
+	printf("Final:\n"); // for testing
+	while ((*envp)[i] != NULL) // for testing
+	{
+		printf("%s\n", (*envp)[i]);
+		i++;
+	}
 	return(1);
 }

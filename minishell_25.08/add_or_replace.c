@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   add_or_replace.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/08/25 20:46:00 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/02 12:34:22 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ static char	**ft_replace_value(char **envp, char *value, int i)
 	return (new_arr);
 }
 
-static char **ft_add_value(char *key, char *value, char **envp)
+static char	**ft_add_value(char *key, char *value, char **envp)
 {
 	int i;
 	char **new_arr;
@@ -113,14 +113,37 @@ static char **ft_add_value(char *key, char *value, char **envp)
 			return (ft_free_array(new_arr));
 		i++;
 	}
-	if (!(temp = ft_strjoin(key, "=")))
-		return (ft_free_array(new_arr));
-	if (!(new_arr[i] = ft_strjoin(temp, value)))
+	if (value == NULL)
 	{
-		free(temp);
-		return (ft_free_array(new_arr));
+		if (!(new_arr[i] = ft_strdup(key)))
+			return (ft_free_array(new_arr));
 	}
-	free(temp);
+	else // add here strjoin_free_left (my version)
+	{
+		if (value[0] != '"')
+		{
+			if (!(temp = ft_strjoin(key, "=\"")))
+				return (ft_free_array(new_arr));
+		}
+		else if (!(temp = ft_strjoin(key, "=")))
+			return (ft_free_array(new_arr));
+		if (!(new_arr[i] = ft_strjoin(temp, value)))
+		{
+			free(temp);
+			return (ft_free_array(new_arr));
+		}
+		free(temp);
+		if (value[0] != '"')
+		{
+			temp = new_arr[i];
+			if (!(new_arr[i] = ft_strjoin(temp, "\"")))
+			{
+				free(temp);
+				return (ft_free_array(new_arr));
+			}
+			free(temp);
+		}
+	}
 	i++;
 	new_arr[i] = NULL;
 	return (new_arr);
@@ -145,7 +168,7 @@ char	**add_or_replace(char *key, char *value, char **envp)
 		if (envp[i][j] == '=' && key[j] == '\0')
 		{
 			if (!ft_strncmp(value, &envp[i][j + 1], ft_strlen(value) + 1))
-				return (ft_copy_array(envp));
+				return (ft_copy_array(envp)); // ну это точно не нужно делать, просто вернем NULL
 			else
 				return (ft_replace_value(envp, value, i));
 		}

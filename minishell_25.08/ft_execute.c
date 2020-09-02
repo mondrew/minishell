@@ -134,6 +134,26 @@ void    ft_free_cmd_elem(t_cmd *cmds)
     free(cmds);
 }
 
+int     ft_execute_in_parent(t_cmd **cmds, char ***envp)
+{
+	if ((*cmds)->cmd == CD)
+    {
+		if ((start_cd((*cmds)->str, *envp)) == -1)
+            return (0);
+    }
+	else if ((*cmds)->cmd == EXPORT)
+    {
+		if ((start_export((*cmds)->str, envp)) == -1) // not finished! // done
+            return (0);
+    }
+	else if ((*cmds)->cmd == UNSET) // done
+    {
+		if (!(start_unset((*cmds)->str, envp)))
+            return (0);
+    }
+    return (1);
+}
+
 int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
 {
     char    **array; // array for execve
@@ -155,7 +175,7 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
 		start_cd(cmds->str, envp);
 	else if (cmds->cmd == EXPORT)
     {
-		if (!(start_export(cmds->str, envp))) // not finished!
+		if (!(start_export(cmds->str, &envp))) // not finished!
             return (0);
     }
 	else if (cmds->cmd == UNSET)
@@ -528,7 +548,14 @@ int     ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees execu
     input_from_file = 0;
     if (cmds[i + 1]->cmd != END && cmds[i + 1]->status == RBWS) // check for the case "cmd < file | cmd ..."
         input_from_file = 1;
-    if ((pipes = ft_check_pipes(cmds, input_from_file)) > 0)
+    // If there are pipes with CD command -> Just go to the ft_execute_with_pipes and it does nothing
+    // If there is redirection with CD command -> Do "cd ~" in Parent and create empty file (> or >>) or do nothing (<)
+    if ((cmds[i]->cmd == CD || cmds[i]->cmd == EXPORT || cmds[i]->cmd == UNSET) && (cmds[i + 1]->cmd == END))
+    {
+        if ((i = ft_execute_in_parent(cmds, &envp)) == -1)
+            return (-1);
+    }
+    else if ((pipes = ft_check_pipes(cmds, input_from_file)) > 0)
     {
         if ((i = ft_execute_with_pipes(cmds, pipes, input_from_file, envp)) == -1)
             return (-1);
@@ -576,7 +603,7 @@ int     main(int argc, char **argv, char **envp) // for testing
     // grep test < newtest | cat -e > file
 
     i = 0; // cmds counter;
-    cmds = malloc(sizeof(t_cmd *) * 3);
+    cmds = malloc(sizeof(t_cmd *) * 2);
     cmds[0] = malloc(sizeof(t_cmd) * 1);
     cmds[1] = malloc(sizeof(t_cmd) * 1);
     // cmds[2] = malloc(sizeof(t_cmd) * 1);
@@ -589,9 +616,15 @@ int     main(int argc, char **argv, char **envp) // for testing
     // 2.1 If command not found > redirection - I create empty file and print "Command not found" at the STDOUT
     // 3. CD, EXPORT, UNSET & EXIT нужно сделать в parent
 
-    cmds[0]->cmd = CD;
+    // cmds[0]->cmd = CD;
+    // cmds[0]->status = NONE;
+    // cmds[0]->str = ft_strdup("~");
+
+    cmds[0]->cmd = UNSET;
     cmds[0]->status = NONE;
-    cmds[0]->str = ft_strdup("../");
+    // cmds[0]->str = ft_strdup("LOLO");
+    cmds[0]->str = ft_strdup("HOME");
+
     //printf("RES: %s\n", cmds[0]->str);
 
     // cmds[1]->cmd = UNKNOWN;

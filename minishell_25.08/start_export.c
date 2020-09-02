@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/26 18:42:17 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/02 12:34:21 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,9 @@ void		ft_strswap(char **strs, int i1, int i2)
 	tmp = strs[i1];
 	strs[i1] = strs[i2];
 	strs[i2] = tmp;
-
 }
 
-void sort_and_show(char **envp)
+void	sort_and_show(char **envp)
 {
 	int is_sort;
 	int i;
@@ -51,25 +50,69 @@ void sort_and_show(char **envp)
 	}
 }
 
-// void remove_key(char *key, char **envp)
-// {
-// 	//эту я написал кажется (mondrew)
-// }
+char	**parse_and_add(char *line, char **envp) // думаю тут нужно отправлять указатель на envp -> &envp
+{
+	int		i;
+	int		j;
+	char	*key;
+	char	*value;
+	char	**new_envp;
 
-// void add_or_replace(char *key, char *value, char **envp) // и эту тоже написал (mondrew)
-// {
-// 	// envp = //выглядит так
-// 	// 	PATH=ghjghjg
-// 	// 	KEY=kkljklj
-// 	// 	PATH_1=jkljlk
-// 	// 	KEY2=jknjkn
-// 	// key = z // если в списке envp нет такого ключа, тогда
-// 	// value = 123 // ему через равно без пробелов присвоить значение и добавить в конец envp
-// 	// key = PATH // если есть, то значение ключа поменять на value
+	i = 0;
+	j = 0;
+	value = NULL;
+	while (line[i] != '=' && line[i] != ' ' && line[i] != '\0')
+		i++;
+	if (!(key = malloc(sizeof(char) * (i + 1))))
+	{
+		printf("Error: not enough memory\n");
+		return (NULL);
+	}
+	ft_strlcpy(key, line, i + 1);
+	if (line[i] == ' ' || line[i] == '\0')
+	{
+		if (!(new_envp = add_or_replace(key, value, envp))) // have to return NULL
+		{
+			printf("Error: not enough memory\n");
+			free(key);
+			return (NULL);
+		}
+		return (new_envp);
+	}
+	else if (line[i] == '=' && (line[i + 1] == '\0' || line[i + 1] == ' '))
+	{
+		if (!(new_envp = add_or_replace(key, "", envp)))
+		{
+			printf("Error: not enough memory\n");
+			free(key);
+			return (NULL);
+		}
+		return (new_envp);
+	}
+	else if (line[i] == '=')
+		i++;
+	j = i;
+	while (line[i] != ' ' && line[i] != '\0')
+		i++;
+	if (!(value = malloc(sizeof(char) * (i - j + 1))))
+	{
+		printf("Error: not enough memory\n");
+		free(key);
+		return (NULL);
+	}
+	ft_strlcpy(value, &(line[j]), i - j + 1);
+	if (!(new_envp = add_or_replace(key, value, envp)))
+	{
+		printf("Error: not enough memory\n");
+		free(key);
+		free(value);
+		return (NULL);
+	}
+	return (new_envp);
+}
 
-// }
-
-int parse_and_add(char *line, char **envp)
+/*
+int		parse_and_add(char *line, char **envp)
 {
 	int i;
 	int start_key;
@@ -77,7 +120,7 @@ int parse_and_add(char *line, char **envp)
 	int end_key;
 	int end_val;
 
-	i = 0; // лишняя, можно убрать (mondrew)
+	i = 0;
 	start_key = -1;
 	start_val = -1;
 	end_key = -1;
@@ -129,24 +172,38 @@ int parse_and_add(char *line, char **envp)
 	// нужно вернуть 0, чтобы в start_export отследить этот момент!
 	return (1);
 }
+*/
 
-int start_export(char *line, char **envp)
+int		start_export(char *line, char ***envp)
 {
+	char	**new_envp;
+	// int		i; // for testing
+	
+	// i = 0; // for testing
+	// printf("Initial:\n"); // for testing
+	// while ((*envp)[i] != NULL) // for testing
+	// {
+	// 	printf("%s\n", (*envp)[i]);
+	// 	i++;
+	// }
 	if (!line || !line[skip_whitespace(line)])
 	{
-		sort_and_show(envp);
+		sort_and_show(*envp);
+		return (-1);
 	}
 	else
 	{
-		if (!(parse_and_add(line, envp)))
-			return (0);
+		if (!(new_envp = parse_and_add(line, *envp)))
+			return (-1);
 	}
-
-	// Непонятно, дописана ли эта функция
-	// В parse_and_add мы используем malloc - соответственно,
-	// должны вернуть 0 в случае ошибки
-
-
-
-	return(1);
+	//ft_free_split(*envp); // It seems like envp from main is not malloced and can't be freed
+	*envp = new_envp;
+	// i = 0; // for testing
+	// printf("Result:\n"); // for testing
+	// while ((*envp)[i] != NULL) // for testing // есть ли последний NULL
+	// {
+	// 	printf("%s\n", (*envp)[i]);
+	// 	i++;
+	// }
+	return (0);
 }

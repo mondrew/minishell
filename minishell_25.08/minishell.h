@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/01 11:34:35 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/02 12:34:24 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,14 @@ int 	start_unknown_cmd(char *line, char **env);
 int 	start_cd(char *line, char **env);
 int 	start_unset(char *line, char ***envp); // added envp (mondrew)
 int 	start_env(char *line, char **envp);
-int 	start_export(char *line, char **envp);
+int		start_export(char *line, char ***envp);
 char	*get_line_env(char **env, char *param);
 int 	ft_len_to_char(char *str, char end);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_strchr(const char *s, int c);
 char	**ft_split(char const *s, char c);
+int     ft_free_split(char **array);
 char 	*correct_echo_msg(char **str, char **envr);
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -95,7 +96,7 @@ char	**remove_key(char *key, char **envp);
 char	*ft_strjoin_free_left(char *s1, char *s2);
 char	*ft_strdup(char *str);
 char	*ft_strjoin(char const *s1, char const *s2);
-char *ft_strsdup(char *str, char *set);
+char	*ft_strsdup(char *str, char *set);
 
 /*
 * GET NEXT LINE
