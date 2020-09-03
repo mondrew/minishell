@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/01 13:35:49 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/03 18:44:26 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,6 +312,7 @@ char	*correct_echo_msg(char **str, char **envr)
 {
 	char *res;
 	
+	//if ()
 	if (!(res = change_envs(*str, envr))) // if you do so => you should free previous res
 	{
 		free(*str);
