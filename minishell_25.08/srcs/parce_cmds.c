@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 09:29:34 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/03 18:13:40 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/03 18:29:07 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ int		set_param(t_cmd **cmd, char *str, int cmd_id, int status)
 	(*cmd)->cmd = cmd_id;
 	if (!((*cmd)->str = ft_strsdup(str, "><|;")))
 		return (-1); // add treatment to the parse_cmd
-	printf("(*cmd)->cmd: %d: (*cmd)->str: %s\n", (*cmd)->cmd, (*cmd)->str); // for testing
+	//printf("(*cmd)->cmd: %d: (*cmd)->str: %s\n", (*cmd)->cmd, (*cmd)->str); // for testing
 	(*cmd)->status = status;
 	i = skip_non_printable(str);
-	printf("i: %d\n", i); // for testing
+	//printf("i: %d\n", i); // for testing
 	//return(ft_strlen((*cmd)->str) > 0)? ft_strlen((*cmd)->str)-1 : 0;
 	return (i + ft_strlen((*cmd)->str) - 1);
 }
@@ -108,7 +108,7 @@ t_cmd	**parse_cmd(char *line)
 	}
 	cmds[cmd_i]->cmd = END;
 
-	printf("cmd_i: %d\n", cmd_i);
+	//printf("cmd_i: %d\n", cmd_i);
 
 	// Пояснение:
 	// Получили 2-мерный массив с указателем на указатели на структуры

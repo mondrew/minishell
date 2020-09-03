@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 09:20:12 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/03 18:06:02 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/03 18:25:52 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ char	*ft_strsdup(char *str, char *set) // mondrew
 	int		j;
 	char	*new;
 
-	i = 0;
 	i = skip_non_printable(str);
 	j = i;
 	while (str[j] && !is_contains_in_set(str[j], set))
