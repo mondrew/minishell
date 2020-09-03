@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/03 18:44:26 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/03 18:50:47 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,7 +264,7 @@ char	*change_envs(char *str, char **envr) // mondrew 01.09.2020 // done
 					(str[i] >= '0' && str[i] <= '9') || str[i] == '_')
 				i++;
 		}
-		else
+		else if (str[i] == '$')
 		{
 			if (!(res = ft_strjoin_free_left(res, "$")))
 			{
@@ -312,7 +312,6 @@ char	*correct_echo_msg(char **str, char **envr)
 {
 	char *res;
 	
-	//if ()
 	if (!(res = change_envs(*str, envr))) // if you do so => you should free previous res
 	{
 		free(*str);
