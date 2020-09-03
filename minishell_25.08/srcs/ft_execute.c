@@ -153,7 +153,7 @@ int     ft_execute_in_parent(t_cmd **cmds, char ***envp)
     }
     else if ((*cmds)->cmd == EXIT)
     {
-        ft_free_cmds(*cmds);
+        ft_free_cmds(cmds);
         exit(0);
     }
     return (1);
@@ -548,6 +548,7 @@ int     ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees execu
     int     i;
     int     pipes;
     int     input_from_file;
+    // Last one: $? <---- add it!
 
     i = 0;
     input_from_file = 0;

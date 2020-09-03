@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parce_cmds.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 09:29:34 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/28 13:26:04 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/03 18:13:40 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int count_cmd(char *line) // What if there is pipe | or redirection > >> < betwe
 
 	while(line[i])
 	{
-		if ((line[i] == '>' && line[i+1] && line[i+1] == '>' ))
+		if ((line[i] == '>' && line[i + 1] && line[i + 1] == '>' ))
 		{
 			count++;
 			i++;
@@ -47,19 +47,23 @@ int count_cmd(char *line) // What if there is pipe | or redirection > >> < betwe
 	return (count);
 }
 
-int set_param(t_cmd **cmd, char *str, int cmd_id, int status)
-// int execve(const char *filename, char *const argv[], char *const envp[])
-// argv должен содержать строки с параметрами, а первой строкой - путь.
+int		set_param(t_cmd **cmd, char *str, int cmd_id, int status)
 {
+	int		i;
+
+	i = 0;
 	(*cmd)->cmd = cmd_id;
-	// Можно посчитать кол-во символов до > >> < | ; и сделать ft_substr(str, start, len)
-	(*cmd)->str = ft_strsdup(str, "><|;"); // CHANGE !!! ADD '>' '>>' '<' '|'//GJ DOIT
-	//printf("%d: %s\n", (*cmd)->cmd, (*cmd)->str);
+	if (!((*cmd)->str = ft_strsdup(str, "><|;")))
+		return (-1); // add treatment to the parse_cmd
+	printf("(*cmd)->cmd: %d: (*cmd)->str: %s\n", (*cmd)->cmd, (*cmd)->str); // for testing
 	(*cmd)->status = status;
-	return(ft_strlen((*cmd)->str) > 0)? ft_strlen((*cmd)->str)-1 : 0;
+	i = skip_non_printable(str);
+	printf("i: %d\n", i); // for testing
+	//return(ft_strlen((*cmd)->str) > 0)? ft_strlen((*cmd)->str)-1 : 0;
+	return (i + ft_strlen((*cmd)->str) - 1);
 }
 
-t_cmd **parse_cmd(char *line)
+t_cmd	**parse_cmd(char *line)
 {
 	int		i;
 	int		cmd_i;
@@ -104,6 +108,7 @@ t_cmd **parse_cmd(char *line)
 	}
 	cmds[cmd_i]->cmd = END;
 
+	printf("cmd_i: %d\n", cmd_i);
 
 	// Пояснение:
 	// Получили 2-мерный массив с указателем на указатели на структуры

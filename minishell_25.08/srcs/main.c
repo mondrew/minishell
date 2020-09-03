@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/01 12:05:17 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/03 18:06:52 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,12 @@ int launch_commands(char *line, char **envp) // mkdir cd --- ???
 // TEST
 	// Print commands
 	int t = 0;
-	while (cmds[t])
+	while (cmds[t]->cmd != END)
 	{
 		printf("[%d] %s <%d>\n", cmds[t]->cmd, cmds[t]->str, cmds[t]->status);
 		t++;
 	}
 	// END TEST
-
 	while (cmds && (cmds[i])->cmd != END)
     {
         if ((i = ft_execute(cmds, envp)) == -1)
@@ -91,6 +90,7 @@ int minishell(char **envp)
 	return (0);
 }
 
+// CTRL + D -- works bad - infinite loop - FIX IT
 int main(int argc, char **argv, char **envp)
 {
 	return (minishell(envp));

@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/02 12:34:21 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/02 14:35:43 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	**parse_and_add(char *line, char **envp) // думаю тут нужно о
 	ft_strlcpy(key, line, i + 1);
 	if (line[i] == ' ' || line[i] == '\0')
 	{
-		if (!(new_envp = add_or_replace(key, value, envp))) // have to return NULL
+		if (!(new_envp = ft_add_or_replace(key, value, envp))) // have to return NULL
 		{
 			printf("Error: not enough memory\n");
 			free(key);
@@ -81,7 +81,7 @@ char	**parse_and_add(char *line, char **envp) // думаю тут нужно о
 	}
 	else if (line[i] == '=' && (line[i + 1] == '\0' || line[i + 1] == ' '))
 	{
-		if (!(new_envp = add_or_replace(key, "", envp)))
+		if (!(new_envp = ft_add_or_replace(key, "", envp)))
 		{
 			printf("Error: not enough memory\n");
 			free(key);
@@ -101,7 +101,7 @@ char	**parse_and_add(char *line, char **envp) // думаю тут нужно о
 		return (NULL);
 	}
 	ft_strlcpy(value, &(line[j]), i - j + 1);
-	if (!(new_envp = add_or_replace(key, value, envp)))
+	if (!(new_envp = ft_add_or_replace(key, value, envp)))
 	{
 		printf("Error: not enough memory\n");
 		free(key);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strsdup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 09:20:12 by gjessica          #+#    #+#             */
-/*   Updated: 2020/08/28 09:28:49 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/03 18:06:02 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,37 @@ static int	is_contains_in_set(char c, char *set)
 	return (0);
 }
 
-char *ft_strsdup(char *str, char *set)
+char	*ft_strsdup(char *str, char *set) // mondrew
 {
-	char			*dest;
-	char			*temp;
+	int		i;
+	int		j;
+	char	*new;
 
-	temp = malloc(sizeof(char) * (ft_strlen(str) + 1));
-	if (!temp)
+	i = 0;
+	i = skip_non_printable(str);
+	j = i;
+	while (str[j] && !is_contains_in_set(str[j], set))
+		j++;
+	if (!(new = malloc(sizeof(char) * ((j - i) + 1))))
+		return (NULL);
+	j = 0;
+	while (str[i] && !is_contains_in_set(str[i], set))
+	{
+		new[j] = str[i];
+		i++;
+		j++;
+	}
+	new[i] = '\0';
+	return (new);
+}
+
+/*
+char	*ft_strsdup(char *str, char *set)
+{
+	char	*dest;
+	char	*temp;
+
+	if (!(temp = malloc(sizeof(char) * (ft_strlen(str) + 1))))
 		return (NULL);
 	dest = temp;
 	while (*str && !is_contains_in_set(*str, set))
@@ -42,3 +66,4 @@ char *ft_strsdup(char *str, char *set)
 	*temp = '\0';
 	return (dest);
 }
+*/

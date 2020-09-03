@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   add_or_replace.c                                   :+:      :+:    :+:   */
+/*   ft_add_or_replace.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/02 12:34:22 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/02 14:36:07 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ static char	**ft_add_value(char *key, char *value, char **envp)
 	return (new_arr);
 }
 
-char	**add_or_replace(char *key, char *value, char **envp)
+char	**ft_add_or_replace(char *key, char *value, char **envp)
 {
 	int i;
 	int j;
