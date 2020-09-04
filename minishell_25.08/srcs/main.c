@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/03 18:30:21 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/04 14:16:39 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,15 @@ void print_pre_command()
 	ft_putstr("\x1b[0m");
 }
 
-int launch_commands(char *line, char **envp) // mkdir cd --- ???
+int		launch_commands(char *line, char **envp) // mkdir cd --- ???
 {
 	t_cmd	**cmds; // Why pointer to pointer? May be t_cmd *cmds is enough? (mondrew)
 	int		i;
 	int		status;
 
-	pid_t	pid1;
-	pid_t	pid2;
-	int		pipefd[2];
+	// pid_t	pid1;
+	// pid_t	pid2;
+	// int		pipefd[2];
 
 	i = 0;
 	status = 0;

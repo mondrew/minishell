@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 09:20:12 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/03 18:25:52 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/04 20:36:34 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,32 @@ static int	is_contains_in_set(char c, char *set)
 	return (0);
 }
 
-char	*ft_strsdup(char *str, char *set) // mondrew
+char	*ft_strsdup(char *str, char *set) // mondrew // fixed problem with whitespaces after the last echo argument
 {
 	int		i;
 	int		j;
+	int		k;
 	char	*new;
 
 	i = skip_non_printable(str);
 	j = i;
+	k = 0;
 	while (str[j] && !is_contains_in_set(str[j], set))
 		j++;
-	if (!(new = malloc(sizeof(char) * ((j - i) + 1))))
+	while (str[j - 1] == ' ') // added 04.09 назад на пробелы |lala_|_|_|\0
+		j--;
+	k = j - i;
+	//printf("k: %d\n"); // for testing
+	if (!(new = malloc(sizeof(char) * (k + 1))))
 		return (NULL);
 	j = 0;
-	while (str[i] && !is_contains_in_set(str[i], set))
+	while (j < k)
 	{
 		new[j] = str[i];
 		i++;
 		j++;
 	}
-	new[i] = '\0';
+	new[j] = '\0';
 	return (new);
 }
 

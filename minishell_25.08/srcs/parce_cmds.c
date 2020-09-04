@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 09:29:34 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/03 18:29:07 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/04 20:40:13 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ t_cmd	**parse_cmd(char *line)
 	// ls -l | cat -e >> test.txt
 	i = 0;
 	cmd_i = 0;
-	status = NONE;// GJ change from 0 to NONE
+	status = NONE; // GJ change from 0 to NONE
 	if (!(cmds = malloc(sizeof(t_cmd) * (count_cmd(line) + 1))))
 		return (NULL);
 	cmds[0] = malloc(sizeof(t_cmd));

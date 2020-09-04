@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/03 18:50:47 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/04 14:12:16 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ char	*remove_bad_quotes(char *str) // version made by mondrew. Seems it works
 	char	*new;
 	int		single_quote;
 	int		double_quote;
+	int		backslash;
 	int		i;
 	int		j;
 
@@ -24,6 +25,7 @@ char	*remove_bad_quotes(char *str) // version made by mondrew. Seems it works
 	j = 0;
 	single_quote = 0;
 	double_quote = 0;
+	backslash = 0; // решить проблему с \\ и "\\\\" // done
 	if (!(new = malloc(sizeof(char) * (ft_strlen(str) + 1))))
 		return (NULL);
 	while (str[i] != '\0')
@@ -48,8 +50,13 @@ char	*remove_bad_quotes(char *str) // version made by mondrew. Seems it works
 		}
 		else if (str[i] == '\\')
 		{
-			if (str[i - 1] == '\\')
+			if (str[i + 1] == '\\' && backslash == 0)
+				backslash = 1;
+			else if (str[i - 1] == '\\' && backslash == 1)
+			{
 				new[j++] = str[i];
+				backslash = 0;
+			}
 		}
 		else
 			new[j++] = str[i];
@@ -109,12 +116,12 @@ char	*get_path_name(char *str) // version made by mondrew // edited 01/09/2020
 	char	*var;
 
 	i = 0;
-	while (str[i] != ' ' && str[i] != '"' && str[i] != '\'')
+	while (str[i] != ' ' && str[i] != '"' && str[i] != '\'' && str[i] != '\0')
 		i++;
 	if (!(var = malloc(sizeof(char) * (i + 1))))
 		return (NULL);
 	i = 0;
-	while (str[i] != ' ' && str[i] != '"' && str[i] != '\'')
+	while (str[i] != ' ' && str[i] != '"' && str[i] != '\'' && str[i] != '\0')
 	{
 		var[i] = str[i];
 		i++;
@@ -237,6 +244,7 @@ char	*change_envs(char *str, char **envr) // mondrew 01.09.2020 // done
 			k++;
 		}
 		tmp[j] = '\0';
+		//
 		if (!(res = ft_strjoin_free_both(res, tmp)))
 			return (NULL);
 		if (str[i] == '$' && (double_quote == 1 || (!double_quote && !single_quote)))
@@ -247,6 +255,7 @@ char	*change_envs(char *str, char **envr) // mondrew 01.09.2020 // done
 				free(res);
 				return (NULL);
 			}
+			printf("[test]tmp: %s\n", tmp); // for testing
 			if (!(param = get_line_env(envr, tmp)))
 			{
 				if (!(param = ft_strdup("")))
@@ -258,8 +267,10 @@ char	*change_envs(char *str, char **envr) // mondrew 01.09.2020 // done
 				}
 				free(tmp);
 			}
+			free(tmp); // added 04.09
 			if (!(res = ft_strjoin_free_left(res, param + 5)))
 				return (NULL);
+			free(param); // added 04.09
 			while ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z') || \
 					(str[i] >= '0' && str[i] <= '9') || str[i] == '_')
 				i++;
