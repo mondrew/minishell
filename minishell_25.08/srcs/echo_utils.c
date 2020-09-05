@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/04 14:12:16 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/05 21:34:36 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,6 @@ char	*change_envs(char *str, char **envr) // mondrew 01.09.2020 // done
 				free(res);
 				return (NULL);
 			}
-			printf("[test]tmp: %s\n", tmp); // for testing
 			if (!(param = get_line_env(envr, tmp)))
 			{
 				if (!(param = ft_strdup("")))
@@ -324,16 +323,9 @@ char	*correct_echo_msg(char **str, char **envr)
 	char *res;
 	
 	if (!(res = change_envs(*str, envr))) // if you do so => you should free previous res
-	{
-		free(*str);
 		return (NULL);
-	}
 	if (!(res = remove_bad_quotes(res))) // you need to check if return value is not NULL (because of malloc in remove_bad_quotes) (mondrew)
-	{
-		free(*str);
 		return (NULL);
-	}
-	free(*str);
 	*str = res;
 	return (res);
 }

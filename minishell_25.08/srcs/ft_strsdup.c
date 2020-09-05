@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 09:20:12 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/04 20:36:34 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/05 19:42:10 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	is_contains_in_set(char c, char *set)
 	while (*set)
 	{
 		if (*set == c)
-			return 1;
+			return (1);
 		set++;
 	}
 	return (0);
@@ -39,7 +39,6 @@ char	*ft_strsdup(char *str, char *set) // mondrew // fixed problem with whitespa
 	while (str[j - 1] == ' ') // added 04.09 назад на пробелы |lala_|_|_|\0
 		j--;
 	k = j - i;
-	//printf("k: %d\n"); // for testing
 	if (!(new = malloc(sizeof(char) * (k + 1))))
 		return (NULL);
 	j = 0;

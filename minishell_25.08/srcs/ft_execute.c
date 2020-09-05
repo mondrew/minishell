@@ -254,7 +254,7 @@ int     ft_simple_execute(t_cmd **cmds, char **envp)
     }
     else
     {
-        ft_free_cmd_elem(cmds[0]);
+        //ft_free_cmd_elem(cmds[0]); // suk
         waitpid(pid, 0, 0);
         return (1);
     }
@@ -418,11 +418,11 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             close(pipefd[i - 1]);
             waitpid(pid, 0, 0); // This is VERY important! Firstly close fds then wait for child // &wstatus
             i = j; // save j index
-            while (j >= 0)
-            {
-                ft_free_cmd_elem(cmds[j]);
-                j--;
-            }
+            // while (j >= 0) // commented 05.09 'cause I free everything in launch_commands
+            // {
+            //     ft_free_cmd_elem(cmds[j]);
+            //     j--;
+            // }
             return (i + 1);
         }
     }
@@ -497,11 +497,11 @@ int     ft_execute_with_redir(t_cmd **cmds, char **envp)
             j++;
         waitpid(pid, 0, 0);
         i = j; // save i position
-        while (j >= 0)
-        {
-            ft_free_cmd_elem(cmds[j]);
-            j--;
-        }
+        // while (j >= 0) // I free everything in 
+        // {
+        //     ft_free_cmd_elem(cmds[j]);
+        //     j--;
+        // }
         return (i + 1);
     }
     return (0);
@@ -543,7 +543,7 @@ int     ft_check_redirection(t_cmd **cmds)
     return (0);
 }
 
-int     ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees executed cmds and moves the cmd pointer
+int     ft_execute(t_cmd **cmds, char ***envp) // executes some cmds, frees executed cmds and moves the cmd pointer
 {
     int     i;
     int     pipes;
@@ -557,24 +557,24 @@ int     ft_execute(t_cmd **cmds, char **envp) // executes some cmds, frees execu
     // If there are pipes with CD command -> Just go to the ft_execute_with_pipes and it does nothing
     // If there is redirection with CD command -> Do "cd ~" in Parent and create empty file (> or >>) or do nothing (<)
     if ((cmds[i]->cmd == CD || cmds[i]->cmd == EXPORT || cmds[i]->cmd == UNSET 
-        ||cmds[i]->cmd == EXIT) && (cmds[i + 1]->cmd == END))
+        || cmds[i]->cmd == EXIT))// && (cmds[i + 1]->cmd == END)) // 05/09
     {
-        if ((i = ft_execute_in_parent(cmds, &envp)) == -1)
+        if ((i = ft_execute_in_parent(cmds, envp)) == -1)
             return (-1);
     }
     else if ((pipes = ft_check_pipes(cmds, input_from_file)) > 0)
     {
-        if ((i = ft_execute_with_pipes(cmds, pipes, input_from_file, envp)) == -1)
+        if ((i = ft_execute_with_pipes(cmds, pipes, input_from_file, *envp)) == -1)
             return (-1);
     }
     else if (ft_check_redirection(cmds))
     {
-        if ((i = ft_execute_with_redir(cmds, envp)) == -1)
+        if ((i = ft_execute_with_redir(cmds, *envp)) == -1)
             return (-1);
     }
     else
     {
-        if ((i = ft_simple_execute(cmds, envp)) == -1)
+        if ((i = ft_simple_execute(cmds, *envp)) == -1)
             return (-1);
     }
     return (i);

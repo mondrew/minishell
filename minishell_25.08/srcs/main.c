@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/04 14:16:39 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/05 22:11:39 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,12 @@ void print_pre_command()
 	ft_putstr("\x1b[0m");
 }
 
-int		launch_commands(char *line, char **envp) // mkdir cd --- ???
+int		launch_commands(char *line, char ***envp) // mkdir cd --- ???
 {
 	t_cmd	**cmds; // Why pointer to pointer? May be t_cmd *cmds is enough? (mondrew)
 	int		i;
 	int		status;
+	int		j; // new
 
 	// pid_t	pid1;
 	// pid_t	pid2;
@@ -43,7 +44,8 @@ int		launch_commands(char *line, char **envp) // mkdir cd --- ???
 
 	i = 0;
 	status = 0;
-	cmds = parse_cmd(line); // возвращает массив команд на исполнение
+	if (!(cmds = parse_cmd(line))) // возвращает массив команд на исполнение
+		return (-1); // выставить ошибку! Не (-1), а недостаточно памяти! Шелл продолжает работать
 
 // TEST
 	// Print commands
@@ -54,18 +56,23 @@ int		launch_commands(char *line, char **envp) // mkdir cd --- ???
 		t++;
 	}
 	// END TEST
-	while (cmds && (cmds[i])->cmd != END)
+	while (cmds && ((cmds[i])->cmd != END))
     {
-        if ((i = ft_execute(cmds, envp)) == -1)
+        if ((j = ft_execute(&(cmds[i]), envp)) == -1) // Тут я отправляю указатель не на начало cmds, поэтому освобождать cmds нужно тут!!!
             return (-1);
+		i += j;
     }
+	// освобождаю все. Но может и не так нужно!!!
+	i = 0; // new // ошибка была в этом!!! Я освобождал executed cmds[i] в ft_execute
     while (cmds[i]->cmd != END)
     {
         ft_free_cmd_elem(cmds[i]);
         i++;
     }
+	//printf("i: %d\n", i); // test
     free(cmds[i]);
     free(cmds);
+	//printf("End of launch_commands\n"); // test
     return (0);
 }
 
@@ -81,11 +88,11 @@ int minishell(char **envp)
 	{
 		print_pre_command();
 		line = read_line();
-		result = launch_commands(line, envp);
+		result = launch_commands(line, &envp);
 		if (line)
 			free(line);
 		if (result == -1)
-			is_exit = 1;
+			is_exit = 1; // это тут не нужно, т.к. если будет exit  - и так выйдет. Использовать для кода возврата
 	}
 	return (0);
 }

@@ -6,13 +6,13 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 09:29:34 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/04 20:40:13 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/05 20:42:34 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int skip_status(char *str)
+int		skip_status(char *str)
 {
 	int i;
 
@@ -47,20 +47,18 @@ int count_cmd(char *line) // What if there is pipe | or redirection > >> < betwe
 	return (count);
 }
 
-int		set_param(t_cmd **cmd, char *str, int cmd_id, int status)
+int		set_param(t_cmd **cmds, char *str, int cmd_id, int status)
 {
 	int		i;
 
 	i = 0;
-	(*cmd)->cmd = cmd_id;
-	if (!((*cmd)->str = ft_strsdup(str, "><|;")))
+	(*cmds)->cmd = cmd_id;
+	if (!((*cmds)->str = ft_strsdup(str, "><|;")))
 		return (-1); // add treatment to the parse_cmd
-	//printf("(*cmd)->cmd: %d: (*cmd)->str: %s\n", (*cmd)->cmd, (*cmd)->str); // for testing
-	(*cmd)->status = status;
+	(*cmds)->status = status;
 	i = skip_non_printable(str);
-	//printf("i: %d\n", i); // for testing
-	//return(ft_strlen((*cmd)->str) > 0)? ft_strlen((*cmd)->str)-1 : 0;
-	return (i + ft_strlen((*cmd)->str) - 1);
+	//return(ft_strlen((*cmds)->str) > 0)? ft_strlen((*cmds)->str)-1 : 0;
+	return (i + ft_strlen((*cmds)->str) - 1);
 }
 
 t_cmd	**parse_cmd(char *line)
@@ -76,13 +74,20 @@ t_cmd	**parse_cmd(char *line)
 	status = NONE; // GJ change from 0 to NONE
 	if (!(cmds = malloc(sizeof(t_cmd) * (count_cmd(line) + 1))))
 		return (NULL);
-	cmds[0] = malloc(sizeof(t_cmd));
+	if (!(cmds[0] = malloc(sizeof(t_cmd))))
+	{
+		free(cmds);
+		return (NULL);
+	}
 	while (line[i])
 	{
 		i += skip_non_printable(line + i);
-		status = check_cmd_status(line + i); // (mondrew!)
-		i += skip_status(line + i); // (mondrew!)
-		i += skip_non_printable(line + i);
+		if (line[i])
+			status = check_cmd_status(line + i); // (mondrew!)
+		if (line[i])
+			i += skip_status(line + i); // (mondrew!)
+		if (line[i])
+			i += skip_non_printable(line + i);
 		if (!line[i]) // (mondrew!)
 			break ; // case if we reach end of the line (mondrew!)
 		if (start_with(line + i, "echo"))
@@ -103,8 +108,17 @@ t_cmd	**parse_cmd(char *line)
 			i += set_param(&cmds[cmd_i], line + i, UNKNOWN, status);
 		cmd_i++;
 		i++;
-		status = NONE; // new GJ change to NONE
-		cmds[cmd_i] = malloc(sizeof(t_cmd));
+		status = NONE; // new GJ change to NONE // эта строчка не нужна
+		if (!(cmds[cmd_i] = malloc(sizeof(t_cmd))))
+		{
+			while (cmd_i)
+			{
+				cmd_i--;
+				ft_free_cmd_elem(cmds[cmd_i]);
+			}
+			free(cmds);
+			return (NULL);
+		}
 	}
 	cmds[cmd_i]->cmd = END;
 
@@ -121,5 +135,5 @@ t_cmd	**parse_cmd(char *line)
 	// то в str - команда с аргументами
 	// Также у каждой команды есть статус - показатель того, первая ли это команда на исполнение,
 	// либо это команда после '|', '>', '<', '>>'. Если перед командой был ';' - то она считается снова первой
-	return cmds;
+	return (cmds);
 }

@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:30:44 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/03 18:40:28 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/05 21:28:42 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,19 @@
 char *get_line_env(char **env, char *param) // В отдельный файл. Функция возвращает указатель на строку в env с нужной переменной?
 											// т.е. *env = "HOME=/path_to_home_dir/" ? (mondrew)
 {
+	char	*res;
+
 	while (*env)
 	{
 		if (start_with_nospace(*env, param))
-			return (*env);
+		{
+			if (!(res = ft_strdup(*env)))
+			{
+				printf("Error: cannot allocate memory\n");
+				return (NULL);
+			}
+			return (res);
+		}
 		env++;
 	}
 	return (NULL);
@@ -91,9 +100,9 @@ int start_with_nospace(char *str, char *con) // it is strncmp (mondrew) | что
 }
 */
 
-int start_with(char *str, char *con) // it is strncmp, isn't it? (mondrew)
+int		start_with(char *str, char *con) // it is strncmp, isn't it? (mondrew)
 {
-	int i;
+	int		i;
 
 	i = 0;
 	if (!str)
@@ -101,10 +110,11 @@ int start_with(char *str, char *con) // it is strncmp, isn't it? (mondrew)
 	while (str[i] && con[i])
 	{
 		if (str[i] != con[i])
-			return(0);
+			return (0);
 		i++;
 	}
-	if (!con[i] && (!str[i] || str[i] == ' '))
+	if (!con[i] && (!str[i] || str[i] == ' ' || str[i] == ';' || \
+		str[i] == '>' || str[i] == '<' || str[i] == '|'))
 		return (1);
 	return (0);
 }

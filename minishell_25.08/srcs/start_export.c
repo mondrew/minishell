@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/02 14:35:43 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/05 22:17:34 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ void		ft_strswap(char **strs, int i1, int i2)
 	strs[i2] = tmp;
 }
 
-void	sort_and_show(char **envp)
+void	sort_and_show(char **envp) // надо переписать. Она не должна менять порядок в envp, а только отображать его в алфавитном порядке!
+									// env;export;env - первый и последний результат дб одинаковыми!!!
 {
 	int is_sort;
 	int i;
@@ -108,6 +109,8 @@ char	**parse_and_add(char *line, char **envp) // думаю тут нужно о
 		free(value);
 		return (NULL);
 	}
+	free(key);
+	free(value);
 	return (new_envp);
 }
 
@@ -177,19 +180,12 @@ int		parse_and_add(char *line, char **envp)
 int		start_export(char *line, char ***envp)
 {
 	char	**new_envp;
-	// int		i; // for testing
-	
-	// i = 0; // for testing
-	// printf("Initial:\n"); // for testing
-	// while ((*envp)[i] != NULL) // for testing
-	// {
-	// 	printf("%s\n", (*envp)[i]);
-	// 	i++;
-	// }
+
+	new_envp = NULL;
 	if (!line || !line[skip_whitespace(line)])
 	{
 		sort_and_show(*envp);
-		return (-1);
+		return (1);
 	}
 	else
 	{
@@ -198,12 +194,5 @@ int		start_export(char *line, char ***envp)
 	}
 	//ft_free_split(*envp); // It seems like envp from main is not malloced and can't be freed
 	*envp = new_envp;
-	// i = 0; // for testing
-	// printf("Result:\n"); // for testing
-	// while ((*envp)[i] != NULL) // for testing // есть ли последний NULL
-	// {
-	// 	printf("%s\n", (*envp)[i]);
-	// 	i++;
-	// }
-	return (0);
+	return (1);
 }
