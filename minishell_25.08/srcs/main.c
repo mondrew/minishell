@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/05 22:11:39 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/06 13:30:25 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,17 @@
 char *read_line()
 {
 	char *line;
+	int res;
 
-	get_next_line(0, &line);
+	res = 0;
+	while ((res  = get_next_line(0, &line)) == 0)
+		continue;
 	return (line);
 }
 
-void print_pre_command()
+void print_prompt()
 {
+
 	ft_putstr("\x1b[1;4;32m");
 	ft_putstr("minishell:");
 	ft_putstr("\x1b[0m");
@@ -47,15 +51,6 @@ int		launch_commands(char *line, char ***envp) // mkdir cd --- ???
 	if (!(cmds = parse_cmd(line))) // возвращает массив команд на исполнение
 		return (-1); // выставить ошибку! Не (-1), а недостаточно памяти! Шелл продолжает работать
 
-// TEST
-	// Print commands
-	int t = 0;
-	while (cmds[t]->cmd != END)
-	{
-		printf("[%d] %s <%d>\n", cmds[t]->cmd, cmds[t]->str, cmds[t]->status);
-		t++;
-	}
-	// END TEST
 	while (cmds && ((cmds[i])->cmd != END))
     {
         if ((j = ft_execute(&(cmds[i]), envp)) == -1) // Тут я отправляю указатель не на начало cmds, поэтому освобождать cmds нужно тут!!!
@@ -76,6 +71,22 @@ int		launch_commands(char *line, char ***envp) // mkdir cd --- ???
     return (0);
 }
 
+void sigint()
+{
+	ft_putstr("\n");
+	print_prompt();
+}
+
+void sigquit()
+{
+	ft_putstr("zsh: quit (core dumped)\n");
+}
+
+void signotactive()
+{
+	return ;
+}
+
 int minishell(char **envp)
 {
 	char *line;
@@ -86,8 +97,11 @@ int minishell(char **envp)
 
 	while (!is_exit)
 	{
-		print_pre_command();
+		print_prompt();
+		signal(SIGINT, sigint);
+		signal(SIGQUIT, signotactive);
 		line = read_line();
+		signal(SIGQUIT, sigquit);
 		result = launch_commands(line, &envp);
 		if (line)
 			free(line);
