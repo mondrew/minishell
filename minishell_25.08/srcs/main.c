@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/06 17:07:43 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/06 20:06:29 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,12 @@ void	signotactive()
 	return ;
 }
 
+void	sigintexec()
+{
+	ft_putstr("\n");
+	return ;
+}
+
 int		minishell(char **envp)
 {
 	char	*line;
@@ -123,6 +129,7 @@ int		minishell(char **envp)
 		signal(SIGINT, sigint);
 		signal(SIGQUIT, signotactive);
 		line = read_line();
+		signal(SIGINT, sigintexec);
 		signal(SIGQUIT, sigquit);
 		result = launch_commands(line, &envp, &exit_code);
 		if (line)
