@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/06 17:17:04 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/06 23:17:52 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ char	*remove_bad_quotes(char *str) // version made by mondrew. Seems it works
 	double_quote = 0;
 	backslash = 0; // решить проблему с \\ и "\\\\" // done
 	if (!(new = malloc(sizeof(char) * (ft_strlen(str) + 1))))
+	{
+		free(str);
 		return (NULL);
+	}
 	while (str[i] != '\0')
 	{
 		if (str[i] == '\'' && str[i - 1] != '\\')
@@ -350,11 +353,98 @@ char *change_envs(char *str, char **envr) // эта функция заменя�
 }
 */
 
+char	*remove_bad_whitespaces(char *str)
+{
+	int		i;
+	int		j;
+	int		quote;
+	char	*new;
+
+	i = 0;
+	j = 0;
+	quote = 0;
+	while (str[i])
+	{
+		if (str[i] == '"' || str[i] == '\'')
+		{
+			if (str[i] == '\'' && !quote)
+				quote = 1;
+			else if (str[i] == '"' && !quote)
+				quote = 2;
+			else if ((str[i] == '\'' && quote == 1) || (str[i] == '"' && quote == 2))
+				quote = 0;
+			i++;
+			j++;
+		}
+		else if (str[i] == ' ')
+		{
+			if (!quote)
+			{
+				while (str[i] == ' ')
+					i++;
+			}
+			else
+				i++;
+			j++;
+		}
+		else
+		{
+			i++;
+			j++;
+		}
+	}
+	if (!(new = malloc(sizeof(char) * (j + 1))))
+	{
+		free(str);
+		return (NULL);
+	}
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (str[i] == '"' || str[i] == '\'')
+		{
+			new[j] = str[i];
+			if (str[i] == '\'' && !quote)
+				quote = 1;
+			else if (str[i] == '"' && !quote)
+				quote = 2;
+			else if ((str[i] == '\'' && quote == 1) || (str[i] == '"' && quote == 2))
+				quote = 0;
+			i++;
+			j++;
+		}
+		else if (str[i] == ' ')
+		{
+			new[j] = str[i];
+			if (!quote)
+			{
+				while (str[i] == ' ')
+					i++;
+			}
+			else
+				i++;
+			j++;
+		}
+		else
+		{
+			new[j] = str[i];
+			i++;
+			j++;
+		}
+	}
+	new[j] = '\0';
+	free(str);
+	return (new);
+}
+
 char	*correct_echo_msg(char **str, char **envr, t_cmd **cmds)
 {
-	char *res;
+	char	*res;
 	
 	if (!(res = change_envs(*str, envr, cmds))) // if you do so => you should free previous res
+		return (NULL);
+	if (!(res = remove_bad_whitespaces(res)))
 		return (NULL);
 	if (!(res = remove_bad_quotes(res))) // you need to check if return value is not NULL (because of malloc in remove_bad_quotes) (mondrew)
 		return (NULL);

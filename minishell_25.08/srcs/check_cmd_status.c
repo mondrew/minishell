@@ -17,15 +17,15 @@ int     check_cmd_status(char *line)
     int     status;
 
     status = NONE;
-    if (start_with(line, ">>"))
+    if (start_with_special(line, ">>"))
         return (RFWD);
-    else if (start_with(line, ">")) // GJ Поменял местами, иначе никогда не определится RFWD
+    else if (start_with_special(line, ">")) // GJ Поменял местами, иначе никогда не определится RFWD
         return (RFWS);
-    else if (start_with(line, "<"))
+    else if (start_with_special(line, "<"))
         return (RBWS);
-    else if (start_with(line, ";"))
+    else if (start_with_special(line, ";"))
         return (NONE);
-    else if (start_with(line, "|"))
+    else if (start_with_special(line, "|"))
         return (PIPE);
     else
         return (NONE);

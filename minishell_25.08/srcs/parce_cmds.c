@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 09:29:34 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/06 14:18:10 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/07 00:11:55 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,36 @@ int		skip_status(char *str)
 	return (i);
 }
 
-int count_cmd(char *line) // What if there is pipe | or redirection > >> < between commands? (mondrew)
+int		count_cmd(char *line) // What if there is pipe | or redirection > >> < between commands? (mondrew)
 							// Функция считает количество комманд, разделенных ';'
 {
-	int i;
-	int count;
+	int 	i;
+	int 	count;
+	int		quote;
 
-	if (!line)
-		return (0);
 	i = 0;
 	count = 1;
-
-	while(line[i])
+	quote = 0;
+	if (!line)
+		return (0);
+	while (line[i])
 	{
-		if ((line[i] == '>' && line[i + 1] && line[i + 1] == '>' ))
+		if (line[i] == '"' || line[i] == '\'')
+		{
+			if (line[i] == '\'' && !quote)
+				quote = 1;
+			else if (line[i] == '"' && !quote)
+				quote = 2;
+			else if ((line[i] == '\'' && quote == 1) || (line[i] == '"' && quote == 2))
+				quote = 0;
+		}
+		else if ((line[i] == '>' && line[i + 1] && line[i + 1] == '>' && !quote))
 		{
 			count++;
 			i++;
 		}
-		else if (line[i] == ';' || line[i] == '>' || line[i] == '<' || line[i] == '|') // добавил все остальные случаи-разделители команд
+		else if ((line[i] == ';' || line[i] == '>' || line[i] == '<' || line[i] == '|') \
+					&& !quote) // добавил все остальные случаи-разделители команд
 			count++;
 		i++;
 	}
@@ -49,7 +60,7 @@ int count_cmd(char *line) // What if there is pipe | or redirection > >> < betwe
 
 int		set_param(t_cmd **cmds, char *str, int cmd_id, int status)
 {
-	int		i;
+	int		i; // | lala|
 
 	i = 0;
 	(*cmds)->cmd = cmd_id;
@@ -85,6 +96,7 @@ t_cmd	**parse_cmd(char *line)
 	}
 	while (line[i])
 	{
+		//printf("line: %s\n", &line[i]); // test
 		i += skip_non_printable(line + i);
 		if (line[i])
 			status = check_cmd_status(line + i); // (mondrew!)

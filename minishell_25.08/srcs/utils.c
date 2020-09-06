@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:30:44 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/05 21:28:42 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/07 00:20:00 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int		start_with(char *str, char *con) // it is strncmp, isn't it? (mondrew)
 
 	i = 0;
 	if (!str)
-		return(0);
+		return (0);
 	while (str[i] && con[i])
 	{
 		if (str[i] != con[i])
@@ -119,7 +119,23 @@ int		start_with(char *str, char *con) // it is strncmp, isn't it? (mondrew)
 	return (0);
 }
 
+int		start_with_special(char *str, char *con) // for check_pipes and check_redirection
+{
+	int		i;
 
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i] && con[i])
+	{
+		if (str[i] != con[i])
+			return (0);
+		i++;
+	}
+	if (!con[i])
+		return (1);
+	return (0);
+}
 
 char *ft_strcdup(char *str, char c)
 {

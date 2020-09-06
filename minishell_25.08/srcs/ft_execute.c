@@ -26,6 +26,59 @@ int     ft_free_split(char **array)
     return (0);
 }
 
+char    *ft_copy_without_quotes(char *str)
+{
+    int     i;
+    int     j;
+    char    *new_str;
+
+    i = 0;
+    j = 0;
+    while (str[i] && str[i] != '"' && str[i] != '\'')
+        i++;
+    if (!(new_str = malloc(sizeof(char) * (i + 1))))
+        return (NULL);
+    i = 0;
+    while (str[i])
+    {
+        if (str[i] != '"' && str[i] != '\'')
+            new_str[j++] = str[i];
+        i++;
+    }
+    new_str[j] = '\0';
+    return (new_str);
+}
+
+char    **ft_remove_quotes_in_args(char **array)
+{
+    int     i;
+    int     j;
+    char    **new;
+
+    i = 0;
+    while (array[i])
+        i++;
+    if (!(new = malloc(sizeof(char *) * (i + 1))))
+    {
+        ft_free_split(array);
+        return (NULL);
+    }
+    i = 0;
+    while (array[i])
+    {
+        if (!(new[i] = ft_copy_without_quotes(array[i])))
+        {
+            ft_free_split(new);
+            ft_free_split(array);
+            return (NULL);
+        }
+        i++;
+    }
+    new[i] = NULL;
+    ft_free_split(array);
+    return (new);
+}
+
 /*
 int		start_with_nospace(char *str, char *con)
 {
@@ -61,7 +114,8 @@ char *get_path(char **env)
 {
 	char *par;
 
-	par = get_line_env(env, "PATH");
+	if (!(par = get_line_env(env, "PATH")))
+        return (NULL);
 	return (par + 5);
 }
 
@@ -212,11 +266,17 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
 	{
         if (!(array = ft_split(cmds->str, ' ')))
             return (0);
+        if (!(array = ft_remove_quotes_in_args(array))) // new 06.09
+            return (0);
         if (execve(array[0], array, envp) == -1) // нужно ли это вообще и когда это сработает? Для обычных executable?
         {
             command = array[0]; // save array[0]
             if (!(paths = ft_make_paths_array(envp, array[0])))
+            {
+                printf("%s: command not found\n", command);
+                ft_set_exit_code(cmds_big, 127 * 256);
                 return (ft_free_split(array));
+            }
             while (paths[i] != NULL)
             {
                 array[0] = paths[i];

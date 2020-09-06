@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/06 20:37:41 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/07 00:30:12 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void			ft_set_exit_code(t_cmd **cmds, int exit_code);
 char			*ft_strcdup(char *str, char c);
 int				skip_non_printable(char *str);
 int 			start_with(char *str, char *con);
+int 			start_with_special(char *str, char *con);
 int 			start_with_nospace(char *str, char *con);
 int 			skip_whitespace(char *str);
 int 			start_cd(char *line, char **env, t_cmd **cmds);
