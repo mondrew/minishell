@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/06 15:54:16 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/06 22:55:25 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,14 @@ void		ft_strswap(char **strs, int i1, int i2)
 	strs[i2] = tmp;
 }
 
-void	sort_and_show(char **envp) // надо переписать. Она не должна менять порядок в envp, а только отображать его в алфавитном порядке!
+void	sort_and_show(char **tenvp) // надо переписать. Она не должна менять порядок в envp, а только отображать его в алфавитном порядке!
 									// env;export;env - первый и последний результат дб одинаковыми!!!
 {
+	char **envp;
 	int is_sort;
 	int i;
+
+	envp = ft_cpyarr(tenvp);
 
 	is_sort = 0;
 	i = 0;
@@ -37,17 +40,18 @@ void	sort_and_show(char **envp) // надо переписать. Она не д
 			is_sort = 1;
 		}
 		i++;
-	}
-	if (is_sort)
-		sort_and_show(envp);
-	else
-	{
-		while (*envp)
+		if (!envp[i + 1] && is_sort)
 		{
-			ft_putstr(*envp);
-			ft_putstr("\n");
-			envp++;
+			is_sort = 0;
+			i = 0;
 		}
+	}
+	i = 0;
+	while (envp[i])
+	{
+		ft_putstr(envp[i]);
+		ft_putstr("\n");
+		i++;
 	}
 }
 

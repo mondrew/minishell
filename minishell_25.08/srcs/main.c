@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/06 20:06:29 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/06 20:09:43 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ void	signotactive()
 void	sigintexec()
 {
 	ft_putstr("\n");
-	return ;
 }
 
 int		minishell(char **envp)

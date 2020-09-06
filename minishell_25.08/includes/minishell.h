@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/06 17:38:44 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/06 20:37:41 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int				ft_strncmp(const char *s1, const char *s2, size_t n);
 char			*ft_strsdup(char *str, char *set);
 char			*ft_strtrim(char const *s1, char const *set);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
+char **ft_cpyarr(char **arr);
 
 /*
 * GET NEXT LINE
