@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 09:29:34 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/05 20:42:34 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/06 14:18:10 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,13 @@ t_cmd	**parse_cmd(char *line)
 	cmd_i = 0;
 	status = NONE; // GJ change from 0 to NONE
 	if (!(cmds = malloc(sizeof(t_cmd) * (count_cmd(line) + 1))))
+	{
+		printf("Error: cannot allocate memory\n");
 		return (NULL);
+	}
 	if (!(cmds[0] = malloc(sizeof(t_cmd))))
 	{
+		printf("Error: cannot allocate memory\n");
 		free(cmds);
 		return (NULL);
 	}
@@ -111,6 +115,7 @@ t_cmd	**parse_cmd(char *line)
 		status = NONE; // new GJ change to NONE // эта строчка не нужна
 		if (!(cmds[cmd_i] = malloc(sizeof(t_cmd))))
 		{
+			printf("Error: cannot allocate memory\n");
 			while (cmd_i)
 			{
 				cmd_i--;

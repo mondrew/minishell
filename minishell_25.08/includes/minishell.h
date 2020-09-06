@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/05 22:08:09 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/06 17:38:44 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,25 +62,27 @@ typedef struct	s_cmd
 char			**ft_add_or_replace(char *key, char *value, char **envp);
 int     		check_cmd_status(char *line);
 int     		check_cmd_status(char *line);
-char 			*correct_echo_msg(char **str, char **envr);
+char 			*correct_echo_msg(char **str, char **envr, t_cmd **cmds);
 int				ft_execute(t_cmd **cmds, char ***envp);
 t_cmd   		**ft_free_cmds(t_cmd **cmds);
 void			ft_free_cmd_elem(t_cmd *cmds);
 int     		ft_free_split(char **array);
 char 			*get_cur_path();
+int				ft_get_exit_code(t_cmd **cmds);
 char			*get_line_env(char **env, char *param);
 char			*ft_itoa(int n);
 int 			ft_len_to_char(char *str, char end);
 t_cmd			**parse_cmd(char *line);
 int				ft_putstr(char *s);
 char			**remove_key(char *key, char **envp);
+void			ft_set_exit_code(t_cmd **cmds, int exit_code);
 char			*ft_strcdup(char *str, char c);
 int				skip_non_printable(char *str);
 int 			start_with(char *str, char *con);
 int 			start_with_nospace(char *str, char *con);
 int 			skip_whitespace(char *str);
-int 			start_cd(char *line, char **env);
-int 			start_echo(char *line, char **envr);
+int 			start_cd(char *line, char **env, t_cmd **cmds);
+int 			start_echo(char *line, char **envr, t_cmd **cmds);
 int 			start_env(char *line, char **envp);
 int				start_export(char *line, char ***envp);
 int 			start_pwd(char *line);

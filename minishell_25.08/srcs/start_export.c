@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/05 22:17:34 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/06 15:54:16 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	**parse_and_add(char *line, char **envp) // думаю тут нужно о
 		i++;
 	if (!(key = malloc(sizeof(char) * (i + 1))))
 	{
-		printf("Error: not enough memory\n");
+		printf("Error: cannot allocate memory\n");
 		return (NULL);
 	}
 	ft_strlcpy(key, line, i + 1);
@@ -74,7 +74,7 @@ char	**parse_and_add(char *line, char **envp) // думаю тут нужно о
 	{
 		if (!(new_envp = ft_add_or_replace(key, value, envp))) // have to return NULL
 		{
-			printf("Error: not enough memory\n");
+			printf("Error: cannot allocate memory\n");
 			free(key);
 			return (NULL);
 		}
@@ -84,7 +84,7 @@ char	**parse_and_add(char *line, char **envp) // думаю тут нужно о
 	{
 		if (!(new_envp = ft_add_or_replace(key, "", envp)))
 		{
-			printf("Error: not enough memory\n");
+			printf("Error: cannot allocate memory\n");
 			free(key);
 			return (NULL);
 		}
@@ -97,14 +97,14 @@ char	**parse_and_add(char *line, char **envp) // думаю тут нужно о
 		i++;
 	if (!(value = malloc(sizeof(char) * (i - j + 1))))
 	{
-		printf("Error: not enough memory\n");
+		printf("Error: cannot allocate memory\n");
 		free(key);
 		return (NULL);
 	}
 	ft_strlcpy(value, &(line[j]), i - j + 1);
 	if (!(new_envp = ft_add_or_replace(key, value, envp)))
 	{
-		printf("Error: not enough memory\n");
+		printf("Error: cannot allocate memory\n");
 		free(key);
 		free(value);
 		return (NULL);
@@ -192,7 +192,7 @@ int		start_export(char *line, char ***envp)
 		if (!(new_envp = parse_and_add(line, *envp)))
 			return (-1);
 	}
-	//ft_free_split(*envp); // It seems like envp from main is not malloced and can't be freed
+	//ft_free_split(*envp); // It seems like envp from main is not allocated and can't be freed
 	*envp = new_envp;
 	return (1);
 }

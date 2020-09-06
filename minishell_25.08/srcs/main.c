@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/06 13:30:25 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/06 17:07:43 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ char *read_line()
 
 void print_prompt()
 {
-
 	ft_putstr("\x1b[1;4;32m");
 	ft_putstr("minishell:");
 	ft_putstr("\x1b[0m");
@@ -35,26 +34,47 @@ void print_prompt()
 	ft_putstr("\x1b[0m");
 }
 
-int		launch_commands(char *line, char ***envp) // mkdir cd --- ???
+void	ft_set_exit_code(t_cmd **cmds, int exit_code)
+{
+	int		i;
+
+	i = 0;
+	while (cmds && cmds[i]->cmd != END)
+		i++;
+	cmds[i]->status = exit_code;
+}
+
+int		ft_get_exit_code(t_cmd **cmds)
+{
+	int		i;
+
+	i = 0;
+	while (cmds && cmds[i]->cmd != END)
+		i++;
+	return (cmds[i]->status);
+}
+
+int		launch_commands(char *line, char ***envp, int *exit_code) // mkdir cd --- ???
 {
 	t_cmd	**cmds; // Why pointer to pointer? May be t_cmd *cmds is enough? (mondrew)
 	int		i;
 	int		status;
 	int		j; // new
 
-	// pid_t	pid1;
-	// pid_t	pid2;
-	// int		pipefd[2];
-
 	i = 0;
 	status = 0;
 	if (!(cmds = parse_cmd(line))) // возвращает массив команд на исполнение
-		return (-1); // выставить ошибку! Не (-1), а недостаточно памяти! Шелл продолжает работать
-
+		return (*exit_code = 1);
+	ft_set_exit_code(cmds, *exit_code);
 	while (cmds && ((cmds[i])->cmd != END))
     {
         if ((j = ft_execute(&(cmds[i]), envp)) == -1) // Тут я отправляю указатель не на начало cmds, поэтому освобождать cmds нужно тут!!!
-            return (-1);
+        {
+			*exit_code = ft_get_exit_code(cmds); // делаю в ft_execute
+			ft_free_cmds(cmds); // added 06/09
+			return (-1);
+		}
+		*exit_code = ft_get_exit_code(cmds);
 		i += j;
     }
 	// освобождаю все. Но может и не так нужно!!!
@@ -68,32 +88,34 @@ int		launch_commands(char *line, char ***envp) // mkdir cd --- ???
     free(cmds[i]);
     free(cmds);
 	//printf("End of launch_commands\n"); // test
-    return (0);
+    return (*exit_code);
 }
 
-void sigint()
+void	sigint()
 {
 	ft_putstr("\n");
 	print_prompt();
 }
 
-void sigquit()
+void	sigquit()
 {
-	ft_putstr("zsh: quit (core dumped)\n");
+	ft_putstr("minishell: quit (core dumped)\n");
 }
 
-void signotactive()
+void	signotactive()
 {
 	return ;
 }
 
-int minishell(char **envp)
+int		minishell(char **envp)
 {
-	char *line;
-	int is_exit;
-	int result;
+	char	*line;
+	int 	is_exit;
+	int 	result;
+	int		exit_code;
 
 	is_exit = 0;
+	exit_code = 0;
 
 	while (!is_exit)
 	{
@@ -102,7 +124,7 @@ int minishell(char **envp)
 		signal(SIGQUIT, signotactive);
 		line = read_line();
 		signal(SIGQUIT, sigquit);
-		result = launch_commands(line, &envp);
+		result = launch_commands(line, &envp, &exit_code);
 		if (line)
 			free(line);
 		if (result == -1)
@@ -111,8 +133,7 @@ int minishell(char **envp)
 	return (0);
 }
 
-// CTRL + D -- works bad - infinite loop - FIX IT
-int main(int argc, char **argv, char **envp)
+int		main(int argc, char **argv, char **envp)
 {
 	return (minishell(envp));
 }

@@ -6,13 +6,13 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/02 09:31:14 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/06 17:38:41 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		start_cd(char *line, char **env)
+int		start_cd(char *line, char **env, t_cmd **cmds)
 {
 	int		i;
 	int		j;
@@ -31,6 +31,7 @@ int		start_cd(char *line, char **env)
 			if (line[i] != '\0')
 			{
 				ft_putstr("-minishell: cd: too many arguments\n");
+				ft_set_exit_code(cmds, 1);
 				return (0);
 			}
 		}
@@ -53,6 +54,7 @@ int		start_cd(char *line, char **env)
 	}
 	str[i] = '\0';
 	//printf("Current path: %s\n", getcwd(cwd, sizeof(cwd))); ////////////// for testing
+	ft_set_exit_code(cmds, 0);
 	if (ft_strlen((line + (skip_whitespace(line)))) == 1 && *(line + (skip_whitespace(line))) == '~')
 	{
 		chdir(get_line_env(env, "HOME") + 5);
@@ -64,8 +66,9 @@ int		start_cd(char *line, char **env)
 		ft_putstr(str);
 		ft_putstr(": No such file or directory");
 		ft_putstr("\n");
+		ft_set_exit_code(cmds, 1);
 	}
 	//printf("New path: %s\n", getcwd(cwd, sizeof(cwd))); ////////////// for testing
 	free(str);
-	return(0);
+	return (0);
 }

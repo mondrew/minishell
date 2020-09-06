@@ -138,24 +138,37 @@ int     ft_execute_in_parent(t_cmd **cmds, char ***envp)
 {
 	if ((*cmds)->cmd == CD)
     {
-		if ((start_cd((*cmds)->str, *envp)) == -1)
-            return (0);
+		if ((start_cd((*cmds)->str, *envp, cmds)) == -1)
+        {
+            printf("Error: cannot allocate memory\n");
+            ft_set_exit_code(cmds, 1);
+            return (-1);
+        }
     }
 	else if ((*cmds)->cmd == EXPORT)
     {
-		if ((start_export((*cmds)->str, envp)) == -1) // not finished! // done
-            return (0);
+		if ((start_export((*cmds)->str, envp)) == -1)
+        {
+            printf("Error: cannot allocate memory\n");
+            ft_set_exit_code(cmds, 1);
+            return (-1);
+        }
     }
-	else if ((*cmds)->cmd == UNSET) // done
+	else if ((*cmds)->cmd == UNSET)
     {
 		if (!(start_unset((*cmds)->str, envp)))
-            return (0);
+        {
+            printf("Error: cannot allocate memory\n");
+            ft_set_exit_code(cmds, 1);
+            return (-1);
+        }
     }
     else if ((*cmds)->cmd == EXIT)
     {
         ft_free_cmds(cmds);
         exit(0);
     }
+    //ft_set_exit_code(cmds, 0);
     return (1);
 }
 
@@ -173,11 +186,11 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
     }
 	else if (cmds->cmd == ECHO)
     {
-		if ((start_echo(cmds->str, envp)) == -1)
+		if ((start_echo(cmds->str, envp, cmds_big)) == -1)
             return (0);
     }
 	else if (cmds->cmd == CD)
-		start_cd(cmds->str, envp);
+		start_cd(cmds->str, envp, cmds_big);
 	else if (cmds->cmd == EXPORT)
     {
 		if (!(start_export(cmds->str, &envp))) // not finished!
@@ -221,8 +234,9 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
             {
                 // Command not found
                 printf("%s: command not found\n", command); // add name of the error
-                array[0] = command; // Recovet array[0]
+                array[0] = command; // Recover array[0]
                 ft_free_split(paths);
+                ft_set_exit_code(cmds_big, 127 * 256);
                 return (ft_free_split(array));
             }
             ft_free_split(paths);
@@ -235,28 +249,33 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
 int     ft_simple_execute(t_cmd **cmds, char **envp)
 {
     pid_t   pid;
+    int     wstatus; // for waitpid
 
     if ((pid = fork()) < 0)
     {
         printf("Error: fork failed\n");
-        ft_free_cmds(cmds);
+        //ft_free_cmds(cmds);
+        ft_set_exit_code(cmds, 1);
         return (-1);
     }
     if (pid == 0)
     {
         if (!ft_execve_cmd(cmds[0], cmds, envp))
         {
-            //printf("Error: execution failed\n");
-            ft_free_cmds(cmds);
-            return (-1);
+            if (ft_get_exit_code(cmds) == (127 * 256))
+                exit(127);
+            else
+                printf("Error: execution failed\n");
+            //ft_free_cmds(cmds);
+            exit(1);
         }
-        exit(0);
+        exit(0); // can be deleted
     }
     else
     {
-        //ft_free_cmd_elem(cmds[0]); // suk
-        waitpid(pid, 0, 0);
-        return (1);
+        waitpid(pid, &wstatus, 0);
+        ft_set_exit_code(cmds, wstatus / 256);
+        return (1); // can be deleted
     }
     return (1);
 }
@@ -269,6 +288,7 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
     int     i; // for pipefd indexing
     int     j; // for cmds indexing
     int     fd;
+    int     wstatus; // for waitpid
 
     i = 2;
     j = 0;
@@ -276,13 +296,15 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
     if (pipe(pipefd) < 0)
     {
         printf("Error: pipe failed\n");
-        ft_free_cmds(cmds);
+        //ft_free_cmds(cmds);
+        ft_set_exit_code(cmds, 1);
         return (-1);
     }
     if ((pid = fork()) < 0)
     {
         printf("Error: fork failed\n");
-        ft_free_cmds(cmds);
+        //ft_free_cmds(cmds);
+        ft_set_exit_code(cmds, 1);
         return (-1);
     }
     if (pid == 0)
@@ -293,8 +315,8 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             if ((fd = open(cmds[j + 1]->str, O_RDONLY)) == -1)
             {
                 printf("Error: open failed\n");
-                ft_free_cmds(cmds);
-                return (-1); // Нужно послать сигнал в Parent (kill?), чтобы в parent-e проверить и сделать free, если нужно
+                //ft_free_cmds(cmds);
+                exit(1); // Нужно послать сигнал в Parent (kill?), чтобы в parent-e проверить и сделать free, если нужно
             }
             dup2(fd, 0); // now input is from the file
             close(fd);
@@ -304,14 +326,15 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
         close(pipefd[1]);
         if (!ft_execve_cmd(cmds[j], cmds, envp)) // if execve returns NULL .. Был !
         {
-            ft_free_cmds(cmds);
-            return (-1); // Нужно послать сигнал в Parent (kill?), чтобы в parent-e проверить и сделать free, если нужно
+            //ft_free_cmds(cmds);
+            exit(1); // Нужно послать сигнал в Parent (kill?), чтобы в parent-e проверить и сделать free, если нужно
         }
         exit(0); // 
     }
     else
     {
-        waitpid(pid, 0, 0); // &wstatus
+        waitpid(pid, &wstatus, 0); // &wstatus
+        ft_set_exit_code(cmds, wstatus / 256);
         // Parent
         j++;
         if (input_from_file == 1) // to skip the second argument ("< filename")
@@ -326,13 +349,15 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
         if (pipe(pipefd + i) < 0)
         {
             printf("Error: pipe failed\n");
-            ft_free_cmds(cmds);
+            //ft_free_cmds(cmds);
+            ft_set_exit_code(cmds, 1);
             return (-1);
         }
         if ((pid = fork()) < 0)
         {
             printf("Error: fork failed\n");
-            ft_free_cmds(cmds);
+            //ft_free_cmds(cmds);
+            ft_set_exit_code(cmds, 1);
             return (-1);
         }
         if (pid == 0)
@@ -346,8 +371,8 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             close(pipefd[i + 1]);
             if (!ft_execve_cmd(cmds[j], cmds, envp)) // был !
             {
-                ft_free_cmds(cmds); // освободится лишь в child-е. Может в этом нет смысла?
-                return (-1);
+                //ft_free_cmds(cmds); // освободится лишь в child-е. Может в этом нет смысла?
+                exit(1);
             }
             exit(0); // до сюда при успешном execve даже не дойдет. Проблема 100% в ft_execve_cmd, т.к. он должен посылать сигнал
                     // о завершении работы.
@@ -359,7 +384,8 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             close(pipefd[i - 1]);
             // close(pipefd[0]);
             // close(pipefd[1]);
-            waitpid(pid, 0, 0); // &wstatus
+            waitpid(pid, &wstatus, 0); // &wstatus
+            ft_set_exit_code(cmds, wstatus / 256);
             j++;
             i += 2;
             pipes--;   
@@ -371,7 +397,8 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
         if ((pid = fork()) < 0)
         {
             printf("Error: fork failed\n");
-            ft_free_cmds(cmds);
+            //ft_free_cmds(cmds);
+            ft_set_exit_code(cmds, 1);
             return (-1);
         }
         if (pid == 0)
@@ -384,8 +411,8 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
                     if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
                     {
                         printf("Error: open failed\n");
-                        ft_free_cmds(cmds);
-                        return (-1);
+                        //ft_free_cmds(cmds);
+                        exit(1);
                     }
                 }
                 else if (cmds[j + 1]->status == RFWD) // for >>
@@ -393,8 +420,8 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
                     if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
                     {
                         printf("Error: open failed\n");
-                        ft_free_cmds(cmds);
-                        return (-1);
+                        //ft_free_cmds(cmds);
+                        exit(1);
                     }
                 }
                 dup2(fd, 1);
@@ -405,8 +432,8 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             close(pipefd[i - 2]);
             if (!ft_execve_cmd(cmds[j], cmds, envp)) // должен делать exit(0) в случае успеха
             {
-                ft_free_cmds(cmds); // Нужно подать сигнал о неудаче родителю!
-                return (-1);
+                //ft_free_cmds(cmds); // Нужно подать сигнал о неудаче родителю!
+                exit(1);
             }
             exit(0); // exit(1) в случае неудачи
         }
@@ -416,17 +443,18 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
                 j++;
             close(pipefd[i - 2]);
             close(pipefd[i - 1]);
-            waitpid(pid, 0, 0); // This is VERY important! Firstly close fds then wait for child // &wstatus
+            waitpid(pid, &wstatus, 0); // This is VERY important! Firstly close fds then wait for child // &wstatus
+            ft_set_exit_code(cmds, wstatus / 256);
             i = j; // save j index
             // while (j >= 0) // commented 05.09 'cause I free everything in launch_commands
             // {
             //     ft_free_cmd_elem(cmds[j]);
             //     j--;
             // }
-            return (i + 1);
+            return (i + 1); // can be deleted to save place
         }
     }
-    return (0);
+    return (i + 1);
 }
 
 int     ft_execute_with_redir(t_cmd **cmds, char **envp)
@@ -435,12 +463,14 @@ int     ft_execute_with_redir(t_cmd **cmds, char **envp)
     int     i;
     int     j; // for cmds indexing
     pid_t   pid;
+    int     wstatus; // fot waitpid
 
     j = 0;
     if ((pid = fork()) < 0)
     {
         printf("Error: fork failed\n");
-        ft_free_cmds(cmds);
+        //ft_free_cmds(cmds);
+        ft_set_exit_code(cmds, 1);
         return (-1);
     }
     if (pid == 0)
@@ -451,8 +481,9 @@ int     ft_execute_with_redir(t_cmd **cmds, char **envp)
             if ((fd = open(cmds[j + 1]->str, O_RDONLY)) == -1)
             {
                 printf("Error: open failed\n");
-                ft_free_cmds(cmds);
-                return (-1);
+                //ft_free_cmds(cmds);
+                ft_set_exit_code(cmds, 1);
+                exit(1);
             }
             dup2(fd, 0);
             close(fd);
@@ -462,8 +493,8 @@ int     ft_execute_with_redir(t_cmd **cmds, char **envp)
         {
             if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
             {
-                ft_free_cmds(cmds);
-                return (-1);
+                //ft_free_cmds(cmds);
+                exit(1);
             }
             dup2(fd, 1);
             close(fd);
@@ -474,8 +505,8 @@ int     ft_execute_with_redir(t_cmd **cmds, char **envp)
             if ((fd = open(cmds[j + 1]->str, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP)) == -1)
             {
                 printf("Error: open failed\n");
-                ft_free_cmds(cmds);
-                return (-1);
+                //ft_free_cmds(cmds);
+                exit(1);
             }
             dup2(fd, 1);
             close(fd);
@@ -484,10 +515,10 @@ int     ft_execute_with_redir(t_cmd **cmds, char **envp)
         if (!(ft_execve_cmd(cmds[0], cmds, envp)))
         {
             printf("Error: execution failed\n");
-            ft_free_cmds(cmds);
-            return (-1);
+            //ft_free_cmds(cmds);
+            exit(1);
         }
-        exit(0);
+        exit(0); // до этого не дойдет
     }
     else
     {
@@ -495,16 +526,17 @@ int     ft_execute_with_redir(t_cmd **cmds, char **envp)
             j++;
         if (cmds[j + 1]->cmd != END && (cmds[j + 1]->status == RFWS || cmds[j + 1]->status == RFWD))
             j++;
-        waitpid(pid, 0, 0);
+        waitpid(pid, &wstatus, 0);
+        ft_set_exit_code(cmds, wstatus / 256);
         i = j; // save i position
         // while (j >= 0) // I free everything in 
         // {
         //     ft_free_cmd_elem(cmds[j]);
         //     j--;
         // }
-        return (i + 1);
+        return (i + 1); // can be deleted to save place
     }
-    return (0);
+    return (i + 1);
 }
 
 int     ft_check_pipes(t_cmd **cmds, int input_from_file)

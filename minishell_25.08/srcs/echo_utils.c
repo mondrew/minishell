@@ -6,11 +6,23 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/05 21:34:36 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/06 17:17:04 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int		ft_skip_env_key(char *param)
+{
+	int		i;
+
+	i = 0;
+	while (param[i] && param[i] != '=')
+		i++;
+	if (param[i])
+		i++;
+	return (i);
+}
 
 char	*remove_bad_quotes(char *str) // version made by mondrew. Seems it works
 {
@@ -173,7 +185,7 @@ char	*ft_strjoin_free_both(char *s1, char *s2)
 	return (new);
 }
 
-char	*change_envs(char *str, char **envr) // mondrew 01.09.2020 // done
+char	*change_envs(char *str, char **envr, t_cmd **cmds) // mondrew 01.09.2020 // done
 {
 	int		i;
 	int		j;
@@ -250,29 +262,49 @@ char	*change_envs(char *str, char **envr) // mondrew 01.09.2020 // done
 		if (str[i] == '$' && (double_quote == 1 || (!double_quote && !single_quote)))
 		{
 			i++;
-			if (!(tmp = get_path_name(&str[i])))
+			if (str[i] == '?' && (str[i + 1] == ' ' || str[i + 1] == '\0' || str[i + 1] == ' ' || \
+					str[i + 1] == '>' || str[i + 1] == '|'))
+			{
+				//printf("exit_code: %d\n", ft_get_exit_code(cmds)); // test
+				if (!(tmp = ft_itoa(ft_get_exit_code(cmds))))
+				{
+					free(res);
+					return (NULL);
+				}
+				//printf("tmp: %s$\n", tmp); // test
+			}
+			else if (!(tmp = get_path_name(&str[i])))
 			{
 				free(res);
 				return (NULL);
 			}
-			if (!(param = get_line_env(envr, tmp)))
+			if (str[i] == '?')
 			{
-				if (!(param = ft_strdup("")))
-				{
-					printf("Malloc failed\n");
-					free(res);
-					free(tmp);
+				if (!(res = ft_strjoin_free_both(res, tmp)))
 					return (NULL);
-				}
-				free(tmp);
-			}
-			free(tmp); // added 04.09
-			if (!(res = ft_strjoin_free_left(res, param + 5)))
-				return (NULL);
-			free(param); // added 04.09
-			while ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z') || \
-					(str[i] >= '0' && str[i] <= '9') || str[i] == '_')
 				i++;
+			}
+			else
+			{
+				if (!(param = get_line_env(envr, tmp)))
+				{
+					if (!(param = ft_strdup("")))
+					{
+						printf("Malloc failed\n");
+						free(res);
+						free(tmp);
+						return (NULL);
+					}
+					free(tmp);
+				}
+				free(tmp); // added 04.09
+				if (!(res = ft_strjoin_free_left(res, param + ft_skip_env_key(param))))
+					return (NULL);
+				free(param); // added 04.09
+				while ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z') || \
+						(str[i] >= '0' && str[i] <= '9') || str[i] == '_')
+					i++;
+			}
 		}
 		else if (str[i] == '$')
 		{
@@ -318,11 +350,11 @@ char *change_envs(char *str, char **envr) // эта функция заменя�
 }
 */
 
-char	*correct_echo_msg(char **str, char **envr)
+char	*correct_echo_msg(char **str, char **envr, t_cmd **cmds)
 {
 	char *res;
 	
-	if (!(res = change_envs(*str, envr))) // if you do so => you should free previous res
+	if (!(res = change_envs(*str, envr, cmds))) // if you do so => you should free previous res
 		return (NULL);
 	if (!(res = remove_bad_quotes(res))) // you need to check if return value is not NULL (because of malloc in remove_bad_quotes) (mondrew)
 		return (NULL);
