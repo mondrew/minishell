@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/06 17:38:41 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/07 23:01:47 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int		start_cd(char *line, char **env, t_cmd **cmds)
 	//char	cwd[PATH_MAX]; ///////////////////////////for testing
 
 	i = 0;
+	j = 0;
 	while (line[i] == ' ') // No need, 'cause in cmds->str we already have and string without spaces in the beginning
 		i++;
 	while (line[i] != '\0')

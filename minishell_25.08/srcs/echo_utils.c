@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/07 20:35:42 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/07 23:13:52 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,14 +305,16 @@ char	*change_envs(char *str, char **envr, t_cmd **cmds) // mondrew 01.09.2020 //
 				free(tmp);
 				return (NULL);
 			}
-			free(tmp); // added 04.09
-			if (!(res = ft_strjoin_free_left(res, param + ft_skip_env_key(param))))
-				return (NULL);
-			free(param); // added 04.09
-			while ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z') || \
-					(str[i] >= '0' && str[i] <= '9') || str[i] == '_')
-				i++;
-			// }
+			else
+			{
+				free(tmp); // added 04.09
+				if (!(res = ft_strjoin_free_left(res, param + ft_skip_env_key(param))))
+					return (NULL);
+				free(param); // added 04.09
+				while ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z') || \
+						(str[i] >= '0' && str[i] <= '9') || str[i] == '_')
+					i++;
+			}
 		}
 		else if (str[i] && (str[i] == '$'))
 		{
