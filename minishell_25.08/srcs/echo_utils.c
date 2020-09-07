@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/07 23:13:52 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/07 23:29:18 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,7 @@ char	*change_envs(char *str, char **envr, t_cmd **cmds) // mondrew 01.09.2020 //
 	i = 0;
 	single_quote = 0;
 	double_quote = 0;
+	param = NULL;
 	if (!(res = ft_strdup("")))
 	{
 		printf("Malloc failed\n");
@@ -303,11 +304,11 @@ char	*change_envs(char *str, char **envr, t_cmd **cmds) // mondrew 01.09.2020 //
 					return (NULL);
 				}
 				free(tmp);
-				return (NULL);
+				//return (NULL);
 			}
-			else
+			if (param)
 			{
-				free(tmp); // added 04.09
+				//free(tmp); // added 04.09
 				if (!(res = ft_strjoin_free_left(res, param + ft_skip_env_key(param))))
 					return (NULL);
 				free(param); // added 04.09
