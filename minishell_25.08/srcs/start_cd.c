@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/07 23:01:47 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/08 01:23:30 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,17 @@ int		start_cd(char *line, char **env, t_cmd **cmds)
 			}
 		}
 		if (line[i] != '\0')
+		{
 			i++;
+			j++;
+		}
 	}
+	if (!j)
+	{
+		chdir(get_line_env(env, "HOME") + 5);
+		return (0);
+	}
+
 	if (!(str = malloc(sizeof(char) * (i + 1))))
 		return (-1);
 	i = 0;

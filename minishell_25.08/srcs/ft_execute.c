@@ -229,7 +229,7 @@ int     ft_execute_in_parent(t_cmd **cmds, char ***envp)
     return (1);
 }
 
-int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
+int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp, pid_t pid)
 {
     char    **array; // array for execve
     char    **paths; // paths from envp PATH
@@ -239,7 +239,8 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
     i = 0;
     if (cmds->cmd == PWD)
     {
-        start_pwd(cmds->str);
+        if ((start_pwd(cmds->str, cmds_big)) == -1)
+            return (0);
     }
 	else if (cmds->cmd == ECHO)
     {
@@ -278,7 +279,7 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
             if (!(paths = ft_make_paths_array(envp, array[0])))
             {
                 printf("%s: command not found\n", command);
-                ft_set_exit_code(cmds_big, 127 * 256);
+                ft_set_exit_code(cmds_big, 127);
                 return (ft_free_split(array));
             }
             while (paths[i] != NULL)
@@ -297,10 +298,11 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
             if (paths[i] == NULL)
             {
                 // Command not found
-                printf("%s: command not found\n", command); // add name of the error
+                if (pid)
+                    printf("%s: command not found\n", command); // add name of the error
                 array[0] = command; // Recover array[0]
                 ft_free_split(paths);
-                ft_set_exit_code(cmds_big, 127 * 256);
+                ft_set_exit_code(cmds_big, 127);
                 return (ft_free_split(array));
             }
             ft_free_split(paths);
@@ -324,10 +326,12 @@ int     ft_simple_execute(t_cmd **cmds, char **envp)
     }
     if (pid == 0)
     {
-        if (!ft_execve_cmd(cmds[0], cmds, envp))
+        if (!ft_execve_cmd(cmds[0], cmds, envp, pid))
         {
-            if (ft_get_exit_code(cmds) == (127 * 256))
+            if (ft_get_exit_code(cmds) == (127))
                 exit(127);
+            // else if (ft_get_exit_code(cmds) == (1 * 256))
+            //     exit(1);
             else
                 printf("Error: execution failed\n");
             //ft_free_cmds(cmds);
@@ -338,6 +342,8 @@ int     ft_simple_execute(t_cmd **cmds, char **envp)
     else
     {
         waitpid(pid, &wstatus, 0);
+        if (wstatus == 127 * 256)
+            printf("%s: command not found\n", cmds[0]->str);
         ft_set_exit_code(cmds, wstatus / 256);
         return (1); // can be deleted
     }
@@ -388,8 +394,10 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
         close(pipefd[0]);
         dup2(pipefd[1], STDOUT_FILENO);
         close(pipefd[1]);
-        if (!ft_execve_cmd(cmds[j], cmds, envp)) // if execve returns NULL .. Был !
+        if (!ft_execve_cmd(cmds[j], cmds, envp, pid)) // if execve returns NULL .. Был !
         {
+            if (ft_get_exit_code(cmds) == 127)
+                exit(127);
             //ft_free_cmds(cmds);
             exit(1); // Нужно послать сигнал в Parent (kill?), чтобы в parent-e проверить и сделать free, если нужно
         }
@@ -398,6 +406,8 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
     else
     {
         waitpid(pid, &wstatus, 0); // &wstatus
+        if (wstatus == 127 * 256)
+            printf("%s: command not found\n", cmds[j]->str); // нужна только команда без аргументов!!!
         ft_set_exit_code(cmds, wstatus / 256);
         // Parent
         j++;
@@ -433,8 +443,10 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             close(pipefd[i]); // close new pipe read end
             dup2(pipefd[i + 1], STDOUT_FILENO); // copy new pipe write end
             close(pipefd[i + 1]);
-            if (!ft_execve_cmd(cmds[j], cmds, envp)) // был !
+            if (!ft_execve_cmd(cmds[j], cmds, envp, pid)) // был !
             {
+                if (ft_get_exit_code(cmds) == 127)
+                    exit(127);
                 //ft_free_cmds(cmds); // освободится лишь в child-е. Может в этом нет смысла?
                 exit(1);
             }
@@ -449,6 +461,8 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             // close(pipefd[0]);
             // close(pipefd[1]);
             waitpid(pid, &wstatus, 0); // &wstatus
+            if (wstatus == 127 * 256)
+                printf("%s: command not found\n", cmds[j]->str);
             ft_set_exit_code(cmds, wstatus / 256);
             j++;
             i += 2;
@@ -494,8 +508,10 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             close(pipefd[i - 1]); // close last pipe OUT
             dup2(pipefd[i - 2], STDIN_FILENO); // reads from last pipe read end
             close(pipefd[i - 2]);
-            if (!ft_execve_cmd(cmds[j], cmds, envp)) // должен делать exit(0) в случае успеха
+            if (!ft_execve_cmd(cmds[j], cmds, envp, pid)) // должен делать exit(0) в случае успеха
             {
+                if (ft_get_exit_code(cmds) == 127)
+                    exit(127);
                 //ft_free_cmds(cmds); // Нужно подать сигнал о неудаче родителю!
                 exit(1);
             }
@@ -508,6 +524,8 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             close(pipefd[i - 2]);
             close(pipefd[i - 1]);
             waitpid(pid, &wstatus, 0); // This is VERY important! Firstly close fds then wait for child // &wstatus
+            if (wstatus == 127 * 256)
+                printf("%s: command not found\n", cmds[j]->str);
             ft_set_exit_code(cmds, wstatus / 256);
             i = j; // save j index
             // while (j >= 0) // commented 05.09 'cause I free everything in launch_commands
@@ -576,7 +594,7 @@ int     ft_execute_with_redir(t_cmd **cmds, char **envp)
             close(fd);
             j++; // there is no scense in doing it here
         }
-        if (!(ft_execve_cmd(cmds[0], cmds, envp)))
+        if (!(ft_execve_cmd(cmds[0], cmds, envp, pid)))
         {
             printf("Error: execution failed\n");
             //ft_free_cmds(cmds);

@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/07 22:02:25 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/07 23:48:25 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int 			start_cd(char *line, char **env, t_cmd **cmds);
 int 			start_echo(char *line, char **envr, t_cmd **cmds);
 int 			start_env(char *line, char **envp);
 int				start_export(char *line, char ***envp, t_cmd **cmds);
-int 			start_pwd(char *line);
+int 			start_pwd(char *line, t_cmd **cmds);
 int 			start_unknown_cmd(char *line, char **env);
 int 			start_unset(char *line, char ***envp); // added envp (mondrew)
 char			**ft_split(char const *s, char c);
