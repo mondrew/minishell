@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:03:37 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/06 23:25:35 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/07 19:27:01 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,11 @@ int start_echo(char *line, char **envr, t_cmd **cmds) // done
 {
 	char *prt;
 
-	prt = ft_strdup((line + skip_whitespace(line)));
+	if (!(prt = ft_strdup((line + skip_whitespace(line)))))
+	{
+		printf("Error: echo failed\n");
+		return (-1);
+	}
 	if (!(prt = correct_echo_msg(&prt, envr, cmds)))
 	{
 		free(prt);

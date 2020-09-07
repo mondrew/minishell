@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/18 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/05 22:23:15 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/07 20:42:18 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ int		start_unset(char *line, char ***envp) // made by mondrew
 		return (1);
 	while ((*envp)[i] != NULL)
 	{
-		if (!ft_strncmp(line, (*envp)[i], ft_strlen(line)) && ((*envp)[i][ft_strlen(line)] == '=')) // correct GJ
+		if (!ft_strncmp(line, (*envp)[i], ft_strlen(line)) && \
+			(!((*envp)[i][ft_strlen(line)]) || ((*envp)[i][ft_strlen(line)] == '='))) // correct GJ
 			break ;
 		i++;
 	}

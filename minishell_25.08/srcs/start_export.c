@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   start_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/06 22:55:25 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/07 19:27:46 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_strswap(char **strs, int i1, int i2)
+void	ft_strswap(char **strs, int i1, int i2)
 {
 	char		*tmp;
 
@@ -21,31 +21,48 @@ void		ft_strswap(char **strs, int i1, int i2)
 	strs[i2] = tmp;
 }
 
-void	sort_and_show(char **tenvp) // надо переписать. Она не должна менять порядок в envp, а только отображать его в алфавитном порядке!
+char	**sort_and_show(char **tenvp) // надо переписать. Она не должна менять порядок в envp, а только отображать его в алфавитном порядке!
 									// env;export;env - первый и последний результат дб одинаковыми!!!
 {
-	char **envp;
-	int is_sort;
-	int i;
+	char	**envp;
+	int		is_sort;
+	int		i;
 
-	envp = ft_cpyarr(tenvp);
-
+	if (!(envp = ft_cpyarr(tenvp)))
+		return (NULL);
 	is_sort = 0;
 	i = 0;
-	while(envp[i] && envp[i + 1]) // можно было каждый раз начинать сначала, чтобы обойтись без рекурсии (mondrew)
+	while (envp[i] && envp[i + 1]) //
 	{
-		if (ft_strcmp(envp[i], envp[i + 1]) > 0)
+		while (envp[i + 1])
 		{
-			ft_strswap(envp, i, i + 1);
-			is_sort = 1;
+			if (ft_strcmp(envp[i], envp[i + 1]) <= 0)
+				i++;
+			else
+			{
+				ft_strswap(envp, i, i + 1);
+				break ;
+			}
 		}
-		i++;
-		if (!envp[i + 1] && is_sort)
-		{
-			is_sort = 0;
-			i = 0;
-		}
+		if (!envp[i + 1])
+			break ;
+		i = 0;
 	}
+
+	// while (envp[i] && envp[i + 1]) // можно было каждый раз начинать сначала, чтобы обойтись без рекурсии (mondrew)
+	// {
+	// 	if (ft_strcmp(envp[i], envp[i + 1]) > 0)
+	// 	{
+	// 		ft_strswap(envp, i, i + 1);
+	// 		is_sort = 1;
+	// 	}
+	// 	i++;
+	// 	if (!envp[i + 1] && is_sort)
+	// 	{
+	// 		is_sort = 0;
+	// 		i = 0; // не нужно вроде...
+	// 	}
+	// }
 	i = 0;
 	while (envp[i])
 	{
@@ -53,9 +70,10 @@ void	sort_and_show(char **tenvp) // надо переписать. Она не �
 		ft_putstr("\n");
 		i++;
 	}
+	return (envp);
 }
 
-char	**parse_and_add(char *line, char **envp) // думаю тут нужно отправлять указатель на envp -> &envp
+char	**parse_and_add(char *line, char **envp, t_cmd **cmds) // думаю тут нужно отправлять указатель на envp -> &envp
 {
 	int		i;
 	int		j;
@@ -74,7 +92,7 @@ char	**parse_and_add(char *line, char **envp) // думаю тут нужно о
 		return (NULL);
 	}
 	ft_strlcpy(key, line, i + 1);
-	if (line[i] == ' ' || line[i] == '\0')
+	if (line[i] == ' ' || line[i] == '\0') // export NEW
 	{
 		if (!(new_envp = ft_add_or_replace(key, value, envp))) // have to return NULL
 		{
@@ -84,7 +102,7 @@ char	**parse_and_add(char *line, char **envp) // думаю тут нужно о
 		}
 		return (new_envp);
 	}
-	else if (line[i] == '=' && (line[i + 1] == '\0' || line[i + 1] == ' '))
+	else if (line[i] == '=' && (line[i + 1] == '\0' || line[i + 1] == ' ')) // export NEW=
 	{
 		if (!(new_envp = ft_add_or_replace(key, "", envp)))
 		{
@@ -106,6 +124,15 @@ char	**parse_and_add(char *line, char **envp) // думаю тут нужно о
 		return (NULL);
 	}
 	ft_strlcpy(value, &(line[j]), i - j + 1);
+	// NEW 07/09
+	if (!(value = correct_echo_msg(&value, envp, cmds))) // added 07/09
+	{
+		free(value);
+		free(key);
+		printf("Error: export failed\n");
+		return (NULL);
+	}
+	//
 	if (!(new_envp = ft_add_or_replace(key, value, envp)))
 	{
 		printf("Error: cannot allocate memory\n");
@@ -181,19 +208,21 @@ int		parse_and_add(char *line, char **envp)
 }
 */
 
-int		start_export(char *line, char ***envp)
+int		start_export(char *line, char ***envp, t_cmd **cmds)
 {
 	char	**new_envp;
 
 	new_envp = NULL;
 	if (!line || !line[skip_whitespace(line)])
 	{
-		sort_and_show(*envp);
+		if (!(new_envp = sort_and_show(*envp)))
+			return (-1);
+		free(new_envp);
 		return (1);
 	}
 	else
 	{
-		if (!(new_envp = parse_and_add(line, *envp)))
+		if (!(new_envp = parse_and_add(line, *envp, cmds)))
 			return (-1);
 	}
 	//ft_free_split(*envp); // It seems like envp from main is not allocated and can't be freed

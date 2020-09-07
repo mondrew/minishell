@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/06 23:17:52 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/07 20:35:42 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,7 +244,7 @@ char	*change_envs(char *str, char **envr, t_cmd **cmds) // mondrew 01.09.2020 //
 			}
 			i++;
 		}
-		if (!(tmp = malloc(sizeof(char) * (i + 1))))
+		if (!(tmp = malloc(sizeof(char) * (i - k + 1))))
 		{
 			printf("Malloc failed\n");
 			free(res);
@@ -262,10 +262,16 @@ char	*change_envs(char *str, char **envr, t_cmd **cmds) // mondrew 01.09.2020 //
 		//
 		if (!(res = ft_strjoin_free_both(res, tmp)))
 			return (NULL);
-		if (str[i] == '$' && (double_quote == 1 || (!double_quote && !single_quote)))
+		if (str[i] && (str[i] == '$') && ((str[i + 1] && (str[i + 1] == ' ')) || !str[i + 1]))
+		{
+			if (!(res = ft_strjoin_free_left(res, "$")))
+				return (NULL);
+			i++;
+		}
+		else if (str[i] && (str[i] == '$') && ((double_quote == 1) || (!double_quote && !single_quote)))
 		{
 			i++;
-			if (str[i] == '?' && (str[i + 1] == ' ' || str[i + 1] == '\0' || str[i + 1] == ' ' || \
+			if (str[i] && (str[i] == '?'))// && (str[i + 1] == ' ' || str[i + 1] == '\0' || str[i + 1] == ' ' || \
 					str[i + 1] == '>' || str[i + 1] == '|'))
 			{
 				//printf("exit_code: %d\n", ft_get_exit_code(cmds)); // test
@@ -281,35 +287,34 @@ char	*change_envs(char *str, char **envr, t_cmd **cmds) // mondrew 01.09.2020 //
 				free(res);
 				return (NULL);
 			}
-			if (str[i] == '?')
+			if (str[i] && (str[i] == '?'))
 			{
 				if (!(res = ft_strjoin_free_both(res, tmp)))
 					return (NULL);
 				i++;
 			}
-			else
+			else if (!(param = get_line_env(envr, tmp)))
 			{
-				if (!(param = get_line_env(envr, tmp)))
+				if (!(param = ft_strdup("")))
 				{
-					if (!(param = ft_strdup("")))
-					{
-						printf("Malloc failed\n");
-						free(res);
-						free(tmp);
-						return (NULL);
-					}
+					printf("Malloc failed\n");
+					free(res);
 					free(tmp);
-				}
-				free(tmp); // added 04.09
-				if (!(res = ft_strjoin_free_left(res, param + ft_skip_env_key(param))))
 					return (NULL);
-				free(param); // added 04.09
-				while ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z') || \
-						(str[i] >= '0' && str[i] <= '9') || str[i] == '_')
-					i++;
+				}
+				free(tmp);
+				return (NULL);
 			}
+			free(tmp); // added 04.09
+			if (!(res = ft_strjoin_free_left(res, param + ft_skip_env_key(param))))
+				return (NULL);
+			free(param); // added 04.09
+			while ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z') || \
+					(str[i] >= '0' && str[i] <= '9') || str[i] == '_')
+				i++;
+			// }
 		}
-		else if (str[i] == '$')
+		else if (str[i] && (str[i] == '$'))
 		{
 			if (!(res = ft_strjoin_free_left(res, "$")))
 			{
@@ -319,6 +324,7 @@ char	*change_envs(char *str, char **envr, t_cmd **cmds) // mondrew 01.09.2020 //
 			i++;
 		}
 	}
+	free(str); // added 07/09
 	return (res);
 }
 

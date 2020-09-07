@@ -190,6 +190,8 @@ void    ft_free_cmd_elem(t_cmd *cmds)
 
 int     ft_execute_in_parent(t_cmd **cmds, char ***envp)
 {
+    int     exit_code;
+
 	if ((*cmds)->cmd == CD)
     {
 		if ((start_cd((*cmds)->str, *envp, cmds)) == -1)
@@ -201,7 +203,7 @@ int     ft_execute_in_parent(t_cmd **cmds, char ***envp)
     }
 	else if ((*cmds)->cmd == EXPORT)
     {
-		if ((start_export((*cmds)->str, envp)) == -1)
+		if ((start_export((*cmds)->str, envp, cmds)) == -1) // added cmds 07/09
         {
             printf("Error: cannot allocate memory\n");
             ft_set_exit_code(cmds, 1);
@@ -219,8 +221,9 @@ int     ft_execute_in_parent(t_cmd **cmds, char ***envp)
     }
     else if ((*cmds)->cmd == EXIT)
     {
-        ft_free_cmds(cmds);
-        exit(0);
+        exit_code = ft_atoi((*cmds)->str);
+        //ft_free_cmds(cmds); // delete? / сюда бы передать i (номер текущей команды) чтобы free
+        exit(exit_code);
     }
     //ft_set_exit_code(cmds, 0);
     return (1);
@@ -247,7 +250,7 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
 		start_cd(cmds->str, envp, cmds_big);
 	else if (cmds->cmd == EXPORT)
     {
-		if (!(start_export(cmds->str, &envp))) // not finished!
+		if (!(start_export(cmds->str, &envp, cmds_big))) // not finished!
             return (0);
     }
 	else if (cmds->cmd == UNSET)
@@ -259,8 +262,9 @@ int     ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp)
 		start_env(cmds->str, envp);
 	else if (cmds->cmd == EXIT)
     {
+        i = ft_atoi(cmds->str);
         ft_free_cmds(cmds_big);
-        exit(0);
+        exit(i);
     }
     else if (cmds->cmd == UNKNOWN)
 	{
@@ -648,8 +652,8 @@ int     ft_execute(t_cmd **cmds, char ***envp) // executes some cmds, frees exec
         input_from_file = 1;
     // If there are pipes with CD command -> Just go to the ft_execute_with_pipes and it does nothing
     // If there is redirection with CD command -> Do "cd ~" in Parent and create empty file (> or >>) or do nothing (<)
-    if ((cmds[i]->cmd == CD || cmds[i]->cmd == EXPORT || cmds[i]->cmd == UNSET 
-        || cmds[i]->cmd == EXIT))// && (cmds[i + 1]->cmd == END)) // 05/09
+    if ((cmds[i]->cmd == CD || cmds[i]->cmd == EXPORT || cmds[i]->cmd == UNSET || \
+        cmds[i]->cmd == EXIT) && ((cmds[i + 1]->cmd == END) || (cmds[i + 1]->cmd == NONE))) // 05/09
     {
         if ((i = ft_execute_in_parent(cmds, envp)) == -1)
             return (-1);

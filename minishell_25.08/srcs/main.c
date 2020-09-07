@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/06 20:09:43 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/07 22:31:22 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,16 @@ int		launch_commands(char *line, char ***envp, int *exit_code) // mkdir cd --- ?
 	if (!(cmds = parse_cmd(line))) // возвращает массив команд на исполнение
 		return (*exit_code = 1);
 	ft_set_exit_code(cmds, *exit_code);
+// TEST
+	// int	t;
+
+	// t = 0;
+	// while (cmds[t]->cmd != END)
+	// {
+	// 	printf("[%d] %s <%d>\n", cmds[t]->cmd, cmds[t]->str, cmds[t]->status);
+	// 	t++;
+	// }
+//
 	while (cmds && ((cmds[i])->cmd != END))
     {
         if ((j = ft_execute(&(cmds[i]), envp)) == -1) // Тут я отправляю указатель не на начало cmds, поэтому освобождать cmds нужно тут!!!

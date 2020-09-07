@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/07 00:30:12 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/07 22:02:25 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct	s_cmd
 // } t_exec_cmd;
 
 char			**ft_add_or_replace(char *key, char *value, char **envp);
+int				ft_atoi(char *str);
 int     		check_cmd_status(char *line);
 int     		check_cmd_status(char *line);
 char 			*correct_echo_msg(char **str, char **envr, t_cmd **cmds);
@@ -85,7 +86,7 @@ int 			skip_whitespace(char *str);
 int 			start_cd(char *line, char **env, t_cmd **cmds);
 int 			start_echo(char *line, char **envr, t_cmd **cmds);
 int 			start_env(char *line, char **envp);
-int				start_export(char *line, char ***envp);
+int				start_export(char *line, char ***envp, t_cmd **cmds);
 int 			start_pwd(char *line);
 int 			start_unknown_cmd(char *line, char **env);
 int 			start_unset(char *line, char ***envp); // added envp (mondrew)

@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:30:44 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/07 00:20:00 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/07 18:51:09 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int		start_with(char *str, char *con) // it is strncmp, isn't it? (mondrew)
 	return (0);
 }
 
-int		start_with_special(char *str, char *con) // for check_pipes and check_redirection
+int		start_with_special(char *str, char *con) // for check_cmd_status
 {
 	int		i;
 
