@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_add_or_replace.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/07 19:40:49 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/08 19:45:54 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,14 +118,8 @@ static char	**ft_add_value(char *key, char *value, char **envp)
 		if (!(new_arr[i] = ft_strdup(key)))
 			return (ft_free_array(new_arr));
 	}
-	else // add here strjoin_free_left (my version)
+	else
 	{
-		// if (value[0] != '"')
-		// {
-		// 	if (!(temp = ft_strjoin(key, "=\"")))
-		// 		return (ft_free_array(new_arr));
-		// }
-		//else if
 		if (!(temp = ft_strjoin(key, "=")))
 			return (ft_free_array(new_arr));
 		if (!(new_arr[i] = ft_strjoin(temp, value)))
@@ -134,16 +128,6 @@ static char	**ft_add_value(char *key, char *value, char **envp)
 			return (ft_free_array(new_arr));
 		}
 		free(temp);
-		// if (value[0] != '"')
-		// {
-		// 	temp = new_arr[i];
-		// 	if (!(new_arr[i] = ft_strjoin(temp, "\"")))
-		// 	{
-		// 		free(temp);
-		// 		return (ft_free_array(new_arr));
-		// 	}
-		// 	free(temp);
-		// }
 	}
 	i++;
 	new_arr[i] = NULL;
@@ -169,9 +153,9 @@ char	**ft_add_or_replace(char *key, char *value, char **envp)
 		if ((envp[i][j] == '=' || envp[i][j] == '\0') && key[j] == '\0')
 		{
 			if (!value)
-				return (ft_copy_array(envp)); // ну это точно не нужно делать, просто вернем NULL
+				return (ft_copy_array(envp));
 			else if (envp[i][j + 1] && !ft_strncmp(value, &envp[i][j + 1], ft_strlen(value) + 1))
-				return (ft_copy_array(envp)); // ну это точно не нужно делать, просто вернем NULL
+				return (ft_copy_array(envp));
 			else
 				return (ft_replace_value(envp, value, i));
 		}

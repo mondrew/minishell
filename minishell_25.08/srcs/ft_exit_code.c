@@ -1,32 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_exit_code.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/27 09:14:22 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/08 19:44:36 by gjessica         ###   ########.fr       */
+/*   Created: 2020/09/08 12:28:58 by gjessica          #+#    #+#             */
+/*   Updated: 2020/09/08 19:45:18 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char		*ft_strdup(char *str)
+void		ft_set_exit_code(t_cmd **cmds, int exit_code)
 {
-	char			*dest;
-	char			*temp;
+	int		i;
 
-	temp = (char *)malloc(sizeof(*dest) * (ft_strlen(str) + 1));
-	if (!temp)
-		return (NULL);
-	dest = temp;
-	while (*str)
-	{
-		*temp = *str;
-		temp++;
-		str++;
-	}
-	*temp = '\0';
-	return (dest);
+	i = 0;
+	while (cmds && cmds[i]->cmd != END)
+		i++;
+	cmds[i]->status = exit_code;
+}
+
+int			ft_get_exit_code(t_cmd **cmds)
+{
+	int		i;
+
+	i = 0;
+	while (cmds && cmds[i]->cmd != END)
+		i++;
+	return (cmds[i]->status);
 }

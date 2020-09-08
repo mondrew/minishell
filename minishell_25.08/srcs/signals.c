@@ -1,32 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/27 09:14:22 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/08 19:44:36 by gjessica         ###   ########.fr       */
+/*   Created: 2020/09/08 11:59:12 by gjessica          #+#    #+#             */
+/*   Updated: 2020/09/08 11:59:45 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char		*ft_strdup(char *str)
+void	sigint(void)
 {
-	char			*dest;
-	char			*temp;
+	ft_putstr("\n");
+	print_prompt();
+}
 
-	temp = (char *)malloc(sizeof(*dest) * (ft_strlen(str) + 1));
-	if (!temp)
-		return (NULL);
-	dest = temp;
-	while (*str)
-	{
-		*temp = *str;
-		temp++;
-		str++;
-	}
-	*temp = '\0';
-	return (dest);
+void	sigquit(void)
+{
+	ft_putstr("minishell: quit (core dumped)\n");
+}
+
+void	signotactive(void)
+{
+	return ;
+}
+
+void	sigintexec(void)
+{
+	ft_putstr("\n");
 }

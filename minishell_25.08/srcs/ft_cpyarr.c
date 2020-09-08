@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cpyarr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/01 17:00:50 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/07 13:40:55 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/08 19:45:46 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char **ft_cpyarr(char **arr)
+char		**ft_cpyarr(char **arr)
 {
-	char **res;
-	int i;
+	char	**res;
+	int		i;
 
 	i = 0;
 	if (!arr)
@@ -31,5 +31,5 @@ char **ft_cpyarr(char **arr)
 		i++;
 	}
 	res[i] = NULL;
-	return res;
+	return (res);
 }

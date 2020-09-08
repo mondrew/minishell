@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:30:44 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/07 18:51:09 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/08 09:21:18 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *get_line_env(char **env, char *param) // В отдельный файл. Функция возвращает указатель на строку в env с нужной переменной?
-											// т.е. *env = "HOME=/path_to_home_dir/" ? (mondrew)
+char	*get_line_env(char **env, char *param)
 {
 	char	*res;
 
@@ -23,7 +22,7 @@ char *get_line_env(char **env, char *param) // В отдельный файл. �
 		{
 			if (!(res = ft_strdup(*env)))
 			{
-				printf("Error: cannot allocate memory\n");
+				ft_putstr("Error: cannot allocate memory\n");
 				return (NULL);
 			}
 			return (res);
@@ -33,14 +32,14 @@ char *get_line_env(char **env, char *param) // В отдельный файл. �
 	return (NULL);
 }
 
-int ft_putstr(char *s)
+int		ft_putstr(char *s)
 {
 	if (s != NULL)
-		return write(1, s, ft_strlen(s));
+		return (write(1, s, ft_strlen(s)));
 	return (0);
 }
 
-int skip_whitespace(char *str)
+int		skip_whitespace(char *str)
 {
 	int i;
 
@@ -50,8 +49,7 @@ int skip_whitespace(char *str)
 	return (i);
 }
 
-
-int skip_non_printable(char *str)
+int		skip_non_printable(char *str)
 {
 	int i;
 
@@ -60,100 +58,3 @@ int skip_non_printable(char *str)
 		i++;
 	return (i);
 }
-
-int		start_with_nospace(char *str, char *con) // made by mondrew
-{
-	int		i;
-
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i] && con[i])
-	{
-		if (str[i] != con[i])
-			return (0);
-		i++;
-	}
-	if (str[i] == '=' && (con[i] == ' ' || con[i] == '$' || con[i] == '\0')) // edited by mondrew 01/09/2020 echo eiufh$HOME$HOME
-		return (1);
-	return (0);
-}
-
-/*
-int start_with_nospace(char *str, char *con) // it is strncmp (mondrew) | что делает эта функция??
-												// проверяет, совпадает ли имя переменной со списком переменных?
-												// Тогда совпадение будет, когда в строке из списка переменных будет '=',
-												// а в проверяемой строке - '\0'
-{
-	int i;
-
-	i = 0;
-	if (!str)
-		return(0);
-	while (str[i] && con[i]) // Эта ситуация может возникнуть, когда str = "HOME=/usr/path/", а con = "HOM"
-	{
-		if (str[i] != con[i])
-			return(0);
-		i++;
-	}
-	return (1);
-}
-*/
-
-int		start_with(char *str, char *con) // it is strncmp, isn't it? (mondrew)
-{
-	int		i;
-
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i] && con[i])
-	{
-		if (str[i] != con[i])
-			return (0);
-		i++;
-	}
-	if (!con[i] && (!str[i] || str[i] == ' ' || str[i] == ';' || \
-		str[i] == '>' || str[i] == '<' || str[i] == '|'))
-		return (1);
-	return (0);
-}
-
-int		start_with_special(char *str, char *con) // for check_cmd_status
-{
-	int		i;
-
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i] && con[i])
-	{
-		if (str[i] != con[i])
-			return (0);
-		i++;
-	}
-	if (!con[i])
-		return (1);
-	return (0);
-}
-
-char *ft_strcdup(char *str, char c)
-{
-	char			*dest;
-	char			*temp;
-
-	temp = (char *)malloc(sizeof(*dest) * (ft_strlen(str) + 1)); // sizeof(char) is the same (mondrew)
-	if (!temp)
-		return (NULL);
-	dest = temp;
-	while (*str && *str != c)
-	{
-		*temp = *str;
-		temp++;
-		str++;
-	}
-	*temp = '\0';
-	return (dest);
-}
-
-

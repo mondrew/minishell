@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_strcdup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/27 09:14:22 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/08 19:44:36 by gjessica         ###   ########.fr       */
+/*   Created: 2020/09/08 09:19:00 by gjessica          #+#    #+#             */
+/*   Updated: 2020/09/08 19:44:46 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char		*ft_strdup(char *str)
+char	*ft_strcdup(char *str, char c)
 {
 	char			*dest;
 	char			*temp;
@@ -21,7 +21,7 @@ char		*ft_strdup(char *str)
 	if (!temp)
 		return (NULL);
 	dest = temp;
-	while (*str)
+	while (*str && *str != c)
 	{
 		*temp = *str;
 		temp++;

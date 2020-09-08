@@ -3,30 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   check_cmd_status.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/03 13:49:42 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/03 13:49:42 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/08 19:46:23 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int     check_cmd_status(char *line)
+int		check_cmd_status(char *line)
 {
-    int     status;
+	int status;
 
-    status = NONE;
-    if (start_with_special(line, ">>"))
-        return (RFWD);
-    else if (start_with_special(line, ">")) // GJ Поменял местами, иначе никогда не определится RFWD
-        return (RFWS);
-    else if (start_with_special(line, "<"))
-        return (RBWS);
-    else if (start_with_special(line, ";"))
-        return (NONE);
-    else if (start_with_special(line, "|"))
-        return (PIPE);
-    else
-        return (NONE);
+	status = NONE;
+	if (start_with_special(line, ">>"))
+		return (RFWD);
+	else if (start_with_special(line, ">"))
+		return (RFWS);
+	else if (start_with_special(line, "<"))
+		return (RBWS);
+	else if (start_with_special(line, ";"))
+		return (NONE);
+	else if (start_with_special(line, "|"))
+		return (PIPE);
+	else
+		return (NONE);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/07 19:27:46 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/08 10:00:54 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,30 @@ void	ft_strswap(char **strs, int i1, int i2)
 	strs[i2] = tmp;
 }
 
-char	**sort_and_show(char **tenvp) // надо переписать. Она не должна менять порядок в envp, а только отображать его в алфавитном порядке!
-									// env;export;env - первый и последний результат дб одинаковыми!!!
+void	show(char **envp)
+{
+	int i;
+
+	i = 0;
+	if (envp)
+		while (envp[i])
+		{
+			ft_putstr(envp[i]);
+			ft_putstr("\n");
+			i++;
+		}
+}
+
+char	**sort_and_show(char **tenvp)
 {
 	char	**envp;
 	int		is_sort;
 	int		i;
 
-	if (!(envp = ft_cpyarr(tenvp)))
-		return (NULL);
+	envp = ft_cpyarr(tenvp);
 	is_sort = 0;
 	i = 0;
-	while (envp[i] && envp[i + 1]) //
+	while (envp && envp[i] && envp[i + 1])
 	{
 		while (envp[i + 1])
 		{
@@ -48,32 +60,11 @@ char	**sort_and_show(char **tenvp) // надо переписать. Она не
 			break ;
 		i = 0;
 	}
-
-	// while (envp[i] && envp[i + 1]) // можно было каждый раз начинать сначала, чтобы обойтись без рекурсии (mondrew)
-	// {
-	// 	if (ft_strcmp(envp[i], envp[i + 1]) > 0)
-	// 	{
-	// 		ft_strswap(envp, i, i + 1);
-	// 		is_sort = 1;
-	// 	}
-	// 	i++;
-	// 	if (!envp[i + 1] && is_sort)
-	// 	{
-	// 		is_sort = 0;
-	// 		i = 0; // не нужно вроде...
-	// 	}
-	// }
-	i = 0;
-	while (envp[i])
-	{
-		ft_putstr(envp[i]);
-		ft_putstr("\n");
-		i++;
-	}
+	show(envp);
 	return (envp);
 }
 
-char	**parse_and_add(char *line, char **envp, t_cmd **cmds) // думаю тут нужно отправлять указатель на envp -> &envp
+char	**parse_and_add(char *line, char **envp, t_cmd **cmds)
 {
 	int		i;
 	int		j;
@@ -87,29 +78,20 @@ char	**parse_and_add(char *line, char **envp, t_cmd **cmds) // думаю тут
 	while (line[i] != '=' && line[i] != ' ' && line[i] != '\0')
 		i++;
 	if (!(key = malloc(sizeof(char) * (i + 1))))
-	{
-		printf("Error: cannot allocate memory\n");
 		return (NULL);
-	}
 	ft_strlcpy(key, line, i + 1);
-	if (line[i] == ' ' || line[i] == '\0') // export NEW
+	if (line[i] == ' ' || line[i] == '\0')
 	{
-		if (!(new_envp = ft_add_or_replace(key, value, envp))) // have to return NULL
-		{
-			printf("Error: cannot allocate memory\n");
+		new_envp = ft_add_or_replace(key, value, envp);
+		if (!new_envp)
 			free(key);
-			return (NULL);
-		}
 		return (new_envp);
 	}
-	else if (line[i] == '=' && (line[i + 1] == '\0' || line[i + 1] == ' ')) // export NEW=
+	else if (line[i] == '=' && (line[i + 1] == '\0' || line[i + 1] == ' '))
 	{
-		if (!(new_envp = ft_add_or_replace(key, "", envp)))
-		{
-			printf("Error: cannot allocate memory\n");
+		new_envp = ft_add_or_replace(key, "", envp);
+		if (!new_envp)
 			free(key);
-			return (NULL);
-		}
 		return (new_envp);
 	}
 	else if (line[i] == '=')
@@ -119,23 +101,19 @@ char	**parse_and_add(char *line, char **envp, t_cmd **cmds) // думаю тут
 		i++;
 	if (!(value = malloc(sizeof(char) * (i - j + 1))))
 	{
-		printf("Error: cannot allocate memory\n");
 		free(key);
 		return (NULL);
 	}
 	ft_strlcpy(value, &(line[j]), i - j + 1);
-	// NEW 07/09
-	if (!(value = correct_echo_msg(&value, envp, cmds))) // added 07/09
+	if (!(value = correct_echo_msg(&value, envp, cmds)))
 	{
 		free(value);
 		free(key);
-		printf("Error: export failed\n");
+		ft_putstr("Error: export failed\n");
 		return (NULL);
 	}
-	//
 	if (!(new_envp = ft_add_or_replace(key, value, envp)))
 	{
-		printf("Error: cannot allocate memory\n");
 		free(key);
 		free(value);
 		return (NULL);
@@ -144,69 +122,6 @@ char	**parse_and_add(char *line, char **envp, t_cmd **cmds) // думаю тут
 	free(value);
 	return (new_envp);
 }
-
-/*
-int		parse_and_add(char *line, char **envp)
-{
-	int i;
-	int start_key;
-	int start_val;
-	int end_key;
-	int end_val;
-
-	i = 0;
-	start_key = -1;
-	start_val = -1;
-	end_key = -1;
-	end_val = -1;
-	i = skip_whitespace(line);
-	//printf("%s %d\n", line, i);
-	while (line[i])
-	{
-		if (start_key == -1 && line[i] != '=')
-			start_key = i;
-		else if (end_key == -1 && (line[i] == '=')  && i > 0)
-			end_key = i;
-		else if (start_key != -1 && end_key != -1 && start_val == -1 && i > 0 && line[i - 1] == '=')
-			start_val = i;
-		else if (start_key != -1 && end_key != -1 && start_val != -1 && line[i] == ' ')
-			end_val = i;
-		else if (start_key > -1 && end_key == -1 && line[i] == ' ') // а если эту переменную определили до вызова export? (mondrew) ??
-		{
-			printf ("minishell: bad assignment\n");
-			start_key = -1;
-			start_val = -1;
-			end_key = -1;
-			end_val = -1;
-		}
-		i++;
-	//	printf("%d, %d, %d, %d\n",start_key, end_key, start_val, end_val);
-		if (start_key > -1 && end_key > -1 && start_val > -1 && end_val > -1)
-		{
-
-		//	printf("NEW_PARAM\n");
-			printf("%s = %s\n", ft_substr((line), start_key, end_key-start_key), ft_substr(line, start_val, end_val - start_val));
-			// substr выделяет память с помощью malloc (mondrew)
-			start_key = -1;
-			start_val = -1;
-			end_key = -1;
-			end_val = -1;
-			i += skip_whitespace(line + i);
-		}
-	}
-	if (start_key > -1 && end_key > -1 && start_val > -1 && end_val == -1)
-	{
-		end_val = i;
-		printf("%s = %s\n", ft_substr((line), start_key, end_key-start_key), ft_substr(line, start_val, end_val - start_val));
-		// substr выделяет память с помощью malloc (mondrew)
-	}
-	// Функция недописана (mondrew)
-	// В parse_and_add - в envp должна добавиться новая переменная окружения
-	// parse_and_end будет выделать память под новую переменную - соответственно в случае ошибки при вызове malloc
-	// нужно вернуть 0, чтобы в start_export отследить этот момент!
-	return (1);
-}
-*/
 
 int		start_export(char *line, char ***envp, t_cmd **cmds)
 {
@@ -225,7 +140,6 @@ int		start_export(char *line, char ***envp, t_cmd **cmds)
 		if (!(new_envp = parse_and_add(line, *envp, cmds)))
 			return (-1);
 	}
-	//ft_free_split(*envp); // It seems like envp from main is not allocated and can't be freed
 	*envp = new_envp;
 	return (1);
 }

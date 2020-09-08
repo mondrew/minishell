@@ -6,13 +6,13 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:28:29 by mondrew           #+#    #+#             */
-/*   Updated: 2020/08/25 20:49:17 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/08 11:54:31 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	**ft_free_array(char **arr)
+static char		**ft_free_array(char **arr)
 {
 	int i;
 
@@ -26,10 +26,10 @@ static char	**ft_free_array(char **arr)
 	return (NULL);
 }
 
-static char **ft_copy_array(char **envp)
+static char		**ft_copy_array(char **envp)
 {
-	int i;
-	char **new_arr;
+	int		i;
+	char	**new_arr;
 
 	i = 0;
 	while (envp[i])
@@ -47,10 +47,10 @@ static char **ft_copy_array(char **envp)
 	return (new_arr);
 }
 
-static char	**remove_str(char **envp, int del)
+static char		**remove_str(char **envp, int del)
 {
-	int i;
-	char **new_arr;
+	int		i;
+	char	**new_arr;
 
 	i = 0;
 	while (envp[i])
@@ -75,7 +75,7 @@ static char	**remove_str(char **envp, int del)
 	return (new_arr);
 }
 
-char	**remove_key(char *key, char **envp)
+char			**remove_key(char *key, char **envp)
 {
 	int i;
 	int j;

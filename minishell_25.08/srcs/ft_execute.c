@@ -401,7 +401,7 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             //ft_free_cmds(cmds);
             exit(1); // Нужно послать сигнал в Parent (kill?), чтобы в parent-e проверить и сделать free, если нужно
         }
-        exit(0); // 
+        exit(0); //
     }
     else
     {
@@ -466,7 +466,7 @@ int     ft_execute_with_pipes(t_cmd **cmds, int pipes, int input_from_file, char
             ft_set_exit_code(cmds, wstatus / 256);
             j++;
             i += 2;
-            pipes--;   
+            pipes--;
         }
     }
     // This is the last after-pipe
@@ -611,7 +611,7 @@ int     ft_execute_with_redir(t_cmd **cmds, char **envp)
         waitpid(pid, &wstatus, 0);
         ft_set_exit_code(cmds, wstatus / 256);
         i = j; // save i position
-        // while (j >= 0) // I free everything in 
+        // while (j >= 0) // I free everything in
         // {
         //     ft_free_cmd_elem(cmds[j]);
         //     j--;

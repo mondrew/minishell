@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/07 23:48:25 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/08 12:37:59 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,11 @@ char			*ft_strsdup(char *str, char *set);
 char			*ft_strtrim(char const *s1, char const *set);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
 char **ft_cpyarr(char **arr);
+void	sigint(void);
+void	sigquit(void);
+void	signotactive(void);
+void	sigintexec(void);
+int			launch_commands(char *line, char ***envp, int *exit_code);
 
 /*
 * GET NEXT LINE

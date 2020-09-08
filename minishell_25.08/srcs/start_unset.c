@@ -3,19 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   start_unset.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/18 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/07 20:42:18 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/08 09:23:34 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**ft_free_arr(char **arr, int j) // made by mondrew
+char	**ft_free_arr(char **arr, int j)
 {
-	// эту ф-цию можно использовать для всей программы
-	int		i;
+	int	i;
 
 	i = 0;
 	while (i < j)
@@ -27,7 +26,7 @@ char	**ft_free_arr(char **arr, int j) // made by mondrew
 	return (NULL);
 }
 
-char	**ft_new_env_arr(char ***old, int i) // made by mondrew
+char	**ft_new_env_arr(char ***old, int i)
 {
 	char	**new;
 	int		j;
@@ -39,8 +38,7 @@ char	**ft_new_env_arr(char ***old, int i) // made by mondrew
 		return (NULL);
 	while ((*old)[j] != NULL)
 		j++;
-	j--;
-	if (!(new = malloc(sizeof(char *) * (j + 1))))
+	if (!(new = malloc(sizeof(char *) * j)))
 		return (NULL);
 	j = 0;
 	while ((*old)[k] != NULL)
@@ -54,11 +52,10 @@ char	**ft_new_env_arr(char ***old, int i) // made by mondrew
 		k++;
 	}
 	new[j] = NULL;
-	//ft_free_arr(*old, k); // I should not free envp
 	return (new);
 }
 
-int		start_unset(char *line, char ***envp) // made by mondrew
+int		start_unset(char *line, char ***envp)
 {
 	int		i;
 	char	**new;
@@ -69,7 +66,7 @@ int		start_unset(char *line, char ***envp) // made by mondrew
 	while ((*envp)[i] != NULL)
 	{
 		if (!ft_strncmp(line, (*envp)[i], ft_strlen(line)) && \
-			(!((*envp)[i][ft_strlen(line)]) || ((*envp)[i][ft_strlen(line)] == '='))) // correct GJ
+	(!((*envp)[i][ft_strlen(line)]) || ((*envp)[i][ft_strlen(line)] == '=')))
 			break ;
 		i++;
 	}
