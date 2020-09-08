@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/08 18:36:29 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/08 20:06:25 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,11 @@ int			minishell(char **envp)
 	while (!is_exit)
 	{
 		print_prompt();
-		signal(SIGINT, sigint());
-		signal(SIGQUIT, signotactive());
+		signal(SIGINT, sigint);
+		signal(SIGQUIT, signotactive);
 		line = read_line();
-		signal(SIGINT, sigintexec());
-		signal(SIGQUIT, sigquit());
+		signal(SIGINT, sigintexec);
+		signal(SIGQUIT, sigquit);
 		result = launch_commands(line, &envp, &exit_code);
 		if (line)
 			free(line);
@@ -62,5 +62,7 @@ int			minishell(char **envp)
 
 int			main(int argc, char **argv, char **envp)
 {
+	(void)argc;
+	(void)argv;
 	return (minishell(envp));
 }
