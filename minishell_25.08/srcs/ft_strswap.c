@@ -1,25 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   start_env.c                                        :+:      :+:    :+:   */
+/*   ft_strswap.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/10 13:51:40 by gjessica         ###   ########.fr       */
+/*   Created: 2020/09/11 09:48:23 by gjessica          #+#    #+#             */
+/*   Updated: 2020/09/11 09:48:50 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		start_env(char *line, char **envp)
+void	ft_strswap(char **strs, int i1, int i2)
 {
-	(void)line;
-	while (envp && *envp)
-	{
-		ft_putstr(*envp);
-		ft_putstr("\n");
-		envp++;
-	}
-	return (0);
+	char		*tmp;
+
+	tmp = strs[i1];
+	strs[i1] = strs[i2];
+	strs[i2] = tmp;
 }

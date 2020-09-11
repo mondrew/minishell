@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/08 20:04:16 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/11 09:57:28 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,15 @@ void	signotactive(int);
 void	sigintexec(int);
 int			launch_commands(char *line, char ***envp, int *exit_code);
 void		print_prompt(void);
+int			skip_status(char *str);
+int			ft_get_quote(char *line, int i, int quote);
+t_cmd		**free_cmds2(int cmd_i, t_cmd **cmds);
+char		**ft_free_array(char **arr);
+char		**ft_free_special_array(char **arr, int n);
+char		**ft_copy_array(char **envp);
+void	ft_strswap(char **strs, int i1, int i2);
+char 	**free_key_val_ret(char **key, char **val, char **ret);
+void	show(char **envp);
 
 /*
 * GET NEXT LINE

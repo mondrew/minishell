@@ -6,13 +6,13 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/08 20:06:25 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/11 09:55:17 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char		*read_line(void)
+static char	*read_line(void)
 {
 	char	*line;
 	int		res;
@@ -34,7 +34,7 @@ void		print_prompt(void)
 	ft_putstr("\x1b[0m");
 }
 
-int			minishell(char **envp)
+static int	minishell(char **envp)
 {
 	char	*line;
 	int		is_exit;

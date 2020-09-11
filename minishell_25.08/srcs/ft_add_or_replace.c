@@ -6,67 +6,11 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/08 19:45:54 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/11 09:53:41 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static char	**ft_free_array(char **arr)
-{
-	int i;
-
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-	return (NULL);
-}
-
-static char	**ft_free_special_array(char **arr, int n)
-{
-	int i;
-
-	i = 0;
-	while (arr[i] && i < n)
-	{
-		free(arr[i]);
-		i++;
-	}
-	if (i == n)
-		i++;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-	return (NULL);
-}
-
-static char **ft_copy_array(char **envp)
-{
-	int i;
-	char **new_arr;
-
-	i = 0;
-	while (envp[i])
-		i++;
-	if (!(new_arr = malloc(sizeof(char *) * (i + 1))))
-		return (NULL);
-	i = 0;
-	while (envp[i])
-	{
-		if (!(new_arr[i] = ft_strdup(envp[i])))
-			return (ft_free_array(new_arr));
-		i++;
-	}
-	new_arr[i] = NULL;
-	return (new_arr);
-}
 
 static char		**ft_replace_value(char **envp, char *value, int i)
 {
@@ -95,24 +39,22 @@ static char		**ft_replace_value(char **envp, char *value, int i)
 	return (new_arr);
 }
 
-static char	**ft_add_value(char *key, char *value, char **envp)
+static int		get_size_array(char **arr)
 {
-	int		i;
-	char	**new_arr;
-	char	*temp;
+	int i;
 
 	i = 0;
-	while (envp[i])
+	if (!arr)
+		return (0);
+	while (arr[i])
 		i++;
-	if (!(new_arr = malloc(sizeof(char *) * (i + 1 + 1))))
-		return (NULL);
-	i = 0;
-	while (envp[i])
-	{
-		if (!(new_arr[i] = ft_strdup(envp[i])))
-			return (ft_free_array(new_arr));
-		i++;
-	}
+	return (i);
+}
+
+static char		**get_elem(char *value, char **new_arr, int i, char *key)
+{
+	char	*temp;
+
 	if (value == NULL)
 	{
 		if (!(new_arr[i] = ft_strdup(key)))
@@ -129,12 +71,32 @@ static char	**ft_add_value(char *key, char *value, char **envp)
 		}
 		free(temp);
 	}
+	return (new_arr);
+}
+
+static char		**ft_add_value(char *key, char *value, char **envp)
+{
+	int		i;
+	char	**new_arr;
+	char	*temp;
+
+	i = 0;
+	if (!(new_arr = malloc(sizeof(char *) * (get_size_array(envp) + 2))))
+		return (NULL);
+	while (envp[i])
+	{
+		if (!(new_arr[i] = ft_strdup(envp[i])))
+			return (ft_free_array(new_arr));
+		i++;
+	}
+	if (!get_elem(value, new_arr, i, key))
+		return (NULL);
 	i++;
 	new_arr[i] = NULL;
 	return (new_arr);
 }
 
-char	**ft_add_or_replace(char *key, char *value, char **envp)
+char			**ft_add_or_replace(char *key, char *value, char **envp)
 {
 	int i;
 	int j;
@@ -144,17 +106,16 @@ char	**ft_add_or_replace(char *key, char *value, char **envp)
 	{
 		j = 0;
 		while (envp[i][j] != '\0' && envp[i][j] != '=' && key[j] != '\0')
-		{
 			if (envp[i][j] == key[j])
 				j++;
 			else
 				break ;
-		}
 		if ((envp[i][j] == '=' || envp[i][j] == '\0') && key[j] == '\0')
 		{
 			if (!value)
 				return (ft_copy_array(envp));
-			else if (envp[i][j + 1] && !ft_strncmp(value, &envp[i][j + 1], ft_strlen(value) + 1))
+			else if (envp[i][j + 1] && !ft_strncmp(value, &envp[i][j + 1],
+			ft_strlen(value) + 1))
 				return (ft_copy_array(envp));
 			else
 				return (ft_replace_value(envp, value, i));
