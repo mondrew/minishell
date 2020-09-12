@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/12 01:49:12 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/12 15:47:37 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,12 @@ typedef struct	s_cmd
 	int			cmd;
 	int			status;
 	char		*str;
-} t_cmd;
+}				t_cmd;
 
-char			*ft_add_bf_dollar_to_res(char *str, char *res, int *i, int *quotes);
-char			**ft_add_command_to_paths(char **paths, char *command, int i, int j);
+char			*ft_add_bf_dollar_to_res(char *str, char *res, int *i, \
+																int *quotes);
+char			**ft_add_command_to_paths(char **paths, char *command, \
+																int i, int j);
 char			*ft_add_dollar_to_res(char *res, int *i);
 char			*ft_add_env_value(char *str, char *res, char *param, int *i);
 char			**ft_add_or_replace(char *key, char *value, char **envp);
@@ -71,26 +73,36 @@ int				ft_check_input_from_file(t_cmd **cmds);
 int				ft_check_pipes(t_cmd **cmds, int input_from_file);
 int				ft_check_redirection(t_cmd **cmds);
 int				ft_close_fds_in_parent_pipe(int *pipefd, int i);
-int				ft_cmd_nf(char *command, t_cmd **cmds, char **array, pid_t pid);
+int				ft_cmd_nf(char *command, t_cmd **cmds, char **array, \
+																pid_t pid);
 char			*correct_echo_msg(char **str, char **envr, t_cmd **cmds);
 char			**ft_copy_array(char **envp);
 char			*ft_copy_without_quotes(char *str);
-char 			**ft_cpyarr(char **arr);
-void			ft_cpy_set_null_backslash(char *new, char c, int *j, int *backslash);
+char			**ft_cpyarr(char **arr);
+void			ft_cpy_set_null_backslash(char *new, char c, int *j, \
+															int *backslash);
 void			ft_cpy_with_quotes(char c, int *quote, int *i);
 void			ft_cpy_with_whitespaces(char c, int quote, int *i);
 char			**ft_cpyarr(char **arr);
-char			*ft_envvar_changer(char **help, char **envp, int *quotes, t_cmd **cmds);
+char			*ft_envvar_changer(char **help, char **envp, int *quotes, \
+																t_cmd **cmds);
 int				ft_execute(t_cmd **cmds, char ***envp);
 int				ft_execute_in_parent(t_cmd **cmds, char ***envp);
-int				ft_execute_pipes(t_cmd **cmds, int pipes, int input_file, char **envp);
+int				ft_execute_pipes(t_cmd **cmds, int pipes, int input_file, \
+																char **envp);
 int				ft_execute_with_redir(t_cmd **cmds, char **envp);
-int				ft_execve_buildins_one(t_cmd *cmds, t_cmd **cmds_big, char **envp);
-int				ft_execve_buildins_two(t_cmd *cmds, t_cmd **cmds_big, char **envp);
-int				ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp, pid_t pid);
-int				ft_execve_unknown(t_cmd *cmds, t_cmd **cmds_big, char **envp, pid_t pid);
-char			*ft_exit_code_or_path(char *str, char *res, int *i, t_cmd **cmds);
-int				ft_first_pipe(int *pipefd, t_cmd **cmds, int input_file, char **envp);
+int				ft_execve_buildins_one(t_cmd *cmds, t_cmd **cmds_big, \
+																char **envp);
+int				ft_execve_buildins_two(t_cmd *cmds, t_cmd **cmds_big, \
+																char **envp);
+int				ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp, \
+																	pid_t pid);
+int				ft_execve_unknown(t_cmd *cmds, t_cmd **cmds_big, \
+													char **envp, pid_t pid);
+char			*ft_exit_code_or_path(char *str, char *res, int *i, \
+																t_cmd **cmds);
+int				ft_first_pipe(int *pipefd, t_cmd **cmds, int input_file, \
+																char **envp);
 char			**ft_free_array(char **arr);
 t_cmd			**ft_free_cmds(t_cmd **cmds);
 t_cmd			**free_cmds2(int cmd_i, t_cmd **cmds);
@@ -107,7 +119,8 @@ char			*get_line_env(char **env, char *param);
 char			*get_path(char **env);
 char			*get_path_name(char *str);
 int				ft_get_quote(char *line, int i, int quote);
-void			ft_goto_execve(t_cmd *cmds, t_cmd **cmds_big, char **envp, pid_t pid);
+void			ft_goto_execve(t_cmd *cmds, t_cmd **cmds_big, char **envp, \
+																	pid_t pid);
 void			ft_goto_redirection(t_cmd **cmds, int j);
 void			ft_input_from_file(t_cmd **cmds, int input_file, int j);
 int				ft_is_buildin_first(int cmd);
@@ -125,7 +138,8 @@ void			ft_open_and_redirect(t_cmd **cmds, int j, int type);
 void			ft_open_failed_and_exit(void);
 int				ft_parent_wait(int pid, t_cmd **cmds, int j);
 t_cmd			**parse_cmd(char *line);
-void			ft_parse_quotes(char *str, int *i, int *single_quote, int *double_quote);
+void			ft_parse_quotes(char *str, int *i, int *single_quote, \
+															int *double_quote);
 void			ft_parse_quotes_for_spaces(char *str, int i, int *j);
 void			ft_print_cmd_not_found(char *str);
 void			print_prompt(void);
@@ -136,12 +150,13 @@ char			*remove_bad_quotes(char *str);
 char			*remove_bad_whitespaces(char *str);
 char			**remove_key(char *key, char **envp);
 char			**ft_remove_quotes_in_args(char **array);
-char			*ft_replace_env(char **help, char **envp, int *i, t_cmd **cmds);
+char			*ft_replace_env(char **help, char **envp, int *i, \
+															t_cmd **cmds);
 void			ft_set_exit_code(t_cmd **cmds, int exit_code);
-void			sigint(int);
-void			sigintexec(int);
-void			signotactive(int);
-void			sigquit(int);
+void			sigint(int sig);
+void			sigintexec(int sig);
+void			signotactive(int sig);
+void			sigquit(int sig);
 int				ft_simple_execute(t_cmd **cmds, char **envp);
 void			show(char **envp);
 void			ft_smart_cpy(char *str, char *new, int backslash, int *quote);
@@ -178,10 +193,11 @@ char			*ft_strsdup(char *str, char *set);
 void			ft_strswap(char **strs, int i1, int i2);
 char			*ft_strtrim(char const *s1, char const *set);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
-int				ft_treat_array(char **array, char **envp, t_cmd **cmds_big, pid_t pid);
+int				ft_treat_array(char **array, char **envp, t_cmd **cmds_big, \
+																	pid_t pid);
 
 /*
-* GET NEXT LINE
+** GET NEXT LINE
 */
 
 int				get_next_line(int fd, char **line);
