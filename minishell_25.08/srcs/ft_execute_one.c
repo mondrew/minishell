@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute_one.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 00:56:53 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 16:46:46 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/12 17:27:53 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,8 @@ int		ft_last_pipe(int *pipefd, t_cmd **cmds, int j, char **envp)
 int		ft_execute_pipes(t_cmd **cmds, int pipes, int input_file, char **envp)
 {
 	int		pipefd[pipes * 2];
-	int		i;
 	int		j;
 
-	i = 2;
 	j = 0;
 	if ((j = ft_first_pipe(pipefd, cmds, input_file, envp)) == -1)
 		return (-1);

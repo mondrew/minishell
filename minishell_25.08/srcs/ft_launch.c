@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_launch.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 12:37:28 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/08 20:19:37 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/12 17:28:25 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,9 @@ int			launch_commands(char *line, char ***envp, int *exit_code)
 {
 	t_cmd	**cmds;
 	int		i;
-	int		status;
 	int		j;
 
 	i = 0;
-	status = 0;
 	if (!(cmds = parse_cmd(line)))
 		return (*exit_code = 1);
 	ft_set_exit_code(cmds, *exit_code);

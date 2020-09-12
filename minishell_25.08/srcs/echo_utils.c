@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/12 16:52:51 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/12 17:27:25 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,9 @@ char	*remove_bad_whitespaces(char *str)
 {
 	int		i;
 	int		j;
-	int		quote;
 	char	*new_str;
 
 	i = 0;
-	quote = 0;
 	ft_parse_quotes_for_spaces(str, i, &j);
 	if (!(new_str = malloc(sizeof(char) * (j + 1))))
 		return (ft_free_one_null(str));

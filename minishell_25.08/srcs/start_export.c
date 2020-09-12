@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/11 09:50:57 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/12 17:30:02 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,9 @@
 char	**sort_and_show(char **tenvp)
 {
 	char	**envp;
-	int		is_sort;
 	int		i;
 
 	envp = ft_cpyarr(tenvp);
-	is_sort = 0;
 	i = 0;
 	while (envp && envp[i] && envp[i + 1])
 	{
