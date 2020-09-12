@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:01:27 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/08 09:25:04 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/12 21:21:46 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 
 char	*get_cur_path(void)
 {
-	char	cwd[PATH_MAX];
-
-	return (getcwd(cwd, sizeof(cwd)));
+	return (getcwd(NULL, PATH_MAX));
 }
 
 int		start_pwd(char *line, t_cmd **cmds)

@@ -6,7 +6,7 @@
 #    By: gjessica <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/06/10 02:15:42 by mondrew           #+#    #+#              #
-#    Updated: 2020/09/12 16:42:10 by gjessica         ###   ########.fr        #
+#    Updated: 2020/09/12 20:00:50 by gjessica         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ all: $(NAME)
 
 $(NAME): $(SRCS)
 	@echo "Compiling ... Please wait..."
-	@gcc $(FLAGS) $(SRCS) -I $(INCLUDES) -o $(NAME)
+	@gcc $(FLAGS) -ggdb3 $(SRCS) -I $(INCLUDES) -o $(NAME)
 	@echo "Compilation successfully done!"
 # $(NAME): $(OBJS)
 # 	@echo "Compiling ... Please wait..."

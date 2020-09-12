@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/11 09:55:17 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/12 21:34:39 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,18 @@ static char	*read_line(void)
 
 void		print_prompt(void)
 {
+	char *str;
+
+	str = get_cur_path();
 	ft_putstr("\x1b[1;4;32m");
 	ft_putstr("minishell:");
 	ft_putstr("\x1b[0m");
 	ft_putstr("\x1b[1;36m");
-	ft_putstr(get_cur_path());
+	ft_putstr(str);
 	ft_putstr("$ ");
 	ft_putstr("\x1b[0m");
+	if (str)
+		free(str);
 }
 
 static int	minishell(char **envp)
