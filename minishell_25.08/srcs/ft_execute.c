@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/18 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 01:01:46 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/12 16:44:51 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	ft_open_and_redirect(t_cmd **cmds, int j, int type)
 {
 	int		fd;
 
+	fd = -1;
 	if (type == RBWS)
 		fd = open(cmds[j + 1]->str, O_RDONLY);
 	else if (type == RFWS)

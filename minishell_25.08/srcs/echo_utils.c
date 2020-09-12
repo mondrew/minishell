@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/12 01:13:19 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/12 16:52:51 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	ft_cpy_with_whitespaces(char c, int quote, int *i)
 		(*i)++;
 }
 
-void	ft_smart_cpy_whitespaces(char *str, char *new, int i, int j)
+void	ft_smart_cpy_whitespaces(char *str, char *new_str, int i, int j)
 {
 	int		quote;
 
@@ -43,22 +43,22 @@ void	ft_smart_cpy_whitespaces(char *str, char *new, int i, int j)
 	{
 		if (str[i] == '"' || str[i] == '\'')
 		{
-			new[j] = str[i];
+			new_str[j] = str[i];
 			ft_cpy_with_quotes(str[i], &quote, &i);
 		}
 		else if (str[i] == ' ')
 		{
-			new[j] = str[i];
+			new_str[j] = str[i];
 			ft_cpy_with_whitespaces(str[i], quote, &i);
 		}
 		else
 		{
-			new[j] = str[i];
+			new_str[j] = str[i];
 			i++;
 		}
 		j++;
 	}
-	new[j] = '\0';
+	new_str[j] = '\0';
 }
 
 char	*remove_bad_whitespaces(char *str)
@@ -66,17 +66,17 @@ char	*remove_bad_whitespaces(char *str)
 	int		i;
 	int		j;
 	int		quote;
-	char	*new;
+	char	*new_str;
 
 	i = 0;
 	quote = 0;
 	ft_parse_quotes_for_spaces(str, i, &j);
-	if (!(new = malloc(sizeof(char) * (j + 1))))
+	if (!(new_str = malloc(sizeof(char) * (j + 1))))
 		return (ft_free_one_null(str));
 	j = 0;
-	ft_smart_cpy_whitespaces(str, new, i, j);
+	ft_smart_cpy_whitespaces(str, new_str, i, j);
 	free(str);
-	return (new);
+	return (new_str);
 }
 
 char	*correct_echo_msg(char **str, char **envr, t_cmd **cmds)

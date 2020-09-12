@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_utils_three.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:15:14 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 01:16:52 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/12 16:54:07 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,27 @@ char	*ft_strjoin_free_both(char *s1, char *s2)
 {
 	int		i;
 	int		j;
-	char	*new;
+	char	*new_str;
 
 	i = 0;
 	j = 0;
-	if (!(new = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1))))
+	if (!(new_str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1))))
 		return (ft_free_two_null(s1, s2));
 	while (s1[i] != '\0')
 	{
-		new[i] = s1[i];
+		new_str[i] = s1[i];
 		i++;
 	}
 	free(s1);
 	while (s2[j] != '\0')
 	{
-		new[i] = s2[j];
+		new_str[i] = s2[j];
 		i++;
 		j++;
 	}
-	new[i] = '\0';
+	new_str[i] = '\0';
 	free(s2);
-	return (new);
+	return (new_str);
 }
 
 void	ft_parse_quotes(char *str, int *i, int *single_quote, \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_utils_five.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:17:20 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 01:18:06 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/12 16:51:34 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ char	*ft_free_two_null(char *s1, char *s2)
 	return (NULL);
 }
 
-void	ft_smart_single_quotes(char *new, char c, int *j, int *quote)
+void	ft_smart_single_quotes(char *new_str, char c, int *j, int *quote)
 {
 	if (quote[1] == 1)
 	{
-		*new = c;
+		*new_str = c;
 		(*j)++;
 	}
 	else if (quote[0] == 1)

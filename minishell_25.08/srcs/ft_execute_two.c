@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute_two.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 00:59:04 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 01:04:01 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/12 16:47:05 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ int		ft_parent_wait(int pid, t_cmd **cmds, int j)
 int		ft_first_pipe(int *pipefd, t_cmd **cmds, int input_file, char **envp)
 {
 	pid_t	pid;
-	int		wstatus;
 	int		j;
 
 	j = 0;

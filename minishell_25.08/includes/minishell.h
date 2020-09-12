@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/12 15:47:37 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/12 16:53:13 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char			*correct_echo_msg(char **str, char **envr, t_cmd **cmds);
 char			**ft_copy_array(char **envp);
 char			*ft_copy_without_quotes(char *str);
 char			**ft_cpyarr(char **arr);
-void			ft_cpy_set_null_backslash(char *new, char c, int *j, \
+void			ft_cpy_set_null_backslash(char *new_str, char c, int *j, \
 															int *backslash);
 void			ft_cpy_with_quotes(char c, int *quote, int *i);
 void			ft_cpy_with_whitespaces(char c, int quote, int *i);
@@ -159,10 +159,10 @@ void			signotactive(int sig);
 void			sigquit(int sig);
 int				ft_simple_execute(t_cmd **cmds, char **envp);
 void			show(char **envp);
-void			ft_smart_cpy(char *str, char *new, int backslash, int *quote);
-void			ft_smart_cpy_whitespaces(char *str, char *new, int i, int j);
-void			ft_smart_double_quotes(char *new, char c, int *j, int *quote);
-void			ft_smart_single_quotes(char *new, char c, int *j, int *quote);
+void			ft_smart_cpy(char *str, char *new_str, int backslash, int *quote);
+void			ft_smart_cpy_whitespaces(char *str, char *new_str, int i, int j);
+void			ft_smart_double_quotes(char *new_str, char c, int *j, int *quote);
+void			ft_smart_single_quotes(char *new_str, char c, int *j, int *quote);
 int				ft_skip_env_key(char *param);
 int				skip_non_printable(char *str);
 void			ft_skip_spaces(char *str, int *i, int quote);

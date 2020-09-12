@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute_one.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 00:56:53 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 01:00:33 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/12 16:46:46 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	ft_redirection_to_file(t_cmd **cmds, int j)
 {
 	int		fd;
 
+	fd = 0;
 	if (cmds[j + 1]->cmd != END && (cmds[j + 1]->status == RFWS || \
 		cmds[j + 1]->status == RFWD))
 	{
@@ -99,7 +100,6 @@ int		ft_last_pipe(int *pipefd, t_cmd **cmds, int j, char **envp)
 int		ft_execute_pipes(t_cmd **cmds, int pipes, int input_file, char **envp)
 {
 	int		pipefd[pipes * 2];
-	pid_t	pid;
 	int		i;
 	int		j;
 

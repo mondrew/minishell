@@ -6,7 +6,7 @@
 /*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/11 09:53:41 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/12 16:43:03 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ static char		**ft_add_value(char *key, char *value, char **envp)
 {
 	int		i;
 	char	**new_arr;
-	char	*temp;
 
 	i = 0;
 	if (!(new_arr = malloc(sizeof(char *) * (get_size_array(envp) + 2))))

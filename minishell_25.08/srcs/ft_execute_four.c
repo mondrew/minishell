@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute_four.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:04:38 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 01:06:40 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/12 16:45:32 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,6 @@ int		ft_execve_unknown(t_cmd *cmds, t_cmd **cmds_big, char **envp, pid_t pid)
 
 int		ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp, pid_t pid)
 {
-	char	**array;
-
 	if (ft_is_buildin_first(cmds->cmd))
 		return (ft_execve_buildins_one(cmds, cmds_big, envp));
 	else if (ft_is_buildin_second(cmds->cmd))
