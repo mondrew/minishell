@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_pwd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:01:27 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/12 21:21:46 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/12 21:40:11 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int		start_pwd(char *line, t_cmd **cmds)
 		else
 		{
 			ft_putstr(path);
+			free(path);
 		}
 	}
 	ft_putstr("\n");
