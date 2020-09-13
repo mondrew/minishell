@@ -1,0 +1,7 @@
+total 160
+-rw-r--r--   1 evgeniichernov  staff   1649 13 сен 21:07 Makefile
+drwxr-xr-x@  4 evgeniichernov  staff    128 13 сен 21:21 includes
+-rwxr-xr-x   1 evgeniichernov  staff  74224 13 сен 21:21 minishell
+drwxr-xr-x@  3 evgeniichernov  staff     96 13 сен 21:21 minishell.dSYM
+drwxr-xr-x@ 53 evgeniichernov  staff   1696 13 сен 21:21 srcs
+-rw-r-----   1 evgeniichernov  staff      0 13 сен 21:23 test
