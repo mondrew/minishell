@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
+/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/13 11:23:17 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/13 18:25:24 by gjessica         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ void			sigquit(int sig);
 int				ft_simple_execute(t_cmd **cmds, char **envp);
 void			show(char **envp);
 void			ft_smart_cpy(char *str, char *new_str, int backslash, int *quote);
-void			ft_smart_cpy_whitespaces(char *str, char *new_str, int i, int j);
+void			ft_smart_cpy_whitespaces(char *str, char **new_str, int i, int j);
 void			ft_smart_double_quotes(char *new_str, char c, int *j, int *quote);
 void			ft_smart_single_quotes(char *new_str, char c, int *j, int *quote);
 int				ft_skip_env_key(char *param);
