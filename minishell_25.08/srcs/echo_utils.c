@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/13 21:00:52 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/13 21:17:12 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	ft_cpy_with_whitespaces(char *str, int quote, int *i)
 		(*i)++;
 }
 
-void	ft_smart_cpy_whitespaces(char *str, char **new_str, int i, int j)
+void	ft_smart_cpy_whitespaces(char *str, char *new_str, int i, int j)
 {
 	int		quote;
 
@@ -43,22 +43,22 @@ void	ft_smart_cpy_whitespaces(char *str, char **new_str, int i, int j)
 	{
 		if (str[i] == '"' || str[i] == '\'')
 		{
-			*new_str[j] = str[i];
+			new_str[j] = str[i];
 			ft_cpy_with_quotes(str[i], &quote, &i);
 		}
 		else if (str[i] == ' ')
 		{
-			*new_str[j] = str[i];
+			new_str[j] = str[i];
 			ft_cpy_with_whitespaces(str, quote, &i);
 		}
 		else
 		{
-			*new_str[j] = str[i];
+			new_str[j] = str[i];
 			i++;
 		}
 		j++;
 	}
-	*new_str[j] = '\0';
+	new_str[j] = '\0';
 }
 
 char	*remove_bad_whitespaces(char *str)
@@ -72,7 +72,7 @@ char	*remove_bad_whitespaces(char *str)
 	if (!(new_str = malloc(sizeof(char) * (j + 1))))
 		return (ft_free_one_null(str));
 	j = 0;
-	ft_smart_cpy_whitespaces(str, &new_str, i, j);
+	ft_smart_cpy_whitespaces(str, new_str, i, j);
 	free(str);
 	return (new_str);
 }
