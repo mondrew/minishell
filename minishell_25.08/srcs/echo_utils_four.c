@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_utils_four.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:16:29 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 16:53:30 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/13 20:43:58 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_smart_double_quotes(char *new_str, char c, int *j, int *quote)
 
 void	ft_cpy_set_null_backslash(char *new_str, char c, int *j, int *backslash)
 {
-	new_str[*j] = c;
+	*new_str = c;
 	(*j)++;
 	*backslash = 0;
 }
@@ -50,8 +50,8 @@ void	ft_smart_cpy(char *str, char *new_str, int backslash, int *quote)
 			if (str[i + 1] == '\\' && backslash == 0)
 				backslash = 1;
 			else if (str[i - 1] == '\\' && backslash == 1)
-				ft_cpy_set_null_backslash(&(new_str[j]), str[i], &j,
-				&backslash);
+				ft_cpy_set_null_backslash(&(new_str[j]), str[i], &j, \
+																&backslash);
 		}
 		else
 			new_str[j++] = str[i];

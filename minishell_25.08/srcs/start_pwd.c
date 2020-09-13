@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:01:27 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/12 21:40:11 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/13 20:44:39 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int		start_pwd(char *line, t_cmd **cmds)
 
 	if (line && *(line + skip_whitespace(line)) != '\0')
 	{
-		ft_putstr("pwd: too many arguments");
+		ft_putstr("pwd: too many arguments\n");
 		ft_set_exit_code(cmds, 1);
 		return (-1);
 	}

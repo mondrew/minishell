@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:03:37 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/13 17:55:00 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/13 19:34:31 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ int		start_echo(char *line, char **envr, t_cmd **cmds)
 		return (-1);
 	}
 	if (start_with(prt, "-n"))
+	{
 		ft_putstr((prt + 2 + skip_whitespace(prt + 2)));
+	}
 	else
 	{
 		ft_putstr(prt);

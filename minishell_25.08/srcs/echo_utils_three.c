@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_utils_three.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:15:14 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 16:54:07 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/13 20:09:33 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,11 @@ int		ft_check_all_quotes(char *str, int i, int *quotes)
 	int		single_quote;
 	int		double_quote;
 
-	single_quote = 0;
-	double_quote = 0;
+	single_quote = quotes[0];
+	double_quote = quotes[1];
 	ft_parse_quotes(str, &i, &single_quote, &double_quote);
-	if ((double_quote == 1) || (!double_quote && !single_quote))
-		*quotes = 1;
-	else
-		*quotes = 0;
+	quotes[0] = single_quote;
+	quotes[1] = double_quote;
 	return (i);
 }
 

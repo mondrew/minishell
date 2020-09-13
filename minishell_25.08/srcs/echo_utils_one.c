@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:12:45 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/13 17:53:32 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/13 20:43:52 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ char	*ft_envvar_changer(char **help, char **envp, int *quotes, t_cmd **cmds)
 			if (!(help[1] = ft_add_dollar_to_res(help[1], &i)))
 				return (NULL);
 		}
-		else if (help[0][i] && (help[0][i] == '$') && (*quotes))
+		else if (help[0][i] && (help[0][i] == '$') && ((quotes[1] == 1) || \
+											(!(quotes[0]) && (!(quotes[1])))))
 		{
 			if (!(help[1] = ft_replace_env(help, envp, &i, cmds)))
 				return (NULL);
@@ -50,13 +51,14 @@ char	*ft_envvar_changer(char **help, char **envp, int *quotes, t_cmd **cmds)
 
 char	*change_envs(char *str, char **envr, t_cmd **cmds)
 {
-	int		quotes;
+	int		quotes[2];
 	char	*res;
 	char	**help;
 
 	if (!(help = malloc(sizeof(char *) * 2)))
 		return (ft_free_one_null(str));
-	quotes = 0;
+	quotes[0] = 0;
+	quotes[1] = 0;
 	if (!(res = ft_strdup("")))
 	{
 		free(str);
@@ -65,7 +67,7 @@ char	*change_envs(char *str, char **envr, t_cmd **cmds)
 	}
 	help[0] = str;
 	help[1] = res;
-	if (!(res = ft_envvar_changer(help, envr, &quotes, cmds)))
+	if (!(res = ft_envvar_changer(help, envr, quotes, cmds)))
 	{
 		free(help);
 		return (NULL);

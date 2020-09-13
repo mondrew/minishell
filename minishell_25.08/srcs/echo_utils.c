@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 21:13:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/12 17:27:25 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/13 19:34:12 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ void	ft_cpy_with_quotes(char c, int *quote, int *i)
 	(*i)++;
 }
 
-void	ft_cpy_with_whitespaces(char c, int quote, int *i)
+void	ft_cpy_with_whitespaces(char *str, int quote, int *i)
 {
 	if (!quote)
 	{
-		while (c == ' ')
+		while (str[*i] == ' ')
 			(*i)++;
 	}
 	else
@@ -49,7 +49,7 @@ void	ft_smart_cpy_whitespaces(char *str, char *new_str, int i, int j)
 		else if (str[i] == ' ')
 		{
 			new_str[j] = str[i];
-			ft_cpy_with_whitespaces(str[i], quote, &i);
+			ft_cpy_with_whitespaces(str, quote, &i);
 		}
 		else
 		{

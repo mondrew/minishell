@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/13 11:23:17 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/13 19:33:12 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,13 @@ char			**ft_cpyarr(char **arr);
 void			ft_cpy_set_null_backslash(char *new_str, char c, int *j, \
 															int *backslash);
 void			ft_cpy_with_quotes(char c, int *quote, int *i);
-void			ft_cpy_with_whitespaces(char c, int quote, int *i);
+void			ft_cpy_with_whitespaces(char *str, int quote, int *i);
 char			**ft_cpyarr(char **arr);
 char			*ft_envvar_changer(char **help, char **envp, int *quotes, \
 																t_cmd **cmds);
-int				ft_execute(t_cmd **cmds, char ***envp, char *line);
-int				ft_execute_in_parent(t_cmd **cmds, char ***envp, char *line);
+int				ft_execute(t_cmd **cmds, char ***envp, char *line, int cmd_i);
+int				ft_execute_in_parent(t_cmd **cmds, char ***envp, char *line, \
+																	int cmd_i);
 int				ft_execute_pipes(t_cmd **cmds, int pipes, int input_file, \
 																char **envp);
 int				ft_execute_with_redir(t_cmd **cmds, char **envp);
