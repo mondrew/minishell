@@ -6,13 +6,13 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:06:02 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 01:07:43 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/13 11:21:46 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		ft_execute_in_parent(t_cmd **cmds, char ***envp)
+int		ft_execute_in_parent(t_cmd **cmds, char ***envp, char *line)
 {
 	int		exit_code;
 
@@ -34,6 +34,8 @@ int		ft_execute_in_parent(t_cmd **cmds, char ***envp)
 	else if ((*cmds)->cmd == EXIT)
 	{
 		exit_code = ft_atoi((*cmds)->str);
+		ft_free_cmds(cmds);
+		free(line);
 		exit(exit_code);
 	}
 	return (1);

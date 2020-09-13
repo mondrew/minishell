@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:12:45 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 01:14:34 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/13 17:53:32 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,14 @@ char	*change_envs(char *str, char **envr, t_cmd **cmds)
 	char	**help;
 
 	if (!(help = malloc(sizeof(char *) * 2)))
-		return (NULL);
+		return (ft_free_one_null(str));
 	quotes = 0;
 	if (!(res = ft_strdup("")))
+	{
+		free(str);
+		free(help);
 		return (NULL);
+	}
 	help[0] = str;
 	help[1] = res;
 	if (!(res = ft_envvar_changer(help, envr, &quotes, cmds)))

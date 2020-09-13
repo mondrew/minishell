@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:08:07 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 01:10:55 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/12 23:13:28 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,10 @@ char	*ft_copy_without_quotes(char *str)
 	while (str[i])
 	{
 		if (str[i] != '"' && str[i] != '\'')
-			new_str[j++] = str[i];
+		{
+			new_str[j] = str[i];
+			j++;
+		}
 		i++;
 	}
 	new_str[j] = '\0';
@@ -66,12 +69,12 @@ char	*ft_copy_without_quotes(char *str)
 char	**ft_remove_quotes_in_args(char **array)
 {
 	int		i;
-	char	**new;
+	char	**new_arr;
 
 	i = 0;
 	while (array && array[i])
 		i++;
-	if (!(new = malloc(sizeof(char *) * (i + 1))))
+	if (!(new_arr = malloc(sizeof(char *) * (i + 1))))
 	{
 		ft_free_split(array);
 		return (NULL);
@@ -79,17 +82,17 @@ char	**ft_remove_quotes_in_args(char **array)
 	i = 0;
 	while (array[i])
 	{
-		if (!(new[i] = ft_copy_without_quotes(array[i])))
+		if (!(new_arr[i] = ft_copy_without_quotes(array[i])))
 		{
-			ft_free_split(new);
+			ft_free_split(new_arr);
 			ft_free_split(array);
 			return (NULL);
 		}
 		i++;
 	}
-	new[i] = NULL;
+	new_arr[i] = NULL;
 	ft_free_split(array);
-	return (new);
+	return (new_arr);
 }
 
 char	*get_path(char **env)

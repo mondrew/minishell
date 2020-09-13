@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_add_or_replace.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 16:43:03 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/13 17:27:40 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ char			**ft_add_or_replace(char *key, char *value, char **envp)
 			if (!value)
 				return (ft_copy_array(envp));
 			else if (envp[i][j + 1] && !ft_strncmp(value, &envp[i][j + 1],
-			ft_strlen(value) + 1))
+						ft_strlen(value) + 1))
 				return (ft_copy_array(envp));
 			else
 				return (ft_replace_value(envp, value, i));

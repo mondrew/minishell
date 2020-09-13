@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/12 21:34:39 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/13 16:45:32 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@ static char	*read_line(void)
 	res = 0;
 	while ((res = get_next_line(0, &line)) == 0)
 		continue;
+	if (res == -1)
+	{
+		if (line)
+			free(line);
+		return (NULL);
+	}
 	return (line);
 }
 
@@ -53,7 +59,8 @@ static int	minishell(char **envp)
 		print_prompt();
 		signal(SIGINT, sigint);
 		signal(SIGQUIT, signotactive);
-		line = read_line();
+		if (!(line = read_line()))
+			return (1);
 		signal(SIGINT, sigintexec);
 		signal(SIGQUIT, sigquit);
 		result = launch_commands(line, &envp, &exit_code);

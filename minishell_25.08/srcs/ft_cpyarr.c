@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cpyarr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/01 17:00:50 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/08 19:45:46 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/13 17:16:58 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ char		**ft_cpyarr(char **arr)
 	i = 0;
 	while (arr[i])
 	{
-		res[i] = ft_strdup(arr[i]);
+		if (!(res[i] = ft_strdup(arr[i])))
+			return (ft_free_split_null(res));
 		i++;
 	}
 	res[i] = NULL;

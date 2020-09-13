@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_echo.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:03:37 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/08 10:00:35 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/13 17:55:00 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ int		start_echo(char *line, char **envr, t_cmd **cmds)
 	}
 	if (!(prt = correct_echo_msg(&prt, envr, cmds)))
 	{
-		free(prt);
 		ft_putstr("Error: echo failed\n");
 		return (-1);
 	}

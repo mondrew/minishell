@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:15:24 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/08 18:36:54 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/13 16:14:29 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,28 @@ static int		get_line(char **list_fd, char **line, char *p_lbrake)
 
 	*p_lbrake = '\0';
 	p_lbrake++;
-	*line = ft_strdup(*list_fd);
-	if (!*line)
+	if (!(*line = ft_strdup(*list_fd)))
+	{
+		free(*list_fd);
 		return (-1);
+	}
 	if (*p_lbrake == '\0')
 	{
 		free_chr(list_fd);
 		return (1);
 	}
-	tmp = ft_strdup(p_lbrake);
+	if (!(tmp = ft_strdup(p_lbrake)))
+	{
+		free(*list_fd);
+		return (-1);
+	}
 	free(*list_fd);
 	*list_fd = tmp;
 	return (1);
 }
 
 static int		get_from_storage(char **list_fd, char **line,
-int read_size, char **buff)
+									int read_size, char **buff)
 {
 	char *p_lbrake;
 
@@ -48,7 +54,8 @@ int read_size, char **buff)
 		*list_fd = NULL;
 		return (0);
 	}
-	*line = ft_strdup("");
+	if (!(*line = ft_strdup("")))
+		return (-1);
 	return (0);
 }
 

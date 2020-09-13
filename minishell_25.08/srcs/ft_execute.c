@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/18 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 16:44:51 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/13 11:20:37 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int		ft_is_single_parent_function(t_cmd **cmds)
 	return (0);
 }
 
-int		ft_execute(t_cmd **cmds, char ***envp)
+int		ft_execute(t_cmd **cmds, char ***envp, char *line)
 {
 	int		i;
 	int		pipes;
@@ -102,7 +102,7 @@ int		ft_execute(t_cmd **cmds, char ***envp)
 	input_file = ft_check_input_from_file(cmds);
 	if (ft_is_single_parent_function(cmds))
 	{
-		if ((i = ft_execute_in_parent(cmds, envp)) == -1)
+		if ((i = ft_execute_in_parent(cmds, envp, line)) == -1)
 			return (-1);
 	}
 	else if ((pipes = ft_check_pipes(cmds, input_file)) > 0)

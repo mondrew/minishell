@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 18:51:04 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/11 09:50:50 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/13 17:06:37 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@ void		show(char **envp)
 
 	i = 0;
 	if (envp)
+	{
 		while (envp[i])
 		{
 			ft_putstr(envp[i]);
 			ft_putstr("\n");
 			i++;
 		}
+	}
 }
 
 char		**ft_free_array(char **arr)

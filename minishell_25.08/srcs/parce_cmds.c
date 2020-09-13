@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parce_cmds.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 09:29:34 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/11 09:56:15 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/13 12:36:09 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,25 +56,25 @@ static int			set_param(t_cmd **cmds, char *str, int cmd_id, int status)
 
 static int			host_parse(char *line, t_cmd **cmds, int cmd_i, int status)
 {
-	int i;
+	int		i;
 
 	i = 0;
-	if (start_with(line + i, "echo"))
-		i += set_param(&cmds[cmd_i], line + i + 4, ECHO, status) + 4;
-	else if (start_with(line + i, "cd"))
-		i += set_param(&cmds[cmd_i], line + i + 2, CD, status) + 2;
-	else if (start_with(line + i, "pwd"))
-		i += set_param(&cmds[cmd_i], line + i + 3, PWD, status) + 3;
-	else if (start_with(line + i, "export"))
-		i += set_param(&cmds[cmd_i], line + i + 6, EXPORT, status) + 6;
-	else if (start_with(line + i, "unset"))
-		i += set_param(&cmds[cmd_i], line + i + 5, UNSET, status) + 5;
-	else if (start_with(line + i, "env"))
-		i += set_param(&cmds[cmd_i], line + i + 3, ENV, status) + 3;
-	else if (start_with(line + i, "exit"))
-		i += set_param(&cmds[cmd_i], line + i + 4, EXIT, status) + 4;
+	if (start_with(line, "echo"))
+		i = set_param(&cmds[cmd_i], line + 4, ECHO, status) + 4;
+	else if (start_with(line, "cd"))
+		i = set_param(&cmds[cmd_i], line + 2, CD, status) + 2;
+	else if (start_with(line, "pwd"))
+		i = set_param(&cmds[cmd_i], line + 3, PWD, status) + 3;
+	else if (start_with(line, "export"))
+		i = set_param(&cmds[cmd_i], line + 6, EXPORT, status) + 6;
+	else if (start_with(line, "unset"))
+		i = set_param(&cmds[cmd_i], line + 5, UNSET, status) + 5;
+	else if (start_with(line, "env"))
+		i = set_param(&cmds[cmd_i], line + 3, ENV, status) + 3;
+	else if (start_with(line, "exit"))
+		i = set_param(&cmds[cmd_i], line + 4, EXIT, status) + 4;
 	else
-		i += set_param(&cmds[cmd_i], line + i, UNKNOWN, status);
+		i = set_param(&cmds[cmd_i], line, UNKNOWN, status);
 	return (i);
 }
 
@@ -95,6 +95,7 @@ static int			pre_parse(char *line, int *i, int *status)
 t_cmd				**parse_cmd(char *line)
 {
 	int		i;
+	int		res;
 	int		cmd_i;
 	int		status;
 	t_cmd	**cmds;
@@ -105,15 +106,14 @@ t_cmd				**parse_cmd(char *line)
 	if (!(cmds = malloc(sizeof(t_cmd) * (count_cmd(line) + 1))))
 		return (NULL);
 	if (!(cmds[0] = malloc(sizeof(t_cmd))))
-	{
-		free(cmds);
-		return (NULL);
-	}
+		return (free_cmds2(0, cmds));
 	while (line[i])
 	{
-		pre_parse(line, &i, &status);
-		i += host_parse(line + i, cmds, cmd_i++, status);
-		i++;
+		if (!(pre_parse(line, &i, &status)))
+			break ;
+		if ((res = host_parse(line + i, cmds, cmd_i++, status)) == -1)
+			return (free_cmds2(cmd_i, cmds));
+		i = i + res + 1;
 		if (!(cmds[cmd_i] = malloc(sizeof(t_cmd))))
 			return (free_cmds2(cmd_i, cmds));
 	}

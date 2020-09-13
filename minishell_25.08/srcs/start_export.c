@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/12 17:30:02 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/13 17:26:11 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ char	**sort_and_show(char **tenvp)
 	char	**envp;
 	int		i;
 
-	envp = ft_cpyarr(tenvp);
+	if (!(envp = ft_cpyarr(tenvp)))
+		return (NULL);
 	i = 0;
 	while (envp && envp[i] && envp[i + 1])
 	{
@@ -92,7 +93,7 @@ char	**parse_and_add(char *line, char **envp, t_cmd **cmds)
 	if (!(value = get_value(&i, line, &key)))
 		return (NULL);
 	if (!(value = correct_echo_msg(&value, envp, cmds)) ||
-	!(new_envp = ft_add_or_replace(key, value, envp)))
+			!(new_envp = ft_add_or_replace(key, value, envp)))
 		return (free_key_val_ret(&key, &value, NULL));
 	return (free_key_val_ret(&key, &value, new_envp));
 }

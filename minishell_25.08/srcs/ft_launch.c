@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 12:37:28 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/12 17:28:25 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/13 11:22:53 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int			launch_commands(char *line, char ***envp, int *exit_code)
 	ft_set_exit_code(cmds, *exit_code);
 	while (cmds && ((cmds[i])->cmd != END))
 	{
-		if ((j = ft_execute(&(cmds[i]), envp)) == -1)
+		if ((j = ft_execute(&(cmds[i]), envp, line)) == -1)
 		{
 			*exit_code = ft_get_exit_code(cmds);
 			ft_free_cmds(cmds);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_unset.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/18 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/08 09:23:34 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/13 17:32:11 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ int		start_unset(char *line, char ***envp)
 	while ((*envp)[i] != NULL)
 	{
 		if (!ft_strncmp(line, (*envp)[i], ft_strlen(line)) && \
-	(!((*envp)[i][ft_strlen(line)]) || ((*envp)[i][ft_strlen(line)] == '=')))
+							(!((*envp)[i][ft_strlen(line)]) || \
+							((*envp)[i][ft_strlen(line)] == '=')))
 			break ;
 		i++;
 	}
