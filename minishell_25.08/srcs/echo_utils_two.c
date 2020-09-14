@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:14:06 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 01:15:39 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/14 23:09:06 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*ft_add_env_value(char *str, char *res, char *param, int *i)
 	if (param)
 	{
 		if (!(res = ft_strjoin_free_left(res, param + ft_skip_env_key(param))))
-			return (NULL);
+			return (ft_free_one_null(param));
 		free(param);
 		while (ft_is_env_name(str[*i]))
 			(*i)++;
@@ -54,6 +54,8 @@ char	*ft_replace_env(char **help, char **envp, int *i, t_cmd **cmds)
 			return (ft_free_two_null(help[1], tmp));
 		free(tmp);
 	}
+	else
+		free(tmp);
 	if (!(help[1] = ft_add_env_value(help[0], help[1], param, i)))
 		return (NULL);
 	return (help[1]);

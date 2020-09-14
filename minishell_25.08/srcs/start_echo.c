@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:03:37 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/13 19:34:31 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/14 17:49:03 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int		start_echo(char *line, char **envr, t_cmd **cmds)
 {
-	char *prt;
+	char	*prt;
 
 	if (!(prt = ft_strdup((line + skip_whitespace(line)))))
 	{

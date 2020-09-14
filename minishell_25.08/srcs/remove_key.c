@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   remove_key.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 15:28:29 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/11 09:05:33 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/14 22:36:25 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static char		**remove_str(char **envp, int del)
 	return (new_arr);
 }
 
-char			**remove_key(char *key, char **envp)
+char			**remove_key(char *key, char **envp, int *ids)
 {
 	int i;
 	int j;
@@ -60,5 +60,5 @@ char			**remove_key(char *key, char **envp)
 			return (remove_str(envp, i));
 		i++;
 	}
-	return (ft_copy_array(envp));
+	return (ft_copy_array(envp, ids));
 }

@@ -6,16 +6,14 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:06:02 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/13 19:34:41 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/14 23:29:46 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		ft_execute_in_parent(t_cmd **cmds, char ***envp, char *line, int cmd_i)
+int		ft_execute_in_parent(t_cmd **cmds, char ***envp, char *line, int *ids)
 {
-	int		exit_code;
-
 	if ((*cmds)->cmd == CD)
 	{
 		if ((start_cd((*cmds)->str, *envp, cmds)) == -1)
@@ -23,21 +21,16 @@ int		ft_execute_in_parent(t_cmd **cmds, char ***envp, char *line, int cmd_i)
 	}
 	else if ((*cmds)->cmd == EXPORT)
 	{
-		if ((start_export((*cmds)->str, envp, cmds)) == -1)
+		if ((start_export((*cmds)->str, envp, cmds, ids)) == -1)
 			return (ft_print_set_exit_code(MALLOCFAIL, cmds));
 	}
 	else if ((*cmds)->cmd == UNSET)
 	{
-		if (!(start_unset((*cmds)->str, envp)))
+		if (!(start_unset((*cmds)->str, envp, ids)))
 			return (ft_print_set_exit_code(MALLOCFAIL, cmds));
 	}
 	else if ((*cmds)->cmd == EXIT)
-	{
-		exit_code = ft_atoi((*cmds)->str);
-		ft_free_cmds(cmds - cmd_i);
-		free(line);
-		exit(exit_code);
-	}
+		ft_goto_exit(cmds, envp, line, ids);
 	return (1);
 }
 
@@ -79,18 +72,19 @@ int		ft_execve_buildins_one(t_cmd *cmds, t_cmd **cmds_big, char **envp)
 	return (1);
 }
 
-int		ft_execve_buildins_two(t_cmd *cmds, t_cmd **cmds_big, char **envp)
+int		ft_execve_buildins_two(t_cmd *cmds, t_cmd **cmds_big, char **envp, \
+																	int *ids)
 {
 	int		exit_code;
 
 	if (cmds->cmd == EXPORT)
 	{
-		if (!(start_export(cmds->str, &envp, cmds_big)))
+		if (!(start_export(cmds->str, &envp, cmds_big, ids)))
 			return (0);
 	}
 	else if (cmds->cmd == UNSET)
 	{
-		if (!(start_unset(cmds->str, &envp)))
+		if (!(start_unset(cmds->str, &envp, ids)))
 			return (0);
 	}
 	else if (cmds->cmd == EXIT)

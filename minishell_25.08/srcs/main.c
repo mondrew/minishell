@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:22:07 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/13 16:45:32 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/15 00:10:15 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,11 @@ static int	minishell(char **envp)
 	int		is_exit;
 	int		result;
 	int		exit_code;
+	int		ids[2];
 
 	is_exit = 0;
 	exit_code = 0;
+	ids[1] = 0;
 	while (!is_exit)
 	{
 		print_prompt();
@@ -63,7 +65,7 @@ static int	minishell(char **envp)
 			return (1);
 		signal(SIGINT, sigintexec);
 		signal(SIGQUIT, sigquit);
-		result = launch_commands(line, &envp, &exit_code);
+		result = launch_commands(line, &envp, &exit_code, ids);
 		if (line)
 			free(line);
 		if (result == -1)

@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 09:20:12 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/13 14:56:55 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/14 23:25:33 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char		*ft_new(char *str, int j, int i)
 	char	*new_str;
 
 	k = 0;
-	while (str[j - 1] == ' ')
+	while ((str[j - 1] == ' ') && (j != i))
 		j--;
 	k = j - i;
 	if (!(new_str = malloc(sizeof(char) * (k + 1))))
@@ -45,6 +45,17 @@ char		*ft_new(char *str, int j, int i)
 	return (new_str);
 }
 
+void		ft_quotes_changer(char c, int *quote, int *j)
+{
+	if (c == '\'' && !(*quote))
+		*quote = 1;
+	else if (c == '"' && !(*quote))
+		*quote = 2;
+	else if ((c == '\'' && *quote == 1) || (c == '"' && *quote == 2))
+		*quote = 0;
+	(*j)++;
+}
+
 char		*ft_strsdup(char *str, char *set)
 {
 	int		i;
@@ -57,16 +68,7 @@ char		*ft_strsdup(char *str, char *set)
 	while (str[j])
 	{
 		if (str[j] == '"' || str[j] == '\'')
-		{
-			if (str[j] == '\'' && !quote)
-				quote = 1;
-			else if (str[j] == '"' && !quote)
-				quote = 2;
-			else if ((str[j] == '\'' && quote == 1) ||
-			(str[j] == '"' && quote == 2))
-				quote = 0;
-			j++;
-		}
+			ft_quotes_changer(str[j], &quote, &j);
 		else if (is_contains_in_set(str[j], set) && !quote)
 			break ;
 		else

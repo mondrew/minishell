@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:04:38 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 23:21:41 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/14 21:47:00 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,14 @@ int		ft_execve_unknown(t_cmd *cmds, t_cmd **cmds_big, char **envp, pid_t pid)
 
 int		ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp, pid_t pid)
 {
+	int		ids[2];
+
+	ids[0] = 0;
+	ids[1] = 0;
 	if (ft_is_buildin_first(cmds->cmd))
 		return (ft_execve_buildins_one(cmds, cmds_big, envp));
 	else if (ft_is_buildin_second(cmds->cmd))
-		return (ft_execve_buildins_two(cmds, cmds_big, envp));
+		return (ft_execve_buildins_two(cmds, cmds_big, envp, ids));
 	else if (cmds->cmd == UNKNOWN)
 	{
 		if (!(ft_execve_unknown(cmds, cmds_big, envp, pid)))

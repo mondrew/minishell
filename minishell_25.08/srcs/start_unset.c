@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/18 10:07:51 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/13 17:32:11 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/15 00:14:48 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	**ft_new_env_arr(char ***old, int i)
 	return (new);
 }
 
-int		start_unset(char *line, char ***envp)
+int		start_unset(char *line, char ***envp, int *ids)
 {
 	int		i;
 	char	**new;
@@ -75,6 +75,8 @@ int		start_unset(char *line, char ***envp)
 	{
 		if (!(new = ft_new_env_arr(envp, i)))
 			return (0);
+		ft_free_envp_null_ids(*envp, ids);
+		ids[1] = 1;
 		*envp = new;
 	}
 	return (1);

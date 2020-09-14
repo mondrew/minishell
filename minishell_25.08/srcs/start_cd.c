@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_cd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/08 11:44:39 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/14 23:10:33 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	ft_chdir(int i, char *line, t_cmd **cmds, char **env)
 	str[i] = '\0';
 	if (ft_strlen((line + (skip_whitespace(line)))) == 1 &&
 		*(line + (skip_whitespace(line))) == '~')
-		chdir(get_line_env(env, "HOME") + 5);
+		chdir(get_line_env_mod(env, "HOME") + 5);
 	else if (chdir((line + (skip_whitespace(line)))) == -1)
 	{
 		ft_putstr("-minishell: cd: ");
@@ -39,6 +39,12 @@ static int	ft_chdir(int i, char *line, t_cmd **cmds, char **env)
 	}
 	free(str);
 	return (0);
+}
+
+void		ft_increment_two(int *i, int *j)
+{
+	(*i)++;
+	(*j)++;
 }
 
 int			start_cd(char *line, char **env, t_cmd **cmds)
@@ -57,13 +63,13 @@ int			start_cd(char *line, char **env, t_cmd **cmds)
 				ft_set_exit_code(cmds, 1);
 				return (0);
 			}
-		if (line[i] != '\0' && i++)
-			j++;
+		if (line[i] != '\0')
+			ft_increment_two(&i, &j);
 	}
 	ft_set_exit_code(cmds, 0);
 	if (!j)
 	{
-		chdir(get_line_env(env, "HOME") + 5);
+		chdir(get_line_env_mod(env, "HOME") + 5);
 		return (0);
 	}
 	return (ft_chdir(i, line, cmds, env));

@@ -3,14 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjessica <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 11:30:44 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/12 20:35:11 by gjessica         ###   ########.fr       */
+/*   Updated: 2020/09/15 00:14:44 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*get_line_env_mod(char **env, char *param)
+{
+	while (*env)
+	{
+		if (start_with_nospace(*env, param))
+			return (*env);
+		env++;
+	}
+	return (NULL);
+}
 
 char	*get_line_env(char **env, char *param)
 {

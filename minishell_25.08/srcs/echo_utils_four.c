@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:16:29 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/13 20:43:58 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/14 18:45:40 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ char	*remove_bad_quotes(char *str)
 	if (!(new_str = malloc(sizeof(char) * (ft_strlen(str) + 1))))
 		return (ft_free_one_null(str));
 	ft_smart_cpy(str, new_str, backslash, quote);
+	free(str);
 	return (new_str);
 }
 

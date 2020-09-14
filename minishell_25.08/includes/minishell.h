@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/13 21:17:08 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/15 00:03:06 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char			**ft_add_command_to_paths(char **paths, char *command, \
 																int i, int j);
 char			*ft_add_dollar_to_res(char *res, int *i);
 char			*ft_add_env_value(char *str, char *res, char *param, int *i);
-char			**ft_add_or_replace(char *key, char *value, char **envp);
+char			**ft_add_or_replace(char *key, char *value, char **envp, int *ids);
 int				ft_atoi(char *str);
 void			ft_change_child_fd_pipe(int *pipefd, int i, int id);
 char			*change_envs(char *str, char **envr, t_cmd **cmds);
@@ -76,7 +76,8 @@ int				ft_close_fds_in_parent_pipe(int *pipefd, int i);
 int				ft_cmd_nf(char *command, t_cmd **cmds, char **array, \
 																pid_t pid);
 char			*correct_echo_msg(char **str, char **envr, t_cmd **cmds);
-char			**ft_copy_array(char **envp);
+char			**ft_copy_array(char **envp, int *ids);
+char			**ft_copy_array_no_free(char **envp);
 char			*ft_copy_without_quotes(char *str);
 char			**ft_cpyarr(char **arr);
 void			ft_cpy_set_null_backslash(char *new_str, char c, int *j, \
@@ -86,16 +87,16 @@ void			ft_cpy_with_whitespaces(char *str, int quote, int *i);
 char			**ft_cpyarr(char **arr);
 char			*ft_envvar_changer(char **help, char **envp, int *quotes, \
 																t_cmd **cmds);
-int				ft_execute(t_cmd **cmds, char ***envp, char *line, int cmd_i);
+int				ft_execute(t_cmd **cmds, char ***envp, char *line, int *ids);
 int				ft_execute_in_parent(t_cmd **cmds, char ***envp, char *line, \
-																	int cmd_i);
+																	int *ids);
 int				ft_execute_pipes(t_cmd **cmds, int pipes, int input_file, \
 																char **envp);
 int				ft_execute_with_redir(t_cmd **cmds, char **envp);
 int				ft_execve_buildins_one(t_cmd *cmds, t_cmd **cmds_big, \
 																char **envp);
 int				ft_execve_buildins_two(t_cmd *cmds, t_cmd **cmds_big, \
-																char **envp);
+																char **envp, int *ids);
 int				ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp, \
 																	pid_t pid);
 int				ft_execve_unknown(t_cmd *cmds, t_cmd **cmds_big, \
@@ -108,6 +109,7 @@ char			**ft_free_array(char **arr);
 t_cmd			**ft_free_cmds(t_cmd **cmds);
 t_cmd			**free_cmds2(int cmd_i, t_cmd **cmds);
 void			ft_free_cmd_elem(t_cmd *cmds);
+void			ft_free_envp_null_ids(char **envp, int *ids);
 char			**free_key_val_ret(char **key, char **val, char **ret);
 char			*ft_free_one_null(char *str);
 char			*ft_free_two_null(char *s1, char *s2);
@@ -117,11 +119,13 @@ char			**ft_free_split_null(char **array);
 char			*get_cur_path();
 int				ft_get_exit_code(t_cmd **cmds);
 char			*get_line_env(char **env, char *param);
+char			*get_line_env_mod(char **env, char *param);
 char			*get_path(char **env);
 char			*get_path_name(char *str);
 int				ft_get_quote(char *line, int i, int quote);
 void			ft_goto_execve(t_cmd *cmds, t_cmd **cmds_big, char **envp, \
 																	pid_t pid);
+void			ft_goto_exit(t_cmd **cmds, char ***envp, char *line, int *ids);
 void			ft_goto_redirection(t_cmd **cmds, int j);
 void			ft_input_from_file(t_cmd **cmds, int input_file, int j);
 int				ft_is_buildin_first(int cmd);
@@ -131,7 +135,7 @@ int				ft_is_only_dollar_sign(char *str, int i);
 int				ft_is_single_parent_function(t_cmd **cmds);
 char			*ft_itoa(int n);
 int				ft_last_pipe(int *pipefd, t_cmd **cmds, int j, char **envp);
-int				launch_commands(char *line, char ***envp, int *exit_code);
+int				launch_commands(char *line, char ***envp, int *exit_code, int *ids);
 int				ft_len_to_char(char *str, char end);
 char			**ft_make_paths_array(char **envp, char *command);
 int				ft_middle_pipe(int *pipefd, t_cmd **cmds, int j, char **envp);
@@ -149,7 +153,7 @@ int				ft_putstr(char *s);
 void			ft_redirection_to_file(t_cmd **cmds, int j);
 char			*remove_bad_quotes(char *str);
 char			*remove_bad_whitespaces(char *str);
-char			**remove_key(char *key, char **envp);
+char			**remove_key(char *key, char **envp, int *ids);
 char			**ft_remove_quotes_in_args(char **array);
 char			*ft_replace_env(char **help, char **envp, int *i, \
 															t_cmd **cmds);
@@ -158,7 +162,7 @@ void			sigint(int sig);
 void			sigintexec(int sig);
 void			signotactive(int sig);
 void			sigquit(int sig);
-int				ft_simple_execute(t_cmd **cmds, char **envp);
+int				ft_simple_execute(t_cmd **cmds, char **envp, int *ids);
 void			show(char **envp);
 void			ft_smart_cpy(char *str, char *new_str, int backslash, int *quote);
 void			ft_smart_cpy_whitespaces(char *str, char *new_str, int i, int j);
@@ -176,10 +180,10 @@ int				start_with_nospace(char *str, char *con);
 int				start_cd(char *line, char **env, t_cmd **cmds);
 int				start_echo(char *line, char **envr, t_cmd **cmds);
 int				start_env(char *line, char **envp);
-int				start_export(char *line, char ***envp, t_cmd **cmds);
+int				start_export(char *line, char ***envp, t_cmd **cmds, int *ids);
 int				start_pwd(char *line, t_cmd **cmds);
 int				start_unknown_cmd(char *line, char **env);
-int				start_unset(char *line, char ***envp);
+int				start_unset(char *line, char ***envp, int *ids);
 char			*ft_str_to_res(char *str, char *res, int i, int k);
 char			*ft_strcdup(char *str, char c);
 char			*ft_strchr(const char *s, int c);

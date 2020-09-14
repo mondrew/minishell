@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 15:05:30 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/13 17:26:11 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/15 00:14:53 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	**sort_and_show(char **tenvp)
 
 char	*get_key(char *line, int *i)
 {
-	char *key;
+	char	*key;
 
 	while (line[*i] != '=' && line[*i] != ' ' && line[*i] != '\0')
 		(*i)++;
@@ -69,7 +69,7 @@ char	*get_value(int *i, char *line, char **key)
 	return (value);
 }
 
-char	**parse_and_add(char *line, char **envp, t_cmd **cmds)
+char	**parse_and_add(char *line, char **envp, t_cmd **cmds, int *ids)
 {
 	int		i;
 	char	*key;
@@ -85,20 +85,20 @@ char	**parse_and_add(char *line, char **envp, t_cmd **cmds)
 	else if ((line[i] == ' ' || line[i] == '\0') ||
 	(line[i] == '=' && (line[i + 1] == '\0' || line[i + 1] == ' ')))
 	{
-		if (!(new_envp = ft_add_or_replace(key,
-		(line[i] == ' ' || line[i] == '\0') ? value : "", envp)))
+		if (!(new_envp = ft_add_or_replace(key, \
+			(line[i] == ' ' || line[i] == '\0') ? value : "", envp, ids)))
 			free(key);
-		return (new_envp);
+		return (free_key_val_ret(&key, NULL, new_envp));
 	}
 	if (!(value = get_value(&i, line, &key)))
 		return (NULL);
 	if (!(value = correct_echo_msg(&value, envp, cmds)) ||
-			!(new_envp = ft_add_or_replace(key, value, envp)))
+			!(new_envp = ft_add_or_replace(key, value, envp, ids)))
 		return (free_key_val_ret(&key, &value, NULL));
 	return (free_key_val_ret(&key, &value, new_envp));
 }
 
-int		start_export(char *line, char ***envp, t_cmd **cmds)
+int		start_export(char *line, char ***envp, t_cmd **cmds, int *ids)
 {
 	char	**new_envp;
 
@@ -107,13 +107,14 @@ int		start_export(char *line, char ***envp, t_cmd **cmds)
 	{
 		if (!(new_envp = sort_and_show(*envp)))
 			return (-1);
-		free(new_envp);
+		ft_free_split(new_envp);
 		return (1);
 	}
 	else
 	{
-		if (!(new_envp = parse_and_add(line, *envp, cmds)))
+		if (!(new_envp = parse_and_add(line, *envp, cmds, ids)))
 			return (-1);
+		ids[1] = 1;
 	}
 	*envp = new_envp;
 	return (1);

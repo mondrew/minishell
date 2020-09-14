@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:08:07 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 23:13:28 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/14 23:10:36 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ char	*get_path(char **env)
 {
 	char	*par;
 
-	if (!(par = get_line_env(env, "PATH")))
+	if (!(par = get_line_env_mod(env, "PATH")))
 		return (NULL);
 	return (par + 5);
 }

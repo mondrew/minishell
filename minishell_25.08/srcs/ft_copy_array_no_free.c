@@ -1,78 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export_utils.c                                     :+:      :+:    :+:   */
+/*   ft_copy_array_no_free.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/10 18:51:04 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/15 00:06:50 by mondrew          ###   ########.fr       */
+/*   Created: 2020/09/15 00:03:29 by mondrew           #+#    #+#             */
+/*   Updated: 2020/09/15 00:06:16 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		show(char **envp)
-{
-	int i;
-
-	i = 0;
-	if (envp)
-	{
-		while (envp[i])
-		{
-			ft_putstr(envp[i]);
-			ft_putstr("\n");
-			i++;
-		}
-	}
-}
-
-char		**ft_free_array(char **arr)
-{
-	int i;
-
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-	return (NULL);
-}
-
-char		**free_key_val_ret(char **key, char **val, char **ret)
-{
-	if (key)
-		free(*key);
-	if (val)
-		free(*val);
-	return (ret);
-}
-
-char		**ft_free_special_array(char **arr, int n)
-{
-	int i;
-
-	i = 0;
-	while (arr[i] && i < n)
-	{
-		free(arr[i]);
-		i++;
-	}
-	if (i == n)
-		i++;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-	return (NULL);
-}
-
-char		**ft_copy_array(char **envp, int *ids)
+char		**ft_copy_array_no_free(char **envp)
 {
 	int		i;
 	char	**new_arr;
@@ -90,6 +30,5 @@ char		**ft_copy_array(char **envp, int *ids)
 		i++;
 	}
 	new_arr[i] = NULL;
-	ft_free_envp_null_ids(envp, ids);
 	return (new_arr);
 }

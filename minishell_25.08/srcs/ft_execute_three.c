@@ -6,28 +6,30 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/12 01:03:20 by mondrew           #+#    #+#             */
-/*   Updated: 2020/09/12 01:05:36 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/14 21:48:21 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		ft_simple_execute(t_cmd **cmds, char **envp)
+int		ft_simple_execute(t_cmd **cmds, char **envp, int *ids)
 {
 	pid_t	pid;
 	int		wstatus;
 
+	wstatus = 0;
 	if ((pid = fork()) < 0)
 		return (ft_print_set_exit_code(FORKFAIL, cmds));
 	if (pid == 0)
 	{
 		if (!ft_execve_cmd(cmds[0], cmds, envp, pid))
 		{
+			wstatus = 1;
 			if (ft_get_exit_code(cmds) == (127))
-				exit(127);
-			exit(1);
+				wstatus = 127;
 		}
-		exit(0);
+		ft_free_cmds(cmds - ids[0]);
+		exit(wstatus);
 	}
 	else
 	{
