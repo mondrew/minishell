@@ -6,7 +6,7 @@
 /*   By: mondrew <mondrew@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 11:08:52 by gjessica          #+#    #+#             */
-/*   Updated: 2020/09/15 00:03:06 by mondrew          ###   ########.fr       */
+/*   Updated: 2020/09/15 09:39:57 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ char			**ft_add_command_to_paths(char **paths, char *command, \
 																int i, int j);
 char			*ft_add_dollar_to_res(char *res, int *i);
 char			*ft_add_env_value(char *str, char *res, char *param, int *i);
-char			**ft_add_or_replace(char *key, char *value, char **envp, int *ids);
+char			**ft_add_or_replace(char *key, char *value, char **envp, \
+																	int *ids);
 int				ft_atoi(char *str);
 void			ft_change_child_fd_pipe(int *pipefd, int i, int id);
 char			*change_envs(char *str, char **envr, t_cmd **cmds);
@@ -96,7 +97,7 @@ int				ft_execute_with_redir(t_cmd **cmds, char **envp);
 int				ft_execve_buildins_one(t_cmd *cmds, t_cmd **cmds_big, \
 																char **envp);
 int				ft_execve_buildins_two(t_cmd *cmds, t_cmd **cmds_big, \
-																char **envp, int *ids);
+														char **envp, int *ids);
 int				ft_execve_cmd(t_cmd *cmds, t_cmd **cmds_big, char **envp, \
 																	pid_t pid);
 int				ft_execve_unknown(t_cmd *cmds, t_cmd **cmds_big, \
@@ -135,7 +136,8 @@ int				ft_is_only_dollar_sign(char *str, int i);
 int				ft_is_single_parent_function(t_cmd **cmds);
 char			*ft_itoa(int n);
 int				ft_last_pipe(int *pipefd, t_cmd **cmds, int j, char **envp);
-int				launch_commands(char *line, char ***envp, int *exit_code, int *ids);
+int				launch_commands(char *line, char ***envp, int *exit_code, \
+																	int *ids);
 int				ft_len_to_char(char *str, char end);
 char			**ft_make_paths_array(char **envp, char *command);
 int				ft_middle_pipe(int *pipefd, t_cmd **cmds, int j, char **envp);
@@ -164,10 +166,14 @@ void			signotactive(int sig);
 void			sigquit(int sig);
 int				ft_simple_execute(t_cmd **cmds, char **envp, int *ids);
 void			show(char **envp);
-void			ft_smart_cpy(char *str, char *new_str, int backslash, int *quote);
-void			ft_smart_cpy_whitespaces(char *str, char *new_str, int i, int j);
-void			ft_smart_double_quotes(char *new_str, char c, int *j, int *quote);
-void			ft_smart_single_quotes(char *new_str, char c, int *j, int *quote);
+void			ft_smart_cpy(char *str, char *new_str, int backslash, \
+																int *quote);
+void			ft_smart_cpy_whitespaces(char *str, char *new_str, int i, \
+																		int j);
+void			ft_smart_double_quotes(char *new_str, char c, int *j, \
+																	int *quote);
+void			ft_smart_single_quotes(char *new_str, char c, int *j, \
+																	int *quote);
 int				ft_skip_env_key(char *param);
 int				skip_non_printable(char *str);
 void			ft_skip_spaces(char *str, int *i, int quote);
